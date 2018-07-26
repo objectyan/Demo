@@ -22,6 +22,7 @@ import android.os.Build.VERSION;
 import android.os.Environment;
 import android.provider.Settings.Secure;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -166,7 +167,7 @@ public class CarlifeUtil implements KeepClass {
 
     /* renamed from: b */
     public static String getDeviceID() {
-        if (ActivityCompat.checkSelfPermission(AppContext.getAppContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(AppContext.getAppContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             String temp = ((TelephonyManager) AppContext.getAppContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
             return TextUtils.isEmpty(temp) ? UNKNOW : temp;
         }

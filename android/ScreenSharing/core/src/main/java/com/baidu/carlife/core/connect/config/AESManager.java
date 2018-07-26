@@ -10,35 +10,35 @@ import javax.crypto.spec.SecretKeySpec;
 /* renamed from: com.baidu.carlife.core.connect.a.b */
 public class AESManager {
     /* renamed from: a */
-    private Cipher f3232a;
+    private Cipher mCipherEncrypt;
     /* renamed from: b */
-    private Cipher f3233b;
+    private Cipher mCipherDecrypt;
 
     public AESManager() {
-        m4111a();
+        init();
     }
 
     /* renamed from: a */
-    private void m4111a() {
-        SecretKey sk = new SecretKeySpec(EncryptConfig.m4118a().m4119b().getBytes(), "AES");
+    private void init() {
+        SecretKey sk = new SecretKeySpec(EncryptConfig.newInstance().getAecSeed().getBytes(), "AES");
         try {
-            this.f3232a = Cipher.getInstance("AES");
-            this.f3233b = Cipher.getInstance("AES");
-            this.f3232a.init(1, sk);
-            this.f3233b.init(2, sk);
+            this.mCipherEncrypt = Cipher.getInstance("AES");
+            this.mCipherDecrypt = Cipher.getInstance("AES");
+            this.mCipherEncrypt.init(1, sk);
+            this.mCipherDecrypt.init(2, sk);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /* renamed from: a */
-    public byte[] m4112a(byte[] rawData, int len) {
-        if (this.f3232a == null) {
+    public byte[] encrypt(byte[] rawData, int len) {
+        if (this.mCipherEncrypt == null) {
             return null;
         }
         byte[] encryptData = null;
         try {
-            return this.f3232a.doFinal(rawData, 0, len);
+            return this.mCipherEncrypt.doFinal(rawData, 0, len);
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
             return encryptData;
@@ -49,13 +49,13 @@ public class AESManager {
     }
 
     /* renamed from: b */
-    public byte[] m4113b(byte[] encryptData, int len) {
-        if (this.f3233b == null) {
+    public byte[] decrypt(byte[] encryptData, int len) {
+        if (this.mCipherDecrypt == null) {
             return null;
         }
         byte[] decryptData = null;
         try {
-            return this.f3233b.doFinal(encryptData, 0, len);
+            return this.mCipherDecrypt.doFinal(encryptData, 0, len);
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
             return decryptData;

@@ -72,11 +72,11 @@ public class C2002b {
             while (!this.f6466d && !isInterrupted()) {
                 long notActiveTime = System.currentTimeMillis() - this.f6465c.get();
                 if (notActiveTime <= HttpsClient.CONN_MGR_TIMEOUT) {
-                    if (notActiveTime > BNOffScreenParams.MIN_ENTER_INTERVAL) {
+                    if (notActiveTime > 10000) {
                         m7623c();
                     }
                     try {
-                        C1997a.sleep(BNOffScreenParams.MIN_ENTER_INTERVAL);
+                        C1997a.sleep(10000);
                     } catch (Throwable e) {
                         LogUtil.m4432a(C2002b.f6477a, e);
                         if (this.f6464a.f6483g != null) {

@@ -1,5 +1,6 @@
 package com.baidu.carlife.core.connect;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -21,9 +22,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+
 import com.baidu.carlife.core.LogUtil;
-import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
-import com.baidu.platform.comapi.map.MapBundleKey.MapObjKey;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,155 +35,155 @@ import java.util.Map;
 /* renamed from: com.baidu.carlife.core.connect.h */
 public class WifiDirectManager implements ConnectionInfoListener, PeerListListener {
     /* renamed from: a */
-    public static final String f3408a = "available";
+    public static final String AVAILABLE = "available";
     /* renamed from: b */
-    public static final String f3409b = "_ClfWfd";
+    public static final String CLF_WFD = "_ClfWfd";
     /* renamed from: c */
-    public static final String f3410c = "_Clf._Wifi";
+    public static final String CLF_WIFI = "_Clf._Wifi";
     /* renamed from: d */
     public static final int f3411d = 65537;
     /* renamed from: e */
-    private static final String f3412e = "[WifiDirect]";
+    private static final String Tag = "[WifiDirect]";
     /* renamed from: f */
-    private static WifiDirectManager f3413f = null;
+    private static WifiDirectManager sWifiDirectManager = null;
     /* renamed from: g */
-    private final IntentFilter f3414g = new IntentFilter();
+    private final IntentFilter mIntentFilter = new IntentFilter();
     /* renamed from: h */
-    private Context f3415h = null;
+    private Context mContext = null;
     /* renamed from: i */
-    private BroadcastReceiver f3416i = null;
+    private BroadcastReceiver mBroadcastReceiver = null;
     /* renamed from: j */
-    private WifiP2pManager f3417j = null;
+    private WifiP2pManager mWifiP2pManager = null;
     /* renamed from: k */
-    private Channel f3418k = null;
+    private Channel mChannel = null;
     /* renamed from: l */
-    private WifiManager f3419l = null;
+    private WifiManager mWifiManager = null;
     /* renamed from: m */
-    private WifiP2pDnsSdServiceRequest f3420m = null;
+    private WifiP2pDnsSdServiceRequest mWifiP2pDnsSdServiceRequest = null;
     /* renamed from: n */
-    private WifiP2pDnsSdServiceInfo f3421n = null;
+    private WifiP2pDnsSdServiceInfo mWifiP2pDnsSdServiceInfo = null;
     /* renamed from: o */
-    private WifiP2pDevice f3422o = null;
+    private WifiP2pDevice mWifiP2pDevice = null;
     /* renamed from: p */
-    private InetAddress f3423p = null;
+    private InetAddress mInetAddress = null;
     /* renamed from: q */
-    private C1236a f3424q = null;
+    private WifiDirectManMsgHandler mDirectManMsgHandler = null;
     /* renamed from: r */
-    private HandlerThread f3425r;
+    private HandlerThread mHandlerThread;
     /* renamed from: s */
-    private List f3426s = new ArrayList();
+    private List mPeerDivice = new ArrayList();
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$1 */
-    class C12251 implements ActionListener {
+    class WifiDirectManagerListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3396a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12251(WifiDirectManager this$0) {
-            this.f3396a = this$0;
+        WifiDirectManagerListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Clear Local Service");
-            this.f3396a.m4289j();
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Clear Local Service");
+            this.mWifiDirectManager.initLocalService();
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Clear Local Service failure");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Clear Local Service failure");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$2 */
-    class C12282 implements ActionListener {
+    class WifiDirectManagerServiceListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3399a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
         /* compiled from: WifiDirectManager */
         /* renamed from: com.baidu.carlife.core.connect.h$2$1 */
-        class C12271 implements ActionListener {
+        class AddServiceListener implements ActionListener {
             /* renamed from: a */
-            final /* synthetic */ C12282 f3398a;
+            final /* synthetic */ WifiDirectManagerServiceListener mWifiDirectManagerServiceListener;
 
             /* compiled from: WifiDirectManager */
             /* renamed from: com.baidu.carlife.core.connect.h$2$1$1 */
-            class C12261 implements ActionListener {
+            class WifiP2PListener implements ActionListener {
                 /* renamed from: a */
-                final /* synthetic */ C12271 f3397a;
+                final /* synthetic */ AddServiceListener mAddServiceListener;
 
-                C12261(C12271 this$2) {
-                    this.f3397a = this$2;
+                WifiP2PListener(AddServiceListener this$2) {
+                    this.mAddServiceListener = this$2;
                 }
 
                 public void onSuccess() {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager:  --------------------------------");
+                    LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager:  --------------------------------");
                 }
 
                 public void onFailure(int reason) {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Wifi P2P discover peers failure !");
+                    LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Wifi P2P discover peers failure !");
                 }
             }
 
-            C12271(C12282 this$1) {
-                this.f3398a = this$1;
+            AddServiceListener(WifiDirectManagerServiceListener this$1) {
+                this.mWifiDirectManagerServiceListener = this$1;
             }
 
             public void onSuccess() {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Added service discovery request");
-                this.f3398a.f3399a.f3417j.discoverPeers(this.f3398a.f3399a.f3418k, new C12261(this));
+                LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Added service discovery request");
+                this.mWifiDirectManagerServiceListener.mWifiDirectManager.mWifiP2pManager.discoverPeers(this.mWifiDirectManagerServiceListener.mWifiDirectManager.mChannel, new WifiP2PListener(this));
             }
 
             public void onFailure(int arg0) {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Failed adding service discovery request");
+                LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Failed adding service discovery request");
             }
         }
 
-        C12282(WifiDirectManager this$0) {
-            this.f3399a = this$0;
+        WifiDirectManagerServiceListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Cleared service discovery request");
-            this.f3399a.f3420m = WifiP2pDnsSdServiceRequest.newInstance();
-            this.f3399a.f3417j.addServiceRequest(this.f3399a.f3418k, this.f3399a.f3420m, new C12271(this));
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Cleared service discovery request");
+            this.mWifiDirectManager.mWifiP2pDnsSdServiceRequest = WifiP2pDnsSdServiceRequest.newInstance();
+            this.mWifiDirectManager.mWifiP2pManager.addServiceRequest(this.mWifiDirectManager.mChannel, this.mWifiDirectManager.mWifiP2pDnsSdServiceRequest, new AddServiceListener(this));
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Failed clearing service discovery request");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Failed clearing service discovery request");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$3 */
-    class C12293 implements ActionListener {
+    class ConnectListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3400a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12293(WifiDirectManager this$0) {
-            this.f3400a = this$0;
+        ConnectListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "@WifiDirectManager: Connect Success!!!");
+            LogUtil.d(WifiDirectManager.Tag, "@WifiDirectManager: Connect Success!!!");
         }
 
         public void onFailure(int reason) {
-            LogUtil.e(WifiDirectManager.f3412e, "WifiDirectManager: Failure to connect to peer!!");
+            LogUtil.e(WifiDirectManager.Tag, "WifiDirectManager: Failure to connect to peer!!");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$4 */
-    class C12304 implements ActionListener {
+    class WifiP2pDeviceListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3401a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12304(WifiDirectManager this$0) {
-            this.f3401a = this$0;
+        WifiP2pDeviceListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: connect to devices：" + this.f3401a.f3422o.deviceName + "ipaddress:" + this.f3401a.f3422o.deviceAddress);
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: connect to devices：" + this.mWifiDirectManager.mWifiP2pDevice.deviceName + "ipaddress:" + this.mWifiDirectManager.mWifiP2pDevice.deviceAddress);
         }
 
         public void onFailure(int arg0) {
@@ -191,12 +192,12 @@ public class WifiDirectManager implements ConnectionInfoListener, PeerListListen
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$5 */
-    class C12315 implements ActionListener {
+    class WifiP2pManagerListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3402a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12315(WifiDirectManager this$0) {
-            this.f3402a = this$0;
+        WifiP2pManagerListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
@@ -208,12 +209,12 @@ public class WifiDirectManager implements ConnectionInfoListener, PeerListListen
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$6 */
-    class C12326 implements ActionListener {
+    class WifiP2pManagerRemoveListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3403a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12326(WifiDirectManager this$0) {
-            this.f3403a = this$0;
+        WifiP2pManagerRemoveListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
@@ -225,78 +226,183 @@ public class WifiDirectManager implements ConnectionInfoListener, PeerListListen
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$7 */
-    class C12337 implements ActionListener {
+    class WifiP2pManagerCreateListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3404a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12337(WifiDirectManager this$0) {
-            this.f3404a = this$0;
+        WifiP2pManagerCreateListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Set group owener success !");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Set group owener success !");
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Set group owener failure !");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Set group owener failure !");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$8 */
-    class C12348 implements ActionListener {
+    class RemoveLocalServiceListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3405a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12348(WifiDirectManager this$0) {
-            this.f3405a = this$0;
+        RemoveLocalServiceListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Removed Local Service");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Removed Local Service");
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Removed Local Service failure");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Removed Local Service failure");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$9 */
-    class C12359 implements ActionListener {
+    class ClearLocalServicesListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3406a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        C12359(WifiDirectManager this$0) {
-            this.f3406a = this$0;
+        ClearLocalServicesListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Clear Local Service");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Clear Local Service");
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Clear Local Service failure");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Clear Local Service failure");
+        }
+    }
+
+    class ClearServiceRequestsListener implements ActionListener {
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        ClearServiceRequestsListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onSuccess() {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Cleared service discovery request");
+        }
+
+        public void onFailure(int reason) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Failed clearing service discovery request");
+        }
+    }
+
+    class StopPeerDiscoveryListener implements ActionListener {
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        StopPeerDiscoveryListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onSuccess() {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: stop discovery Success");
+        }
+
+        public void onFailure(int reason) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: stop discovery failed");
+        }
+    }
+
+    class AddLocalServiceListener implements ActionListener
+
+    {
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        AddLocalServiceListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onSuccess() {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Added Local Service");
+            this.mWifiDirectManager.setDnsSdResponseListener();
+        }
+
+        public void onFailure(int error) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Failed to add a service");
+        }
+    }
+
+    class WifManagerDnsSdResponseListeners implements DnsSdServiceResponseListener
+
+    {
+        /* renamed from: a */
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        WifManagerDnsSdResponseListeners(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onDnsSdServiceAvailable(String instanceName, String
+                registrationType, WifiP2pDevice srcDevice) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: discover service : " + instanceName);
+            if (instanceName.equalsIgnoreCase("_ClfWfd")) {
+                if (this.mWifiDirectManager.mWifiP2pDevice == null) {
+                    this.mWifiDirectManager.mWifiP2pDevice = new WifiP2pDevice();
+                }
+                this.mWifiDirectManager.mWifiP2pDevice = srcDevice;
+                this.mWifiDirectManager.connectP2P(this.mWifiDirectManager.mWifiP2pDevice);
+            }
+        }
+    }
+
+    class WifManagerDnsSdTxtRecordListener implements DnsSdTxtRecordListener {
+        /* renamed from: a */
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        WifManagerDnsSdTxtRecordListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> record, WifiP2pDevice device) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: TxtRecord Available : ---------------");
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: " + device.deviceName + " is " + ((String) record.get(AVAILABLE)));
+        }
+    }
+
+    class RemoveServiceRequestListener implements ActionListener {
+        /* renamed from: a */
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
+
+        RemoveServiceRequestListener(WifiDirectManager this$0) {
+            this.mWifiDirectManager = this$0;
+        }
+
+        public void onSuccess() {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Removed service discovery request");
+        }
+
+        public void onFailure(int reason) {
+            LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: Failed removing service discovery request");
         }
     }
 
     /* compiled from: WifiDirectManager */
     /* renamed from: com.baidu.carlife.core.connect.h$a */
-    private class C1236a extends Handler {
+    private class WifiDirectManMsgHandler extends Handler {
         /* renamed from: a */
-        final /* synthetic */ WifiDirectManager f3407a;
+        final /* synthetic */ WifiDirectManager mWifiDirectManager;
 
-        public C1236a(WifiDirectManager wifiDirectManager, Looper looper) {
-            this.f3407a = wifiDirectManager;
+        public WifiDirectManMsgHandler(WifiDirectManager wifiDirectManager, Looper looper) {
             super(looper);
+            this.mWifiDirectManager = wifiDirectManager;
         }
 
         public void handleMessage(Message msg) {
             if (msg != null) {
                 switch (msg.what) {
-                    case WifiDirectManager.f3411d /*65537*/:
-                        LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: peer connect");
-                        this.f3407a.m4303f();
+                    case 65537:
+                        LogUtil.d(WifiDirectManager.Tag, "WifiDirectManager: peer connect");
+                        this.mWifiDirectManager.starToConnect();
                         return;
                     default:
                         super.handleMessage(msg);
@@ -308,306 +414,217 @@ public class WifiDirectManager implements ConnectionInfoListener, PeerListListen
 
     /* renamed from: a */
     public static WifiDirectManager m4281a() {
-        if (f3413f == null) {
+        if (sWifiDirectManager == null) {
             synchronized (WifiDirectManager.class) {
-                if (f3413f == null) {
-                    f3413f = new WifiDirectManager();
+                if (sWifiDirectManager == null) {
+                    sWifiDirectManager = new WifiDirectManager();
                 }
             }
         }
-        return f3413f;
+        return sWifiDirectManager;
     }
 
     /* renamed from: a */
     public void m4297a(WifiP2pManager wpm, Channel channel, Context context) {
-        this.f3417j = wpm;
-        this.f3418k = channel;
-        this.f3415h = context;
+        this.mWifiP2pManager = wpm;
+        this.mChannel = channel;
+        this.mContext = context;
     }
 
     /* renamed from: a */
-    public void m4295a(Context context) {
+    public void init(Context context) {
         if (context != null) {
-            LogUtil.d(f3412e, "WifiDirectManager: ++++++++ WifiP2pManager  init ++++++++");
-            this.f3415h = context;
-            if (this.f3424q == null) {
-                this.f3425r = new HandlerThread("WifiDirectManMsgHandlerThread");
-                this.f3425r.start();
-                this.f3424q = new C1236a(this, this.f3425r.getLooper());
+            LogUtil.d(Tag, "WifiDirectManager: ++++++++ WifiP2pManager  init ++++++++");
+            this.mContext = context;
+            if (this.mDirectManMsgHandler == null) {
+                this.mHandlerThread = new HandlerThread("WifiDirectManMsgHandlerThread");
+                this.mHandlerThread.start();
+                this.mDirectManMsgHandler = new WifiDirectManMsgHandler(this, this.mHandlerThread.getLooper());
             }
-            if (this.f3417j == null) {
-                this.f3419l = (WifiManager) context.getSystemService(C1981b.f6365e);
-                Context context2 = this.f3415h;
-                Context context3 = this.f3415h;
-                this.f3417j = (WifiP2pManager) context2.getSystemService("wifip2p");
-                LogUtil.d(f3412e, "WifiDirectManager: init wifi_p2p_service : " + this.f3417j);
-                if (this.f3417j != null) {
-                    this.f3418k = this.f3417j.initialize(this.f3415h, Looper.getMainLooper(), null);
-                    if (this.f3418k == null) {
-                        LogUtil.d(f3412e, "WifiDirectManager: setup connection fail");
-                        this.f3417j = null;
+            if (this.mWifiP2pManager == null) {
+                this.mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                Context context2 = this.mContext;
+                Context context3 = this.mContext;
+                this.mWifiP2pManager = (WifiP2pManager) context2.getSystemService(Context.WIFI_P2P_SERVICE);
+                LogUtil.d(Tag, "WifiDirectManager: init wifi_p2p_service : " + this.mWifiP2pManager);
+                if (this.mWifiP2pManager != null) {
+                    this.mChannel = this.mWifiP2pManager.initialize(this.mContext, Looper.getMainLooper(), null);
+                    if (this.mChannel == null) {
+                        LogUtil.d(Tag, "WifiDirectManager: setup connection fail");
+                        this.mWifiP2pManager = null;
                     }
                 } else {
-                    LogUtil.d(f3412e, "WifiDirectManager: mWifiP2pManager is null");
+                    LogUtil.d(Tag, "WifiDirectManager: mWifiP2pManager is null");
                 }
             }
-            if (!m4291l()) {
-                LogUtil.d(f3412e, "WifiDirectManager: Wifi is disable, CarLife will open !");
-                m4292m();
+            if (!isWifiEnabled()) {
+                LogUtil.d(Tag, "WifiDirectManager: Wifi is disable, CarLife will open !");
+                enabledWifi();
             }
-            m4301d();
+            clearLocalServices();
         }
     }
 
     /* renamed from: b */
-    public WifiP2pManager m4298b() {
-        return this.f3417j;
+    public WifiP2pManager getWifiP2pManager() {
+        return this.mWifiP2pManager;
     }
 
     /* renamed from: c */
-    public Channel m4300c() {
-        return this.f3418k;
+    public Channel getChannel() {
+        return this.mChannel;
     }
 
     /* renamed from: d */
-    public boolean m4301d() {
-        if (!m4291l()) {
-            LogUtil.d(f3412e, "WifiDirectManager: Wifi is disable, CarLife will open !");
-            m4292m();
+    public boolean clearLocalServices() {
+        if (!isWifiEnabled()) {
+            LogUtil.d(Tag, "WifiDirectManager: Wifi is disable, CarLife will open !");
+            enabledWifi();
         }
-        this.f3417j.clearLocalServices(this.f3418k, new C12251(this));
+        this.mWifiP2pManager.clearLocalServices(this.mChannel, new WifiDirectManagerListener(this));
         return true;
     }
 
     /* renamed from: a */
-    public void m4294a(int nWhat, int arg1, int arg2, Object obj) {
+    public void sendMsg(int nWhat, int arg1, int arg2, Object obj) {
         Message msg = Message.obtain();
         msg.what = nWhat;
         msg.arg1 = arg1;
         msg.arg2 = arg2;
         msg.obj = obj;
-        this.f3424q.sendMessage(msg);
+        this.mDirectManMsgHandler.sendMessage(msg);
     }
 
     /* renamed from: e */
-    public void m4302e() {
-        if (this.f3421n != null) {
-            this.f3417j.removeLocalService(this.f3418k, this.f3421n, new C12348(this));
-            this.f3417j.clearLocalServices(this.f3418k, new C12359(this));
+    public void removeServices() {
+        if (this.mWifiP2pDnsSdServiceInfo != null) {
+            this.mWifiP2pManager.removeLocalService(this.mChannel, this.mWifiP2pDnsSdServiceInfo, new RemoveLocalServiceListener(this));
+            this.mWifiP2pManager.clearLocalServices(this.mChannel, new ClearLocalServicesListener(this));
         }
-        if (this.f3420m != null) {
-            this.f3417j.removeServiceRequest(this.f3418k, this.f3420m, new ActionListener(this) {
-                /* renamed from: a */
-                final /* synthetic */ WifiDirectManager f3390a;
-
-                {
-                    this.f3390a = this$0;
-                }
-
-                public void onSuccess() {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Removed service discovery request");
-                }
-
-                public void onFailure(int reason) {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Failed removing service discovery request");
-                }
-            });
-            this.f3417j.clearServiceRequests(this.f3418k, new ActionListener(this) {
-                /* renamed from: a */
-                final /* synthetic */ WifiDirectManager f3391a;
-
-                {
-                    this.f3391a = this$0;
-                }
-
-                public void onSuccess() {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Cleared service discovery request");
-                }
-
-                public void onFailure(int reason) {
-                    LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Failed clearing service discovery request");
-                }
-            });
+        if (this.mWifiP2pDnsSdServiceRequest != null) {
+            this.mWifiP2pManager.removeServiceRequest(this.mChannel, this.mWifiP2pDnsSdServiceRequest, new RemoveServiceRequestListener(this));
+            this.mWifiP2pManager.clearServiceRequests(this.mChannel, new ClearServiceRequestsListener(this));
         }
     }
 
     /* renamed from: i */
-    private void m4288i() {
-        this.f3417j.stopPeerDiscovery(this.f3418k, new ActionListener(this) {
-            /* renamed from: a */
-            final /* synthetic */ WifiDirectManager f3392a;
-
-            {
-                this.f3392a = this$0;
-            }
-
-            public void onSuccess() {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: stop discovery Success");
-            }
-
-            public void onFailure(int reason) {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: stop discovery failed");
-            }
-        });
-        LogUtil.d(f3412e, "Activity: WifiDirectManager: stopDiscoverServices");
+    private void stopDiscoverServices() {
+        this.mWifiP2pManager.stopPeerDiscovery(this.mChannel, new StopPeerDiscoveryListener(this));
+        LogUtil.d(Tag, "Activity: WifiDirectManager: stopDiscoverServices");
     }
 
     /* renamed from: j */
-    private void m4289j() {
+    private void initLocalService() {
         Map<String, String> record = new HashMap();
-        record.put("available", MapObjKey.OBJ_SL_VISI);
-        this.f3421n = WifiP2pDnsSdServiceInfo.newInstance("_ClfWfd", "_Clf._Wifi", record);
-        this.f3417j.addLocalService(this.f3418k, this.f3421n, new ActionListener(this) {
-            /* renamed from: a */
-            final /* synthetic */ WifiDirectManager f3393a;
-
-            {
-                this.f3393a = this$0;
-            }
-
-            public void onSuccess() {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Added Local Service");
-                this.f3393a.m4290k();
-            }
-
-            public void onFailure(int error) {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: Failed to add a service");
-            }
-        });
+        record.put(AVAILABLE, "visible");
+        this.mWifiP2pDnsSdServiceInfo = WifiP2pDnsSdServiceInfo.newInstance(CLF_WFD, CLF_WIFI, record);
+        this.mWifiP2pManager.addLocalService(this.mChannel, this.mWifiP2pDnsSdServiceInfo, new AddLocalServiceListener(this));
     }
 
     /* renamed from: k */
-    private void m4290k() {
-        this.f3417j.setDnsSdResponseListeners(this.f3418k, new DnsSdServiceResponseListener(this) {
-            /* renamed from: a */
-            final /* synthetic */ WifiDirectManager f3394a;
-
-            {
-                this.f3394a = this$0;
-            }
-
-            public void onDnsSdServiceAvailable(String instanceName, String registrationType, WifiP2pDevice srcDevice) {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: discover service : " + instanceName);
-                if (instanceName.equalsIgnoreCase("_ClfWfd")) {
-                    if (this.f3394a.f3422o == null) {
-                        this.f3394a.f3422o = new WifiP2pDevice();
-                    }
-                    this.f3394a.f3422o = srcDevice;
-                    this.f3394a.m4296a(this.f3394a.f3422o);
-                }
-            }
-        }, new DnsSdTxtRecordListener(this) {
-            /* renamed from: a */
-            final /* synthetic */ WifiDirectManager f3395a;
-
-            {
-                this.f3395a = this$0;
-            }
-
-            public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> record, WifiP2pDevice device) {
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: TxtRecord Available : ---------------");
-                LogUtil.d(WifiDirectManager.f3412e, "WifiDirectManager: " + device.deviceName + " is " + ((String) record.get("available")));
-            }
-        });
-        this.f3417j.clearServiceRequests(this.f3418k, new C12282(this));
+    private void setDnsSdResponseListener() {
+        this.mWifiP2pManager.setDnsSdResponseListeners(this.mChannel, new WifManagerDnsSdResponseListeners(this),
+                new WifManagerDnsSdTxtRecordListener(this));
+        this.mWifiP2pManager.clearServiceRequests(this.mChannel, new WifiDirectManagerServiceListener(this));
     }
 
     public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
         if (p2pInfo.isGroupOwner) {
-            LogUtil.d(f3412e, "WifiDirectManager: Activity:Connected as group owner");
+            LogUtil.d(Tag, "WifiDirectManager: Activity:Connected as group owner");
             return;
         }
-        LogUtil.d(f3412e, "WifiDirectManager: Activity:Connected as peer");
+        LogUtil.d(Tag, "WifiDirectManager: Activity:Connected as peer");
         try {
-            this.f3423p = p2pInfo.groupOwnerAddress;
+            this.mInetAddress = p2pInfo.groupOwnerAddress;
         } catch (Exception e) {
-            LogUtil.d(f3412e, "WifiDirectManager: Failed to create connect thread - " + e.getMessage());
+            LogUtil.d(Tag, "WifiDirectManager: Failed to create connect thread - " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        LogUtil.d(f3412e, "WifiDirectManager: onPeersAvailable");
-        this.f3426s.clear();
-        this.f3426s.addAll(peerList.getDeviceList());
-        for (int i = 0; i < this.f3426s.size(); i++) {
-            WifiP2pDevice device = (WifiP2pDevice) this.f3426s.get(0);
-            LogUtil.d(f3412e, "WifiDirectManager: dump device :" + i);
-            LogUtil.d(f3412e, "WifiDirectManager:  : " + device.toString());
+        LogUtil.d(Tag, "WifiDirectManager: onPeersAvailable");
+        this.mPeerDivice.clear();
+        this.mPeerDivice.addAll(peerList.getDeviceList());
+        for (int i = 0; i < this.mPeerDivice.size(); i++) {
+            WifiP2pDevice device = (WifiP2pDevice) this.mPeerDivice.get(0);
+            LogUtil.d(Tag, "WifiDirectManager: dump device :" + i);
+            LogUtil.d(Tag, "WifiDirectManager:  : " + device.toString());
         }
-        if (this.f3426s.size() == 0) {
-            LogUtil.d(f3412e, "WifiDirectManager: No devices found");
+        if (this.mPeerDivice.size() == 0) {
+            LogUtil.d(Tag, "WifiDirectManager: No devices found");
         } else {
-            LogUtil.d(f3412e, "WifiDirectManager: Get peers : " + this.f3426s.size());
+            LogUtil.d(Tag, "WifiDirectManager: Get peers : " + this.mPeerDivice.size());
         }
     }
 
     /* renamed from: f */
-    public void m4303f() {
-        if (this.f3426s.size() == 0) {
-            LogUtil.d(f3412e, "WifiDirectManager: Peer divice is null !");
+    public void starToConnect() {
+        if (this.mPeerDivice.size() == 0) {
+            LogUtil.d(Tag, "WifiDirectManager: Peer divice is null !");
             return;
         }
-        WifiP2pDevice device = (WifiP2pDevice) this.f3426s.get(0);
+        WifiP2pDevice device = (WifiP2pDevice) this.mPeerDivice.get(0);
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = 0;
-        LogUtil.d(f3412e, "@WifiDirectManager: Star to Connect device");
-        this.f3417j.connect(this.f3418k, config, new C12293(this));
+        LogUtil.d(Tag, "@WifiDirectManager: Star to Connect device");
+        this.mWifiP2pManager.connect(this.mChannel, config, new ConnectListener(this));
     }
 
     /* renamed from: a */
-    public void m4296a(WifiP2pDevice device) {
-        LogUtil.d(f3412e, "WifiDirectManager: connectP2P");
+    public void connectP2P(WifiP2pDevice device) {
+        LogUtil.d(Tag, "WifiDirectManager: connectP2P");
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = 0;
-        this.f3417j.connect(this.f3418k, config, new C12304(this));
+        this.mWifiP2pManager.connect(this.mChannel, config, new WifiP2pDeviceListener(this));
     }
 
     /* renamed from: b */
-    public void m4299b(WifiP2pDevice device) {
-        if (this.f3417j == null) {
+    public void cancel(WifiP2pDevice device) {
+        if (this.mWifiP2pManager == null) {
             return;
         }
         if (device == null || device.status == 0) {
-            m4304g();
+            removeWifiP2pListener();
         } else if (device.status == 3 || device.status == 1) {
-            this.f3417j.cancelConnect(this.f3418k, new C12315(this));
+            this.mWifiP2pManager.cancelConnect(this.mChannel, new WifiP2pManagerListener(this));
         }
     }
 
     /* renamed from: g */
-    public void m4304g() {
-        this.f3417j.removeGroup(this.f3418k, new C12326(this));
+    public void removeWifiP2pListener() {
+        this.mWifiP2pManager.removeGroup(this.mChannel, new WifiP2pManagerRemoveListener(this));
     }
 
     /* renamed from: h */
     public void m4305h() {
-        LogUtil.d(f3412e, "WifiDirectManager: resetData");
-        this.f3422o = null;
+        LogUtil.d(Tag, "WifiDirectManager: resetData");
+        this.mWifiP2pDevice = null;
     }
 
     /* renamed from: l */
-    private boolean m4291l() {
-        if (this.f3419l == null) {
-            Context context = this.f3415h;
-            Context context2 = this.f3415h;
-            this.f3419l = (WifiManager) context.getSystemService(C1981b.f6365e);
+    private boolean isWifiEnabled() {
+        if (this.mWifiManager == null) {
+            Context context = this.mContext;
+            Context context2 = this.mContext;
+            this.mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         }
-        if (this.f3419l != null) {
-            return this.f3419l.isWifiEnabled();
+        if (this.mWifiManager != null) {
+            return this.mWifiManager.isWifiEnabled();
         }
         return false;
     }
 
     /* renamed from: m */
-    private void m4292m() {
-        this.f3419l.setWifiEnabled(true);
+    @SuppressLint("MissingPermission")
+    private void enabledWifi() {
+        this.mWifiManager.setWifiEnabled(true);
     }
 
     /* renamed from: n */
-    private void m4293n() {
-        this.f3417j.createGroup(this.f3418k, new C12337(this));
+    private void createGroupListener() {
+        this.mWifiP2pManager.createGroup(this.mChannel, new WifiP2pManagerCreateListener(this));
     }
 }

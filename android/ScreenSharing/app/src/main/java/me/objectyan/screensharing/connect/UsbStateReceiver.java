@@ -177,7 +177,7 @@ public class UsbStateReceiver extends BroadcastReceiver {
                     }
                 }
             };
-            this.f2962f.schedule(this.f2963g, BNOffScreenParams.MIN_ENTER_INTERVAL);
+            this.f2962f.schedule(this.f2963g, 10000);
         } catch (Exception e) {
             LogUtil.d(f2956a, "startTimer get exception for usb debug switch");
             e.printStackTrace();

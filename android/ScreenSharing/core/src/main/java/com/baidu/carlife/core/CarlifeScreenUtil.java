@@ -10,6 +10,7 @@ import android.view.Display;
 
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.config.CarlifeConfig;
+import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.protobuf.CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo;
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -141,7 +142,7 @@ public class CarlifeScreenUtil implements KeepClass {
     /* renamed from: a */
     public void m4338a(Message message) {
         try {
-            CarlifeVideoEncoderInfo initInfo = CarlifeVideoEncoderInfo.parseFrom(message.obj.m4205f());
+            CarlifeVideoEncoderInfo initInfo = CarlifeVideoEncoderInfo.parseFrom(((CarlifeCmdMessage) message.obj).getData());
             int width = initInfo.getWidth();
             int height = initInfo.getHeight();
             LogUtil.d(f3453d, "####### MSG_CMD_VIDEO_ENCODER_INIT:[ " + width + " : " + height + "]");
@@ -266,7 +267,7 @@ public class CarlifeScreenUtil implements KeepClass {
         String channel = CommonParams.sVehicleChannel.getChannel();
         LogUtil.d(f3453d, "####### isVehicleSupportScreenAdapt: " + channel);
         if (channel != null) {
-            if (CommonParams.sVehicleChannel == CommonParams.VEHICLE_CHANNEL_YUANFENG_ELH_ONLINE || CommonParams.sVehicleChannel == EnumVehicleChannel.VEHICLE_CHANNEL_YUANFENG_ELH_PCBA || channel.equals("20882101") || channel.equals("20882100")) {
+            if (CommonParams.sVehicleChannel == CommonParams.EnumVehicleChannel.VEHICLE_CHANNEL_YUANFENG_ELH_ONLINE || CommonParams.sVehicleChannel == CommonParams.EnumVehicleChannel.VEHICLE_CHANNEL_YUANFENG_ELH_PCBA || channel.equals("20882101") || channel.equals("20882100")) {
                 LogUtil.d(f3453d, "####### isVehicleSupportScreenAdapt: true");
                 return true;
             }

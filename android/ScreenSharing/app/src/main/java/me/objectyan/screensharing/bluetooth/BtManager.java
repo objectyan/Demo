@@ -236,7 +236,7 @@ public class BtManager {
                         this.f2741a.m3491f(address);
                         timeoutMsg = new Message();
                         timeoutMsg.what = 24;
-                        this.f2741a.f2782w.sendMessageDelayed(timeoutMsg, BNOffScreenParams.MIN_ENTER_INTERVAL);
+                        this.f2741a.f2782w.sendMessageDelayed(timeoutMsg, 10000);
                         return;
                     } else {
                         LogUtil.d(BtManager.f2747a, "PAIR STAGE: Failed as down counter is over");
@@ -254,7 +254,7 @@ public class BtManager {
                         if (this.f2741a.m3494g(address)) {
                             timeoutMsg = new Message();
                             timeoutMsg.what = 23;
-                            this.f2741a.f2782w.sendMessageDelayed(timeoutMsg, BNOffScreenParams.MIN_ENTER_INTERVAL);
+                            this.f2741a.f2782w.sendMessageDelayed(timeoutMsg, 10000);
                             return;
                         }
                         pairMsg = new Message();

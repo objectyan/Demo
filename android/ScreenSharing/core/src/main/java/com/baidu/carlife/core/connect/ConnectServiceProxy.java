@@ -6,54 +6,55 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
+
 import com.baidu.carlife.core.KeepClass;
-import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
+
 import java.util.ArrayList;
 
 /* compiled from: ConnectServiceProxy */
 /* renamed from: com.baidu.carlife.core.connect.f */
 public class ConnectServiceProxy implements KeepClass {
     /* renamed from: a */
-    private static final String f3360a = "ConnectServiceProxy";
+    private static final String Tag = "ConnectServiceProxy";
     /* renamed from: b */
-    private static final String f3361b = "ConnectServiceProxyHandler";
+    private static final String ConnectServiceProxyHandlerTag = "ConnectServiceProxyHandler";
     /* renamed from: c */
-    private ArrayList<Messenger> f3362c = new ArrayList();
+    private ArrayList<Messenger> mMessengers = new ArrayList();
     /* renamed from: d */
-    private Context f3363d;
+    private Context mContext;
     /* renamed from: e */
-    private Handler f3364e;
+    private Handler mConnectServiceProxyHandler;
 
     /* compiled from: ConnectServiceProxy */
     /* renamed from: com.baidu.carlife.core.connect.f$a */
-    private class C1219a extends Handler {
+    private class ConnectServiceProxyHandler extends Handler {
         /* renamed from: a */
-        final /* synthetic */ ConnectServiceProxy f3359a;
+        final /* synthetic */ ConnectServiceProxy mServiceProxy;
 
-        public C1219a(ConnectServiceProxy connectServiceProxy, Looper looper) {
-            this.f3359a = connectServiceProxy;
+        public ConnectServiceProxyHandler(ConnectServiceProxy connectServiceProxy, Looper looper) {
             super(looper);
+            this.mServiceProxy = connectServiceProxy;
         }
 
         public void handleMessage(Message msg) {
             if (msg == null) {
-                LogUtil.e(ConnectServiceProxy.f3360a, "handleMessage error: msg is null");
+                LogUtil.e(ConnectServiceProxy.Tag, "handleMessage error: msg is null");
                 return;
             }
             switch (msg.what) {
-                case CommonParams.eL /*901*/:
-                    this.f3359a.f3362c.add(msg.replyTo);
+                case 901:
+                    this.mServiceProxy.mMessengers.add(msg.replyTo);
                     return;
-                case CommonParams.eM /*902*/:
-                    this.f3359a.f3362c.remove(msg.replyTo);
+                case 902:
+                    this.mServiceProxy.mMessengers.remove(msg.replyTo);
                     return;
-                case CommonParams.eN /*903*/:
+                case 903:
                     return;
                 default:
                     if (msg.arg1 == 1001) {
-                        LogUtil.d(ConnectServiceProxy.f3360a, "Send Msg to Socket, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
-                        if (msg.what == CommonParams.f3536C || ConnectManager.newInstance().getIS()) {
+                        LogUtil.d(ConnectServiceProxy.Tag, "Send Msg to Socket, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
+                        if (msg.what == 65538 || ConnectManager.newInstance().getIS()) {
                             ConnectManager.newInstance().write((CarlifeCmdMessage) msg.obj);
                         }
                     }
@@ -64,14 +65,14 @@ public class ConnectServiceProxy implements KeepClass {
     }
 
     public ConnectServiceProxy(Context context) {
-        this.f3363d = context;
-        HandlerThread handlerThread = new HandlerThread(f3361b);
+        this.mContext = context;
+        HandlerThread handlerThread = new HandlerThread(ConnectServiceProxyHandlerTag);
         handlerThread.start();
-        this.f3364e = new C1219a(this, handlerThread.getLooper());
+        this.mConnectServiceProxyHandler = new ConnectServiceProxyHandler(this, handlerThread.getLooper());
     }
 
     /* renamed from: a */
-    public Handler m4257a() {
-        return this.f3364e;
+    public Handler getConnectServiceProxyHandler() {
+        return this.mConnectServiceProxyHandler;
     }
 }

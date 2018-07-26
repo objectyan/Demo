@@ -453,7 +453,7 @@ public class C1849s extends C1790b {
             }
             try {
                 Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(address));
-                intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                intent.addFlags(268435456);
                 this.C.startActivity(intent);
                 return;
             } catch (Exception e) {

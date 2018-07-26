@@ -2,7 +2,6 @@ package com.baidu.carlife.p057a;
 
 import android.os.Message;
 import android.util.Base64;
-import com.baidu.android.common.security.RSAUtil;
 import com.baidu.carlife.core.CarlifeUtil;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
@@ -141,7 +140,7 @@ public class C0967a {
 
     /* renamed from: d */
     private PrivateKey m3161d(String key) throws Exception {
-        return KeyFactory.getInstance(RSAUtil.ALGORITHM_RSA).generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(key, 2)));
+        return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(key, 2)));
     }
 
     /* renamed from: a */

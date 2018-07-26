@@ -10,27 +10,27 @@ import com.baidu.carlife.core.connect.config.EncryptSetupManager;
 /* renamed from: com.baidu.carlife.l.c */
 public class CarlifeCoreEncrypt {
     /* renamed from: a */
-    private static final String f5146a = com.baidu.carlife.p087l.CarlifeCoreEncrypt.class.getSimpleName();
+    private static final String Tag = com.baidu.carlife.p087l.CarlifeCoreEncrypt.class.getSimpleName();
     /* renamed from: b */
-    private static com.baidu.carlife.p087l.CarlifeCoreEncrypt f5147b;
+    private static com.baidu.carlife.p087l.CarlifeCoreEncrypt sCarlifeCoreEncrypt;
     /* renamed from: c */
-    private AESManager f5148c;
+    private AESManager mAESManager;
 
     private CarlifeCoreEncrypt() {
     }
 
     /* renamed from: a */
-    public static com.baidu.carlife.p087l.CarlifeCoreEncrypt m6093a() {
-        if (f5147b == null) {
-            f5147b = new com.baidu.carlife.p087l.CarlifeCoreEncrypt();
+    public static com.baidu.carlife.p087l.CarlifeCoreEncrypt newInstance() {
+        if (sCarlifeCoreEncrypt == null) {
+            sCarlifeCoreEncrypt = new com.baidu.carlife.p087l.CarlifeCoreEncrypt();
         }
-        return f5147b;
+        return sCarlifeCoreEncrypt;
     }
 
     /* renamed from: b */
     public void m6097b() {
         EncryptSetupManager.newInstance();
-        DebugLogUtil.m4115a().m4116a(AppContext.getAppContext());
+        DebugLogUtil.newInstance().setContext(AppContext.getAppContext());
     }
 
     /* renamed from: a */
@@ -44,7 +44,7 @@ public class CarlifeCoreEncrypt {
     }
 
     /* renamed from: d */
-    public boolean m6100d() {
+    public boolean getFlag() {
         return EncryptSetupManager.newInstance().getFlag();
     }
 
@@ -59,18 +59,18 @@ public class CarlifeCoreEncrypt {
     }
 
     /* renamed from: a */
-    public byte[] m6096a(byte[] rawData, int len) {
-        if (this.f5148c == null) {
-            this.f5148c = new AESManager();
+    public byte[] encrypt(byte[] rawData, int len) {
+        if (this.mAESManager == null) {
+            this.mAESManager = new AESManager();
         }
-        return this.f5148c.m4112a(rawData, len);
+        return this.mAESManager.encrypt(rawData, len);
     }
 
     /* renamed from: b */
-    public byte[] m6098b(byte[] encryptData, int len) {
-        if (this.f5148c == null) {
-            this.f5148c = new AESManager();
+    public byte[] decrypt(byte[] encryptData, int len) {
+        if (this.mAESManager == null) {
+            this.mAESManager = new AESManager();
         }
-        return this.f5148c.m4113b(encryptData, len);
+        return this.mAESManager.decrypt(encryptData, len);
     }
 }

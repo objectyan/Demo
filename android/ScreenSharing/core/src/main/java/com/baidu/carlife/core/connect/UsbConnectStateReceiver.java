@@ -6,55 +6,56 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 
 public class UsbConnectStateReceiver extends BroadcastReceiver {
     /* renamed from: a */
-    private static final String f3195a = "UsbConnectStateReceiver";
+    private static final String Tag = "UsbConnectStateReceiver";
     /* renamed from: b */
-    private static final String f3196b = "android.hardware.usb.action.USB_STATE";
+    private static final String ANDROID_HARDWARE_USB_ACTION_USB_STATE = "android.hardware.usb.action.USB_STATE";
     /* renamed from: c */
-    private Context f3197c = null;
+    private Context mContext = null;
     /* renamed from: d */
-    private Handler f3198d = null;
+    private Handler mHandler = null;
     /* renamed from: e */
     private boolean f3199e = false;
 
     public UsbConnectStateReceiver(Context context, Handler handler) {
-        this.f3197c = context;
-        this.f3198d = handler;
+        this.mContext = context;
+        this.mHandler = handler;
     }
 
     /* renamed from: a */
-    public void m4103a() {
+    public void registerReceiver() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(f3196b);
-        this.f3197c.registerReceiver(this, filter);
+        filter.addAction(ANDROID_HARDWARE_USB_ACTION_USB_STATE);
+        this.mContext.registerReceiver(this, filter);
     }
 
     /* renamed from: b */
-    public void m4104b() {
-        this.f3197c.unregisterReceiver(this);
+    public void unregisterReceiver() {
+        this.mContext.unregisterReceiver(this);
     }
 
     public void onReceive(Context context, Intent intent) {
-        if (this.f3198d == null) {
-            LogUtil.e(f3195a, "mHandler is null");
+        if (this.mHandler == null) {
+            LogUtil.e(Tag, "mHandler is null");
             return;
         }
         String action = intent.getAction();
         Message msg = new Message();
         msg.what = 1031;
-        if (action.equals(f3196b)) {
+        if (action.equals(ANDROID_HARDWARE_USB_ACTION_USB_STATE)) {
             if (intent.getExtras().getBoolean("connected")) {
-                LogUtil.d(f3195a, "usb connect is changed: connected");
+                LogUtil.d(Tag, "usb connect is changed: connected");
                 msg.arg1 = CommonParams.fe;
             } else {
-                LogUtil.d(f3195a, "usb connect is changed: disconnected");
+                LogUtil.d(Tag, "usb connect is changed: disconnected");
                 msg.arg1 = CommonParams.ff;
             }
-            this.f3198d.sendMessage(msg);
+            this.mHandler.sendMessage(msg);
         }
     }
 }

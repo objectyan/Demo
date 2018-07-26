@@ -18,7 +18,7 @@ public class VideoOutputThread extends Thread {
     /* renamed from: c */
     private static boolean f3918c = false;
     /* renamed from: d */
-    private static Recorder f3919d = Recorder.m4826b();
+    private static Recorder f3919d = Recorder.newInstance();
     /* renamed from: e */
     private static MediaCodec f3920e = f3919d.m4892w();
     /* renamed from: f */
@@ -121,7 +121,7 @@ public class VideoOutputThread extends Thread {
             }
             m4920g();
             while (this.f3927l) {
-                if (Recorder.m4826b().m4870e()) {
+                if (Recorder.newInstance().m4870e()) {
                     if (f3919d.m4846M() < 0) {
                         m4923a();
                     }

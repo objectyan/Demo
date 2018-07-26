@@ -2,11 +2,11 @@ package com.baidu.carlife.p087l;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.hardware.usb.UsbAccessory;
 import android.os.Message;
+
+import com.baidu.carlife.core.CarlifeScreenUtil;
 import com.baidu.carlife.core.KeepClass;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.AOAConnectManager;
@@ -17,14 +17,15 @@ import com.baidu.carlife.core.connect.config.IConfigSyncDone;
 import com.baidu.carlife.core.screen.OnStatusChangeListener;
 import com.baidu.carlife.core.screen.operation.OnHardKeyCodeEventListener;
 import com.baidu.carlife.core.screen.operation.CarlifeTouchManager;
-import com.baidu.carlife.core.screen.presentation.CarlifeServiceConnection;
+import com.baidu.carlife.core.screen.presentation.view.CarLifePresentationController;
+
 import java.util.ArrayList;
 
 /* compiled from: CarlifeCoreSDK */
 /* renamed from: com.baidu.carlife.l.a */
 public class CarlifeCoreSDK implements KeepClass {
     /* renamed from: a */
-    public static final String f5112a = "CarlifeCoreSDK";
+    public static final String Tag = "CarlifeCoreSDK";
     /* renamed from: b */
     public static final int f5113b = 4353;
     /* renamed from: c */
@@ -48,176 +49,181 @@ public class CarlifeCoreSDK implements KeepClass {
     /* renamed from: l */
     public static final boolean f5123l = false;
     /* renamed from: m */
-    private static CarlifeCoreSDK f5124m;
+    private static CarlifeCoreSDK sCarlifeCoreSDK;
 
     private CarlifeCoreSDK() {
     }
 
     /* renamed from: a */
-    public static CarlifeCoreSDK m5979a() {
-        if (f5124m == null) {
-            f5124m = new CarlifeCoreSDK();
+    public static CarlifeCoreSDK newInstance() {
+        if (sCarlifeCoreSDK == null) {
+            sCarlifeCoreSDK = new CarlifeCoreSDK();
         }
-        return f5124m;
+        return sCarlifeCoreSDK;
     }
 
     /* renamed from: a */
-    public void m6008a(Activity activity, Class CarlifeActivityServiceClass, OnStatusChangeListener listener, Drawable maskDrawable, int launchIconId) {
-        C1667d.m6102a().m6104a(activity, CarlifeActivityServiceClass, listener, maskDrawable, launchIconId);
+    public void m6008a(Activity activity, Class CarlifeActivityServiceClass,
+                       OnStatusChangeListener listener,
+                       Drawable maskDrawable, int launchIconId) {
+        CarLifePresentationController.newInstance().m4630a(activity, CarlifeActivityServiceClass, listener);
+        CarLifePresentationController.newInstance().setMaskDrawable(maskDrawable);
+        CarLifePresentationController.newInstance().setLaunchIconId(launchIconId);
+        CarlifeScreenUtil.m4331a().m4337a(activity);
     }
 
     /* renamed from: b */
-    public int m6019b() {
-        return C1667d.m6102a().m6106b();
-    }
+//    public int m6019b() {
+//        return C1667d.m6102a().m6106b();
+//    }
 
     /* renamed from: c */
-    public int m6025c() {
-        return C1667d.m6102a().m6108c();
-    }
+//    public int m6025c() {
+//        return C1667d.m6102a().m6108c();
+//    }
 
     /* renamed from: d */
-    public Bitmap m6031d() {
-        return C1667d.m6102a().m6110d();
-    }
+//    public Bitmap m6031d() {
+//        return C1667d.m6102a().m6110d();
+//    }
 
     /* renamed from: e */
-    public boolean m6035e() {
-        return C1667d.m6102a().m6112e();
-    }
+//    public boolean m6035e() {
+//        return C1667d.m6102a().m6112e();
+//    }
 
     /* renamed from: a */
-    public void m6015a(boolean needCheckIDRCnt) {
-        C1667d.m6102a().m6105a(needCheckIDRCnt);
-    }
+//    public void m6015a(boolean needCheckIDRCnt) {
+//        C1667d.m6102a().m6105a(needCheckIDRCnt);
+//    }
 
     /* renamed from: f */
-    public void m6036f() {
-        C1667d.m6102a().m6113f();
-    }
+//    public void m6036f() {
+//        C1667d.m6102a().m6113f();
+//    }
 
     /* renamed from: g */
-    public void m6039g() {
-        C1667d.m6102a().m6114g();
-    }
+//    public void m6039g() {
+//        C1667d.m6102a().m6114g();
+//    }
 
     /* renamed from: h */
-    public boolean m6041h() {
-        return C1667d.m6102a().m6115h();
-    }
+//    public boolean m6041h() {
+//        return C1667d.m6102a().m6115h();
+//    }
 
     /* renamed from: b */
-    public void m6023b(boolean isJPEGMode) {
-        C1667d.m6102a().m6107b(isJPEGMode);
-    }
+//    public void m6023b(boolean isJPEGMode) {
+//        C1667d.m6102a().m6107b(isJPEGMode);
+//    }
 
     /* renamed from: c */
-    public void m6028c(boolean isStart) {
-        C1667d.m6102a().m6109c(isStart);
-    }
+//    public void m6028c(boolean isStart) {
+//        C1667d.m6102a().m6109c(isStart);
+//    }
 
     /* renamed from: i */
-    public boolean m6042i() {
-        return C1667d.m6102a().m6116i();
-    }
+//    public boolean m6042i() {
+//        return C1667d.m6102a().m6116i();
+//    }
 
     /* renamed from: j */
-    public boolean m6043j() {
-        return C1667d.m6102a().m6117j();
-    }
+//    public boolean m6043j() {
+//        return C1667d.m6102a().m6117j();
+//    }
 
     /* renamed from: d */
-    public void m6032d(boolean isNeedChangeColor) {
-        C1667d.m6102a().m6111d(isNeedChangeColor);
-    }
+//    public void m6032d(boolean isNeedChangeColor) {
+//        C1667d.m6102a().m6111d(isNeedChangeColor);
+//    }
 
     /* renamed from: k */
-    public void m6044k() {
-        C1667d.m6102a().m6118k();
-    }
+//    public void m6044k() {
+//        C1667d.m6102a().m6118k();
+//    }
 
     /* renamed from: l */
-    public void m6045l() {
-        C1667d.m6102a().m6119l();
-    }
+//    public void m6045l() {
+//        C1667d.m6102a().m6119l();
+//    }
 
     /* renamed from: a */
-    public void m6006a(int requestCode, int resultCode, Intent data) {
-        C1667d.m6102a().m6103a(requestCode, resultCode, data);
-    }
+//    public void m6006a(int requestCode, int resultCode, Intent data) {
+//        C1667d.m6102a().m6103a(requestCode, resultCode, data);
+//    }
 
     /* renamed from: m */
-    public boolean m6046m() {
-        return C1667d.m6102a().m6120m();
-    }
+//    public boolean m6046m() {
+//        return C1667d.m6102a().m6120m();
+//    }
 
     /* renamed from: n */
-    public CarlifeServiceConnection m6047n() {
-        return C1667d.m6102a().m6121n();
-    }
+//    public CarlifeServiceConnection m6047n() {
+//        return C1667d.m6102a().m6121n();
+//    }
 
     /* renamed from: a */
     public void m6007a(int bottomBarHeight, OnHardKeyCodeEventListener listener) {
-        CarlifeTouchManager.m4515a().m4537a(bottomBarHeight, listener);
+        CarlifeTouchManager.newInstance().m4537a(bottomBarHeight, listener);
     }
 
     /* renamed from: a */
     public void m6012a(OnHardKeyCodeEventListener listener) {
-        CarlifeTouchManager.m4515a().m4544b(listener);
+        CarlifeTouchManager.newInstance().m4544b(listener);
     }
 
     /* renamed from: o */
     public int m6048o() {
-        return CarlifeTouchManager.m4515a().m4548d();
+        return CarlifeTouchManager.newInstance().m4548d();
     }
 
     /* renamed from: p */
     public int m6049p() {
-        return CarlifeTouchManager.m4515a().m4551e();
+        return CarlifeTouchManager.newInstance().m4551e();
     }
 
     /* renamed from: q */
     public int m6050q() {
-        return CarlifeTouchManager.m4515a().m4554f();
+        return CarlifeTouchManager.newInstance().m4554f();
     }
 
     /* renamed from: r */
     public int m6051r() {
-        return CarlifeTouchManager.m4515a().m4557g();
+        return CarlifeTouchManager.newInstance().m4557g();
     }
 
     /* renamed from: s */
-    public boolean m6052s() {
+    public boolean initAudioHandler() {
         return CarlifeCoreAudio.newInstance().initCarlifeCoreAudioHandler();
     }
 
     /* renamed from: t */
-    public boolean m6053t() {
+    public boolean quitAudioHandler() {
         return CarlifeCoreAudio.newInstance().quitCarlifeCoreAudioHandler();
     }
 
     /* renamed from: a */
-    public void m6013a(String filePath) {
+    public void sendMsg(String filePath) {
         CarlifeCoreAudio.newInstance().sendMessage1(filePath, null);
     }
 
     /* renamed from: a */
-    public void m6014a(String filePath, ArrayList<String> fileList) {
+    public void sendMsg(String filePath, ArrayList<String> fileList) {
         CarlifeCoreAudio.newInstance().sendMessage1(filePath, (ArrayList) fileList);
     }
 
     /* renamed from: u */
-    public void m6054u() {
+    public void sendMsg2() {
         CarlifeCoreAudio.newInstance().sendMessage2();
     }
 
     /* renamed from: v */
-    public void m6055v() {
+    public void sendMsg3() {
         CarlifeCoreAudio.newInstance().sendMessage3();
     }
 
     /* renamed from: w */
-    public void m6056w() {
+    public void sendMsg4() {
         CarlifeCoreAudio.newInstance().sendMessage4();
     }
 
@@ -342,51 +348,51 @@ public class CarlifeCoreSDK implements KeepClass {
     }
 
     /* renamed from: b */
-    public void m6022b(Context context) {
-        ConnectClient.newInstance().m4221a(context);
+    public void initConn(Context context) {
+        ConnectClient.newInstance().init(context);
     }
 
     /* renamed from: L */
-    public void m5991L() {
-        ConnectClient.newInstance().m4224b();
+    public void uninitConn() {
+        ConnectClient.newInstance().uninit();
     }
 
     /* renamed from: a */
-    public void m6010a(Context context, UsbAccessory accessory) {
-        AOAConnectManager.m4143a().m4162a(context, accessory);
+    public void initAOA(Context context, UsbAccessory accessory) {
+        AOAConnectManager.newInstance().init(context, accessory);
     }
 
     /* renamed from: M */
-    public void m5992M() {
-        AOAConnectManager.m4143a().m4163b();
+    public void unInitAOA() {
+        AOAConnectManager.newInstance().unInit();
     }
 
     /* renamed from: N */
-    public boolean m5993N() {
-        return ConnectClient.newInstance().m4225c();
+    public boolean getISConn() {
+        return ConnectClient.newInstance().getIS();
     }
 
     /* renamed from: O */
-    public void m5994O() {
-        ConnectClient.newInstance().m4222a(false);
+    public void setISFlase() {
+        ConnectClient.newInstance().setIS(false);
     }
 
     /* renamed from: a */
-    public boolean m6017a(Message msg) {
+    public boolean sendMsgToService(Message msg) {
         if (msg != null) {
-            return ConnectClient.newInstance().m4223a(msg);
+            return ConnectClient.newInstance().sendMsgToService(msg);
         }
-        LogUtil.e(f5112a, "send error: msg is null");
+        LogUtil.e(Tag, "send error: msg is null");
         return false;
     }
 
     /* renamed from: P */
-    public void m5995P() {
+    public void stopUDP() {
         ConnectManager.newInstance().stopUDP();
     }
 
     /* renamed from: e */
-    public void m6034e(boolean is) {
+    public void setIS(boolean is) {
         ConnectManager.newInstance().setIS(is);
     }
 
@@ -401,85 +407,85 @@ public class CarlifeCoreSDK implements KeepClass {
     }
 
     /* renamed from: S */
-    public int m5998S() {
+    public int getConnType() {
         return ConnectManager.newInstance().getType();
     }
 
     /* renamed from: c */
-    public void m6026c(int serviceType) {
-        if (ConnectClient.newInstance().m4225c()) {
+    public void disconnected(int serviceType) {
+        if (ConnectClient.newInstance().getIS()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
-            command.m4201c(serviceType);
-            ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+            command.setServiceType(serviceType);
+            ConnectClient.newInstance().sendMsgToService(Message.obtain(null, command.getServiceType(), 1001, 0, command));
             return;
         }
-        LogUtil.e(f5112a, "--disconnected!!!---");
+        LogUtil.e(Tag, "--disconnected!!!---");
     }
 
     /* renamed from: d */
-    public int m6030d(byte[] buffer, int len) {
+    public int writeVR(byte[] buffer, int len) {
         if (buffer != null) {
             return ConnectManager.newInstance().writeVR(buffer, len);
         }
-        LogUtil.e(f5112a, "write error: VR buffer is null");
+        LogUtil.e(Tag, "write error: VR buffer is null");
         return -1;
     }
 
     /* renamed from: e */
-    public int m6033e(byte[] buffer, int len) {
+    public int readVR(byte[] buffer, int len) {
         if (buffer != null) {
             return ConnectManager.newInstance().readVR(buffer, len);
         }
-        LogUtil.e(f5112a, "read error: VR buffer is null");
+        LogUtil.e(Tag, "read error: VR buffer is null");
         return -1;
     }
 
     /* renamed from: a */
-    public int m6003a(CarlifeCmdMessage msg) {
+    public int writeDate(CarlifeCmdMessage msg) {
         if (msg != null) {
             return ConnectManager.newInstance().writeDate(msg);
         }
-        LogUtil.e(f5112a, "write error: data buffer is null");
+        LogUtil.e(Tag, "write error: data buffer is null");
         return -1;
     }
 
     /* renamed from: T */
     public void m5999T() {
-        C1666c.m6093a().m6097b();
+        CarlifeCoreEncrypt.newInstance().m6097b();
     }
 
     /* renamed from: f */
     public void m6037f(boolean flag) {
-        C1666c.m6093a().m6095a(flag);
+        CarlifeCoreEncrypt.newInstance().m6095a(flag);
     }
 
     /* renamed from: U */
     public boolean m6000U() {
-        return C1666c.m6093a().m6099c();
+        return CarlifeCoreEncrypt.newInstance().m6099c();
     }
 
     /* renamed from: V */
     public boolean m6001V() {
-        return C1666c.m6093a().m6100d();
+        return CarlifeCoreEncrypt.newInstance().getFlag();
     }
 
     /* renamed from: a */
     public void m6011a(IConfigSyncDone syncDone) {
-        C1666c.m6093a().m6094a(syncDone);
+        CarlifeCoreEncrypt.newInstance().m6094a(syncDone);
     }
 
     /* renamed from: W */
     public void m6002W() {
-        C1666c.m6093a().m6101e();
+        CarlifeCoreEncrypt.newInstance().m6101e();
     }
 
     /* renamed from: f */
-    public byte[] m6038f(byte[] rawData, int len) {
-        return C1666c.m6093a().m6096a(rawData, len);
+    public byte[] encrypt(byte[] rawData, int len) {
+        return CarlifeCoreEncrypt.newInstance().encrypt(rawData, len);
     }
 
     /* renamed from: g */
-    public byte[] m6040g(byte[] encryptData, int len) {
-        return C1666c.m6093a().m6098b(encryptData, len);
+    public byte[] decrypt(byte[] encryptData, int len) {
+        return CarlifeCoreEncrypt.newInstance().decrypt(encryptData, len);
     }
 }

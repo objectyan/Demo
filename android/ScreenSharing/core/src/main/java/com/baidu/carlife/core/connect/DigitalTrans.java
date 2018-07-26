@@ -1,12 +1,10 @@
 package com.baidu.carlife.core.connect;
 
-import com.baidu.navi.util.StatisticConstants;
-
 /* compiled from: DigitalTrans */
 /* renamed from: com.baidu.carlife.core.connect.j */
 public class DigitalTrans {
     /* renamed from: a */
-    public static String m4318a(String content) {
+    public static String toHexString(String content) {
         String result = "";
         int max = content.length();
         for (int i = 0; i < max; i++) {
@@ -78,13 +76,13 @@ public class DigitalTrans {
                     result = result + "1000";
                     break;
                 case '9':
-                    result = result + StatisticConstants.HU_CONNECT_MOBILE;
+                    result = result + "1001";
                     break;
                 case 'A':
                     result = result + "1010";
                     break;
                 case 'B':
-                    result = result + StatisticConstants.VOICE_CONTROL_OPERATE;
+                    result = result + "1011";
                     break;
                 case 'C':
                     result = result + "1100";

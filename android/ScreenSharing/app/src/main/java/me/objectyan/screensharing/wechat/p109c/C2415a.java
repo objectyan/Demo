@@ -238,7 +238,7 @@ public class C2415a {
         } else {
             Toast.makeText(AppContext.m3876a(), "网络连接异常，请检查您的网络连接", 0).show();
             C2372c.m9036e("网络连接异常，10s后重试!!!!!!!!!!!!!");
-            new Handler(Looper.getMainLooper()).postDelayed(new C23991(this), BNOffScreenParams.MIN_ENTER_INTERVAL);
+            new Handler(Looper.getMainLooper()).postDelayed(new C23991(this), 10000);
         }
     }
 

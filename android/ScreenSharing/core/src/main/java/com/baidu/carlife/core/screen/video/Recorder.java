@@ -1,5 +1,7 @@
 package com.baidu.carlife.core.screen.video;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,8 +18,10 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.view.MotionEvent;
 import android.view.Surface;
+
 import com.baidu.carlife.core.AppContext;
 import com.baidu.carlife.core.CarlifeScreenUtil;
 import com.baidu.carlife.core.CommonParams;
@@ -32,17 +36,18 @@ import com.baidu.carlife.core.screen.OnStatusChangeListener;
 import com.baidu.carlife.core.screen.presentation.view.CarlifeMaskView;
 import com.baidu.carlife.protobuf.CarlifeConnectExceptionProto.CarlifeConnectException;
 import com.baidu.carlife.protobuf.CarlifeConnectExceptionProto.CarlifeConnectException.Builder;
-import com.baidu.navisdk.BNaviModuleManager.AppSourceDefine;
-import com.facebook.imagepipeline.memory.C5628c;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Locale;
+
+import static android.media.MediaCodec.CONFIGURE_FLAG_ENCODE;
 
 /* compiled from: Recorder */
 /* renamed from: com.baidu.carlife.core.screen.video.e */
 public class Recorder {
     /* renamed from: a */
-    static final String f3860a = "Recorder";
+    static final String Tag = "Recorder";
     /* renamed from: b */
     static int f3861b = 832;
     /* renamed from: c */
@@ -76,7 +81,7 @@ public class Recorder {
     /* renamed from: t */
     private static final int f3876t = 1;
     /* renamed from: u */
-    private static Recorder f3877u;
+    private static Recorder sRecorder;
     /* renamed from: w */
     private static final int[] f3878w = new int[]{6, 7, 15, 21, 16, 19};
     /* renamed from: A */
@@ -147,7 +152,7 @@ public class Recorder {
     /* renamed from: f */
     public Bitmap f3905f;
     /* renamed from: g */
-    byte[] f3906g;
+    public byte[] f3906g;
     /* renamed from: h */
     ByteBuffer f3907h;
     /* renamed from: v */
@@ -212,13 +217,13 @@ public class Recorder {
                 synchronized (this.f3858a.f3898T) {
                     try {
                         this.f3858a.f3880B.stop();
-                        LogUtil.d(Recorder.f3860a, "Recorder mEncoder.stop()");
+                        LogUtil.d(Recorder.Tag, "Recorder mEncoder.stop()");
                     } catch (IllegalStateException e) {
                         e.printStackTrace();
                     }
                     try {
                         this.f3858a.f3880B.release();
-                        LogUtil.d(Recorder.f3860a, "Recorder mEncoder.release");
+                        LogUtil.d(Recorder.Tag, "Recorder mEncoder.release");
                     } catch (IllegalStateException e2) {
                         e2.printStackTrace();
                     }
@@ -228,7 +233,7 @@ public class Recorder {
                         if (this.f3858a.am != null) {
                             this.f3858a.am.release();
                             this.f3858a.am = null;
-                            LogUtil.d(Recorder.f3860a, "Recorder mEncSurface.release");
+                            LogUtil.d(Recorder.Tag, "Recorder mEncSurface.release");
                         }
                     } catch (Exception e3) {
                         e3.printStackTrace();
@@ -240,6 +245,9 @@ public class Recorder {
 
     /* compiled from: Recorder */
     /* renamed from: com.baidu.carlife.core.screen.video.e$a */
+    @SuppressLint("NewApi")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private class C1337a extends Callback {
         /* renamed from: a */
         final /* synthetic */ Recorder f3859a;
@@ -284,15 +292,15 @@ public class Recorder {
     }
 
     /* renamed from: b */
-    public static Recorder m4826b() {
-        if (f3877u == null) {
+    public static Recorder newInstance() {
+        if (sRecorder == null) {
             synchronized (Recorder.class) {
-                if (f3877u == null) {
-                    f3877u = new Recorder();
+                if (sRecorder == null) {
+                    sRecorder = new Recorder();
                 }
             }
         }
-        return f3877u;
+        return sRecorder;
     }
 
     /* renamed from: c */
@@ -337,9 +345,13 @@ public class Recorder {
     }
 
     /* renamed from: i */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void m4877i() {
         if (this.f3896R) {
-            m4849P();
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                m4849P();
+            }
         }
         this.f3891M = false;
         if (this.f3882D != null) {
@@ -401,7 +413,7 @@ public class Recorder {
 
     /* renamed from: k */
     public boolean m4880k() {
-        if (!this.f3894P && ConnectClient.newInstance().m4225c()) {
+        if (!this.f3894P && ConnectClient.newInstance().getIS()) {
             return this.f3885G;
         }
         return false;
@@ -438,15 +450,15 @@ public class Recorder {
         CarlifeConnectException info = builder.build();
         command.setData(info.toByteArray());
         command.setLength(info.getSerializedSize());
-        ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+        ConnectClient.newInstance().sendMsgToService(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: m */
     public void m4882m() {
         if (CarlifeConfig.m4065a()) {
-            LogUtil.d(f3860a, " onActivityPause internal screen capture ");
+            LogUtil.d(Tag, " onActivityPause internal screen capture ");
         } else {
-            LogUtil.d(f3860a, " onActivityPause fullscreen capture, Invoke's Recorder pauseFromMobile() ");
+            LogUtil.d(Tag, " onActivityPause fullscreen capture, Invoke's Recorder pauseFromMobile() ");
             m4866c(false);
             m4875h();
         }
@@ -474,8 +486,12 @@ public class Recorder {
     }
 
     /* renamed from: p */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void m4885p() {
-        m4815U();
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            m4815U();
+        }
         m4841H();
     }
 
@@ -516,7 +532,7 @@ public class Recorder {
 
     /* renamed from: v */
     void m4891v() {
-        LogUtil.d(f3860a, "setInputThreadNull...");
+        LogUtil.d(Tag, "setInputThreadNull...");
         this.f3881C = null;
     }
 
@@ -588,7 +604,7 @@ public class Recorder {
     }
 
     /* renamed from: G */
-    boolean m4840G() {
+    boolean m4840G() throws InterruptedException {
         if (this.f3880B == null) {
             return false;
         }
@@ -627,7 +643,7 @@ public class Recorder {
         if (this.f3880B == null || this.f3893O) {
             return false;
         }
-        LogUtil.d(f3860a, "Recorder releaseVideoEncoder");
+        LogUtil.d(Tag, "Recorder releaseVideoEncoder");
         this.f3893O = true;
         new C13363(this).start();
         return true;
@@ -729,17 +745,17 @@ public class Recorder {
                 this.f3881C.start();
                 return 0;
             }
-            LogUtil.e(f3860a, "The RecordThread didnt close last time");
+            LogUtil.e(Tag, "The RecordThread didnt close last time");
             return -1;
         } else if (CarlifeConfig.m4065a()) {
-            LogUtil.d(f3860a, "startThread internal screen capture.");
+            LogUtil.d(Tag, "startThread internal screen capture.");
             m4818X();
             return 0;
         } else if (this.ag) {
             m4818X();
             return 0;
         } else {
-            LogUtil.d(f3860a, "startThread full screen capture.");
+            LogUtil.d(Tag, "startThread full screen capture.");
             if (this.f3881C != null) {
                 return -1;
             }
@@ -750,8 +766,10 @@ public class Recorder {
     }
 
     /* renamed from: U */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void m4815U() {
-        LogUtil.d(f3860a, "Recorder  ==============================> begin stopThread()");
+        LogUtil.d(Tag, "Recorder  ==============================> begin stopThread()");
         if ((CarlifeConfig.m4065a() || this.ag) && !this.f3894P) {
             if (!CarlifeConfig.m4065a()) {
                 aa();
@@ -767,7 +785,7 @@ public class Recorder {
         if (this.f3882D != null) {
             this.f3882D.m4923a();
         }
-        LogUtil.d(f3860a, "Recorder  ==============================> end stopThread()");
+        LogUtil.d(Tag, "Recorder  ==============================> end stopThread()");
     }
 
     /* renamed from: V */
@@ -786,7 +804,7 @@ public class Recorder {
                     this.f3903Y.putInt(f3865i, 1);
                     this.f3903Y.commit();
                 }
-            } else if (Build.MANUFACTURER.toLowerCase(Locale.ENGLISH).contains(AppSourceDefine.HUAWEI_SOURCE)) {
+            } else if (Build.MANUFACTURER.toLowerCase(Locale.ENGLISH).contains("huawei")) {
                 if (Build.DEVICE.contains("hwp6") || Build.DEVICE.contains("hwmt1")) {
                     this.f3885G = true;
                     this.f3886H = false;
@@ -875,7 +893,7 @@ public class Recorder {
             f3863d = destFrameRate;
             f3864e = 1000 / destFrameRate;
         }
-        LogUtil.e(f3860a, "mContainerWidth = " + f3861b + ", mContainerHeight = " + f3862c);
+        LogUtil.e(Tag, "mContainerWidth = " + f3861b + ", mContainerHeight = " + f3862c);
         try {
             this.f3880B = MediaCodec.createEncoderByType("video/avc");
         } catch (Exception e) {
@@ -896,13 +914,13 @@ public class Recorder {
                 mediaFormat.setInteger("color-format", this.f3910y);
                 mediaFormat.setInteger("profile", 1);
                 mediaFormat.setInteger("level", 256);
-                this.f3880B.configure(mediaFormat, null, null, 1);
+                this.f3880B.configure(mediaFormat, null, null, CONFIGURE_FLAG_ENCODE);
             } catch (Exception e2) {
                 isConfigSuccess = false;
                 e2.printStackTrace();
             }
             if (isConfigSuccess) {
-                LogUtil.e(f3860a, "with level 3.0 mColorFormat=" + this.f3910y);
+                LogUtil.e(Tag, "with level 3.0 mColorFormat=" + this.f3910y);
                 break;
             }
             try {
@@ -911,8 +929,8 @@ public class Recorder {
                 mediaFormat.setInteger("frame-rate", 15);
                 mediaFormat.setInteger("i-frame-interval", 1);
                 mediaFormat.setInteger("color-format", this.f3910y);
-                this.f3880B.configure(mediaFormat, null, null, 1);
-                LogUtil.e(f3860a, "mColorFormat=" + this.f3910y);
+                this.f3880B.configure(mediaFormat, null, null, CONFIGURE_FLAG_ENCODE);
+                LogUtil.e(Tag, "mColorFormat=" + this.f3910y);
                 break;
             } catch (Exception e22) {
                 e22.printStackTrace();
@@ -941,7 +959,7 @@ public class Recorder {
             }
             try {
                 mediaFormat.setInteger("color-format", this.f3910y);
-                this.f3880B.configure(mediaFormat, null, null, 1);
+                this.f3880B.configure(mediaFormat, null, null, CONFIGURE_FLAG_ENCODE);
             } catch (Exception e222) {
                 e222.printStackTrace();
                 if (this.f3909x < 46) {
@@ -949,7 +967,7 @@ public class Recorder {
                 }
             }
             if (this.f3909x != 45 || this.f3909x == 46) {
-                LogUtil.e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
+                LogUtil.e(Tag, "没有合适的参数可完成初始化 n = " + this.f3909x);
                 this.f3880B = null;
                 return false;
             }
@@ -959,7 +977,7 @@ public class Recorder {
                 if (this.f3885G) {
                     JniMethod.prepare(this.f3910y, f3861b, f3862c, this.f3886H);
                 }
-                LogUtil.d(f3860a, "initMediaCodec mColorFormat=" + this.f3910y);
+                LogUtil.d(Tag, "initMediaCodec mColorFormat=" + this.f3910y);
                 if (CarlifeConfig.m4065a()) {
                 }
                 return true;
@@ -975,7 +993,7 @@ public class Recorder {
         }
         if (this.f3909x != 45) {
         }
-        LogUtil.e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
+        LogUtil.e(Tag, "没有合适的参数可完成初始化 n = " + this.f3909x);
         this.f3880B = null;
         return false;
     }
@@ -984,7 +1002,7 @@ public class Recorder {
     int m4852a(byte[] input) {
         synchronized (this.f3897S) {
             if (this.f3880B == null) {
-                LogUtil.e(f3860a, "还没完成初始化, 或已经被释放");
+                LogUtil.e(Tag, "还没完成初始化, 或已经被释放");
                 return -2;
             }
             try {
@@ -998,12 +1016,12 @@ public class Recorder {
                     this.f3880B.queueInputBuffer(inputBufferIndex, 0, input.length, this.f3900V, 0);
                     return 0;
                 }
-                LogUtil.m4443d(f3860a, "input2Encoder -1;sendEmptyPacket");
+                LogUtil.m4443d(Tag, "input2Encoder -1;sendEmptyPacket");
                 m4845L();
-                return -1;
             } catch (Throwable t) {
                 t.printStackTrace();
             }
+            return -1;
         }
     }
 
@@ -1057,9 +1075,9 @@ public class Recorder {
         byte[] sendDtata = videoData;
         int sendLen = length;
         if (EncryptSetupManager.newInstance().getFlag() && length > 0) {
-            sendDtata = this.f3904Z.m4112a(videoData, length);
+            sendDtata = this.f3904Z.encrypt(videoData, length);
             if (sendDtata == null) {
-                LogUtil.e(f3860a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
                 return -1;
             }
             sendLen = sendDtata.length;
@@ -1092,7 +1110,7 @@ public class Recorder {
     }
 
     /* renamed from: W */
-    private boolean m4817W() {
+    private boolean m4817W() throws InterruptedException {
         m4841H();
         int i = 3;
         while (i > 0) {
@@ -1101,11 +1119,7 @@ public class Recorder {
             if (this.f3891M) {
                 m4846M();
             } else {
-                try {
-                    m4845L();
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
+                m4845L();
             }
         }
         if (this.f3893O) {
@@ -1171,12 +1185,12 @@ public class Recorder {
                     }
                     if (CarlifeScreenUtil.m4334m()) {
                         this.ae = 1024;
-                        this.af = C5628c.f22756b;
-                        LogUtil.d(f3860a, "####### Adapte Video size");
+                        this.af = 384;
+                        LogUtil.d(Tag, "####### Adapte Video size");
                     }
-                    LogUtil.d(f3860a, "####### set vidoe size[" + this.ae + " : " + this.af + "]");
+                    LogUtil.d(Tag, "####### set vidoe size[" + this.ae + " : " + this.af + "]");
                     if (!(f3861b == this.ae && f3862c == this.af)) {
-                        LogUtil.d(f3860a, "####### set setFirstEncodeFrame size[" + this.ae + " : " + this.af + "]");
+                        LogUtil.d(Tag, "####### set setFirstEncodeFrame size[" + this.ae + " : " + this.af + "]");
                         m4872f(true);
                         VideoOutputThread.m4916c();
                     }
@@ -1209,7 +1223,7 @@ public class Recorder {
                         mediaFormat.setInteger("color-format", this.f3910y);
                         mediaFormat.setInteger("profile", 1);
                         mediaFormat.setInteger("level", 256);
-                        this.f3880B.configure(mediaFormat, null, null, 1);
+                        this.f3880B.configure(mediaFormat, null, null, CONFIGURE_FLAG_ENCODE);
                     } catch (Exception e3) {
                         e3.printStackTrace();
                         isConfigSuccess = false;
@@ -1225,7 +1239,7 @@ public class Recorder {
                         this.f3910y = 2130708361;
                         try {
                             mediaFormat.setInteger("color-format", this.f3910y);
-                            this.f3880B.configure(mediaFormat, null, null, 1);
+                            this.f3880B.configure(mediaFormat, null, null, CONFIGURE_FLAG_ENCODE);
                         } catch (Exception e32) {
                             e32.printStackTrace();
                             return false;
@@ -1235,7 +1249,7 @@ public class Recorder {
                         this.am.release();
                     }
                     this.am = this.f3880B.createInputSurface();
-                    CarlifeMaskView.m4741a(this.am);
+                    CarlifeMaskView.setDisplaySpec(this.am);
                     this.f3880B.start();
                 } catch (IOException e1) {
                     e1.printStackTrace();
@@ -1260,7 +1274,7 @@ public class Recorder {
     /* renamed from: c */
     boolean m4867c(int destWidth, int destHeight, int destFrameRate) {
         if (this.f3905f != null) {
-            LogUtil.e(f3860a, "重复调用了initMediaCodec50TextureView");
+            LogUtil.e(Tag, "重复调用了initMediaCodec50TextureView");
         } else {
             m4861a(destWidth, destHeight, destFrameRate);
             this.f3905f = Bitmap.createBitmap(f3861b, f3862c, Config.ARGB_8888);
@@ -1284,20 +1298,23 @@ public class Recorder {
     }
 
     /* renamed from: P */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void m4849P() {
         this.f3896R = false;
         if (this.aj == null) {
             Context context = AppContext.getAppContext();
             this.ab = CarlifeScreenUtil.m4331a().m4350g();
-            this.aj = (MediaProjectionManager) context.getSystemService("media_projection");
+            this.aj = (MediaProjectionManager) context.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         }
         if (this.ak == null) {
-            this.f3908v.mo1347a(this.aj.createScreenCaptureIntent(), 4353);
+            this.f3908v.startActivity(this.aj.createScreenCaptureIntent(), 4353);
             this.ah = true;
         }
     }
 
     /* renamed from: a */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void m4856a(int requestCode, int resultCode, Intent data) {
         if (requestCode == 4353) {
             m4869e(false);
@@ -1305,8 +1322,10 @@ public class Recorder {
                 m4855a(2);
             } else if (this.aj != null) {
                 if (this.ak == null) {
-                    this.ak = this.aj.getMediaProjection(resultCode, data);
-                    this.ak.registerCallback(new C1337a(), null);
+                    if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        this.ak = this.aj.getMediaProjection(resultCode, data);
+                    }
+                    this.ak.registerCallback(new C1337a(this), null);
                     this.al = m4820Z();
                 }
                 this.ai = true;
@@ -1328,20 +1347,33 @@ public class Recorder {
     }
 
     /* renamed from: R */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void m4851R() {
         if (this.ak != null && this.al == null) {
-            this.al = m4820Z();
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.al = m4820Z();
+            }
         }
     }
 
     /* renamed from: Z */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private VirtualDisplay m4820Z() {
-        return this.ak.createVirtualDisplay("ScreenSharingDemo", this.ac, this.ad, this.ab, 25, this.am, null, null);
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return this.ak.createVirtualDisplay("ScreenSharingDemo", this.ac, this.ad, this.ab, 25, this.am, null, null);
+        }
+        return null;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void aa() {
         if (this.ak != null) {
-            this.ak.stop();
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                this.ak.stop();
+            }
             this.ak = null;
         }
     }

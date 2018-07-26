@@ -3,13 +3,14 @@ package com.baidu.carlife.core.screen.operation;
 import android.app.Activity;
 import android.view.KeyEvent;
 import android.view.View;
+
 import com.baidu.carlife.core.LogUtil;
 
 /* compiled from: NormalKnobKeyListener */
 /* renamed from: com.baidu.carlife.core.screen.b.b */
 public class NormalKnobKeyListener extends KnobKeyListener {
     public NormalKnobKeyListener(Activity activity) {
-        this.c = activity;
+        this.mActivity = activity;
     }
 
     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -23,9 +24,9 @@ public class NormalKnobKeyListener extends KnobKeyListener {
         }
         if (event.getAction() == 1) {
             if (keyCode == KnobKeyListener.f3664a) {
-                this.c.dispatchKeyEvent(new KeyEvent(0, 22));
+                this.mActivity.dispatchKeyEvent(new KeyEvent(0, 22));
             } else {
-                this.c.dispatchKeyEvent(new KeyEvent(0, 21));
+                this.mActivity.dispatchKeyEvent(new KeyEvent(0, 21));
             }
             LogUtil.d("ouyang", "-------ACTION_UP----");
         }

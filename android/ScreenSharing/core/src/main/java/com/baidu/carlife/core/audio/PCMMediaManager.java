@@ -15,44 +15,44 @@ import com.baidu.carlife.core.connect.config.EncryptSetupManager;
 /* renamed from: com.baidu.carlife.core.audio.n */
 public class PCMMediaManager extends AudioSourceManagerBase {
     /* renamed from: a */
-    private static final String f3123a = (AudioUtil.AUDIO + PCMMediaManager.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + PCMMediaManager.class.getSimpleName());
     /* renamed from: b */
-    private PCMPackageHead f3124b = new PCMPackageHead();
+    private PCMPackageHead mPCMPackageHead = new PCMPackageHead();
     /* renamed from: c */
-    private byte[] f3125c = new byte[120];
+    private byte[] mByteData = new byte[120];
     /* renamed from: d */
-    private int f3126d;
+    private int mEncryptDataLength;
     /* renamed from: e */
     private boolean f3127e = true;
     /* renamed from: f */
-    private AudioTrack f3128f;
+    private AudioTrack mAudioTrack;
     /* renamed from: g */
-    private int f3129g;
+    private int mSampleRate;
     /* renamed from: h */
-    private int f3130h;
+    private int mChannel;
     /* renamed from: i */
-    private int f3131i;
+    private int mFormat;
     /* renamed from: j */
-    private C1184a f3132j = new C1184a();
+    private PCMMediaManagerHandler mManagerHandler = new PCMMediaManagerHandler(this);
     /* renamed from: k */
     private int f3133k;
     /* renamed from: l */
-    private Pair f3134l = new Pair();
+    private Pair mPair = new Pair();
     /* renamed from: m */
-    private ArrayAdd f3135m = new ArrayAdd();
+    private ArrayAdd mArrayAdd = new ArrayAdd();
     /* renamed from: n */
-    private byte[] f3136n;
+    private byte[] mEncryptData;
     /* renamed from: o */
-    private AESManager f3137o = new AESManager();
+    private AESManager mAESManager = new AESManager();
 
     /* compiled from: PCMMediaManager */
     /* renamed from: com.baidu.carlife.core.audio.n$a */
-    private class C1184a extends MsgBaseHandler {
+    private class PCMMediaManagerHandler extends MsgBaseHandler {
         /* renamed from: a */
-        final /* synthetic */ PCMMediaManager f3122a;
+        final /* synthetic */ PCMMediaManager mPCMMediaManager;
 
-        public C1184a(PCMMediaManager PCMMediaManager) {
-            this.f3122a = PCMMediaManager;
+        public PCMMediaManagerHandler(PCMMediaManager PCMMediaManager) {
+            this.mPCMMediaManager = PCMMediaManager;
         }
 
         public void handleMessage(Message msg) {
@@ -60,7 +60,7 @@ public class PCMMediaManager extends AudioSourceManagerBase {
                 case 1002:
                     AudioUtil.newInstance().initSR();
                     AudioUtil.newInstance().setMode();
-                    this.f3122a.f3127e = true;
+                    this.mPCMMediaManager.f3127e = true;
                     return;
                 default:
                     return;
@@ -76,109 +76,111 @@ public class PCMMediaManager extends AudioSourceManagerBase {
     public PCMMediaManager() {
         AudioUtil.newInstance();
         this.f3133k = 12;
-        MsgHandlerCenter.registerMessageHandler(this.f3132j);
+        MsgHandlerCenter.registerMessageHandler(this.mManagerHandler);
     }
 
     /* renamed from: a */
     public synchronized void send(int sampleRate, int channelConfig, int format) {
-        m4040h();
-        this.f3129g = sampleRate;
+        stopTrack();
+        this.mSampleRate = sampleRate;
         if (channelConfig == 1) {
-            this.f3130h = 4;
+            this.mChannel = 4;
         } else {
-            this.f3130h = 12;
+            this.mChannel = 12;
         }
         if (format == 8) {
-            this.f3131i = 3;
+            this.mFormat = 3;
         } else {
-            this.f3131i = 2;
+            this.mFormat = 2;
         }
         try {
-            this.f3128f = new AudioTrack(3, this.f3129g, channelConfig, 2, AudioTrack.getMinBufferSize(this.f3129g, this.f3130h, this.f3131i), 1);
-            if (this.f3128f != null) {
-                this.f3128f.play();
+            this.mAudioTrack = new AudioTrack(3, this.mSampleRate, channelConfig,
+                    2, AudioTrack.getMinBufferSize(this.mSampleRate, this.mChannel,
+                    this.mFormat), 1);
+            if (this.mAudioTrack != null) {
+                this.mAudioTrack.play();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            this.f3128f = null;
+            this.mAudioTrack = null;
         }
-        m4039b(sampleRate, channelConfig, format);
+        sendPCM(sampleRate, channelConfig, format);
     }
 
     /* renamed from: h */
-    private void m4040h() {
-        if (this.f3128f != null) {
-            this.f3128f.stop();
-            this.f3128f.release();
-            this.f3128f = null;
+    private void stopTrack() {
+        if (this.mAudioTrack != null) {
+            this.mAudioTrack.stop();
+            this.mAudioTrack.release();
+            this.mAudioTrack = null;
         }
     }
 
     /* renamed from: c */
     public synchronized void play() {
         ArbitrationModule.newInstance().musicAudioFocus();
-        LogUtil.d(f3123a, "PCMMedia play() is called");
-        this.f3124b.m4053c(CommonParams.bs);
-        this.f3124b.m4047a(0);
-        MediaChannelSend.newInstance().send(this.f3124b.m4048a(), this.f3124b.m4049b(), EnumAudioState.RESUME);
+        LogUtil.d(Tag, "PCMMedia play() is called");
+        this.mPCMPackageHead.m4053c(CommonParams.bs);
+        this.mPCMPackageHead.m4047a(0);
+        MediaChannelSend.newInstance().send(this.mPCMPackageHead.m4048a(), this.mPCMPackageHead.m4049b(), EnumAudioState.RESUME);
     }
 
     /* renamed from: a */
     public synchronized void send() {
-        LogUtil.d(f3123a, "stop() is called");
-        this.f3124b.m4053c(CommonParams.bq);
-        this.f3124b.m4047a(0);
-        MediaChannelSend.newInstance().send(this.f3124b.m4048a(), this.f3124b.m4049b(), EnumAudioState.STOP);
+        LogUtil.d(Tag, "stop() is called");
+        this.mPCMPackageHead.m4053c(CommonParams.bq);
+        this.mPCMPackageHead.m4047a(0);
+        MediaChannelSend.newInstance().send(this.mPCMPackageHead.m4048a(), this.mPCMPackageHead.m4049b(), EnumAudioState.STOP);
     }
 
     /* renamed from: b */
     public synchronized void pause() {
-        LogUtil.d(f3123a, "pause() is called");
-        this.f3124b.m4053c(CommonParams.br);
-        this.f3124b.m4047a(0);
-        MediaChannelSend.newInstance().send(this.f3124b.m4048a(), this.f3124b.m4049b(), EnumAudioState.PAUSE);
+        LogUtil.d(Tag, "pause() is called");
+        this.mPCMPackageHead.m4053c(CommonParams.br);
+        this.mPCMPackageHead.m4047a(0);
+        MediaChannelSend.newInstance().send(this.mPCMPackageHead.m4048a(), this.mPCMPackageHead.m4049b(), EnumAudioState.PAUSE);
     }
 
     /* renamed from: a */
     public synchronized void send(byte[] buffer, int size) {
         byte[] playBuf;
-        if (this.f3136n == null) {
-            this.f3136n = new byte[size];
+        if (this.mEncryptData == null) {
+            this.mEncryptData = new byte[size];
         }
-        if (this.f3136n.length < size) {
-            this.f3136n = new byte[size];
+        if (this.mEncryptData.length < size) {
+            this.mEncryptData = new byte[size];
         }
         if (AudioUtil.newInstance().isBlueToothMode() || !AudioUtil.getIs()) {
             playBuf = buffer;
         } else {
-            playBuf = this.f3136n;
+            playBuf = this.mEncryptData;
         }
-        if (this.f3128f != null && this.f3128f.getPlayState() == 3) {
-            this.f3128f.write(playBuf, 0, size);
+        if (this.mAudioTrack != null && this.mAudioTrack.getPlayState() == 3) {
+            this.mAudioTrack.write(playBuf, 0, size);
         }
         if (AudioUtil.getIs() && this.f3127e) {
-            m4039b(this.f3129g, this.f3130h, this.f3131i);
+            sendPCM(this.mSampleRate, this.mChannel, this.mFormat);
             this.f3127e = false;
         }
         byte[] sendData = buffer;
         int sendDataLen = size;
         if (EncryptSetupManager.newInstance().getFlag() && size > 0) {
-            sendData = this.f3137o.m4112a(buffer, size);
+            sendData = this.mAESManager.encrypt(buffer, size);
             if (sendData == null) {
-                LogUtil.e(f3123a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
             } else {
                 sendDataLen = sendData.length;
             }
         }
-        this.f3124b.m4053c(CommonParams.bu);
-        this.f3124b.m4047a(sendDataLen);
-        this.f3124b.m4052c();
-        this.f3135m.merge(this.f3124b.m4048a(), this.f3133k, sendData, sendDataLen, this.f3134l);
-        MediaChannelSend.newInstance().send(this.f3134l.getData(), this.f3134l.getSize(), EnumAudioState.NORMAL);
+        this.mPCMPackageHead.m4053c(CommonParams.bu);
+        this.mPCMPackageHead.m4047a(sendDataLen);
+        this.mPCMPackageHead.m4052c();
+        this.mArrayAdd.merge(this.mPCMPackageHead.m4048a(), this.f3133k, sendData, sendDataLen, this.mPair);
+        MediaChannelSend.newInstance().send(this.mPair.getData(), this.mPair.getSize(), EnumAudioState.NORMAL);
     }
 
     /* renamed from: b */
-    private void m4039b(int sampleRate, int channelConfig, int format) {
+    private void sendPCM(int sampleRate, int channelConfig, int format) {
         int revisedSampleRate;
         int revisedChannelConfig;
         int revisedFormat;
@@ -197,10 +199,10 @@ public class PCMMediaManager extends AudioSourceManagerBase {
         } else {
             revisedFormat = 16;
         }
-        this.f3124b.m4053c(CommonParams.bp);
-        this.f3126d = this.f3124b.m4046a(revisedSampleRate, revisedChannelConfig, revisedFormat, this.f3125c);
-        this.f3124b.m4047a(this.f3126d);
-        System.arraycopy(this.f3124b.m4048a(), 0, this.f3125c, 0, this.f3133k);
-        MediaChannelSend.newInstance().send(this.f3125c, this.f3133k + this.f3126d, EnumAudioState.INIT);
+        this.mPCMPackageHead.m4053c(CommonParams.bp);
+        this.mEncryptDataLength = this.mPCMPackageHead.encryptMusicLength(revisedSampleRate, revisedChannelConfig, revisedFormat, this.mByteData);
+        this.mPCMPackageHead.m4047a(this.mEncryptDataLength);
+        System.arraycopy(this.mPCMPackageHead.m4048a(), 0, this.mByteData, 0, this.f3133k);
+        MediaChannelSend.newInstance().send(this.mByteData, this.f3133k + this.mEncryptDataLength, EnumAudioState.INIT);
     }
 }

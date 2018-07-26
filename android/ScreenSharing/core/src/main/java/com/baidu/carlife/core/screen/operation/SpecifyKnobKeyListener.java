@@ -2,19 +2,20 @@ package com.baidu.carlife.core.screen.operation;
 
 import android.view.KeyEvent;
 import android.view.View;
+
 import com.baidu.carlife.core.LogUtil;
 
 /* compiled from: SpecifyKnobKeyListener */
 /* renamed from: com.baidu.carlife.core.screen.b.d */
 public class SpecifyKnobKeyListener extends KnobKeyListener {
     /* renamed from: d */
-    private View f3667d;
+    private View mNextView;
     /* renamed from: e */
-    private View f3668e;
+    private View mPreviousView;
 
     public SpecifyKnobKeyListener(View next, View previous) {
-        this.f3667d = next;
-        this.f3668e = previous;
+        this.mNextView = next;
+        this.mPreviousView = previous;
     }
 
     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -29,9 +30,9 @@ public class SpecifyKnobKeyListener extends KnobKeyListener {
         if (event.getAction() == 1) {
             View targetView;
             if (keyCode == KnobKeyListener.f3664a) {
-                targetView = this.f3667d;
+                targetView = this.mNextView;
             } else {
-                targetView = this.f3668e;
+                targetView = this.mPreviousView;
             }
             if (targetView != null) {
                 targetView.requestFocus();

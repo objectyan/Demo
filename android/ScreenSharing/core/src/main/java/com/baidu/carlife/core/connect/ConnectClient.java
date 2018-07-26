@@ -20,65 +20,65 @@ import com.baidu.carlife.core.MsgHandlerCenter;
 /* renamed from: com.baidu.carlife.core.connect.d */
 public class ConnectClient implements KeepClass {
     /* renamed from: a */
-    private static final String f3308a = "ConnectClient";
+    private static final String Tag = "ConnectClient";
     /* renamed from: b */
-    private static final String f3309b = "ConnectClientHandlerThread";
+    private static final String ConnectClientHandlerThreadTag = "ConnectClientHandlerThread";
     /* renamed from: l */
     private static ConnectClient sConnectClient = null;
     /* renamed from: c */
-    private Context f3311c = null;
+    private Context mContext = null;
     /* renamed from: d */
-    private ConnectServiceReceiver f3312d = null;
+    private ConnectServiceReceiver mServiceReceiver = null;
     /* renamed from: e */
-    private UsbConnectStateReceiver f3313e = null;
+    private UsbConnectStateReceiver mStateReceiver = null;
     /* renamed from: f */
-    private C1214a f3314f = null;
+    private ConnectClientHandler mClientHandler = null;
     /* renamed from: g */
-    private Messenger f3315g = null;
+    private Messenger mServiceMessenger = null;
     /* renamed from: h */
-    private Messenger f3316h = null;
+    private Messenger mClientMessenger = null;
     /* renamed from: i */
-    private boolean f3317i = true;
+    private boolean mUSBCableIsConn = true;
     /* renamed from: j */
-    private boolean f3318j = false;
+    private boolean mIS = false;
     /* renamed from: k */
-    private boolean f3319k = false;
+    private boolean mServiceIsConn = false;
     /* renamed from: m */
-    private ServiceConnection f3320m = new C12131(this);
+    private ServiceConnection mClientService = new ConnectClientService(this);
 
     /* compiled from: ConnectClient */
     /* renamed from: com.baidu.carlife.core.connect.d$1 */
-    class C12131 implements ServiceConnection {
+    class ConnectClientService implements ServiceConnection {
         /* renamed from: a */
-        final /* synthetic */ ConnectClient f3306a;
+        final /* synthetic */ ConnectClient mConnectClient;
 
-        C12131(ConnectClient this$0) {
-            this.f3306a = this$0;
+        ConnectClientService(ConnectClient this$0) {
+            this.mConnectClient = this$0;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            LogUtil.d(ConnectClient.f3308a, "onServiceConnected");
-            this.f3306a.f3319k = true;
-            this.f3306a.f3315g = new Messenger(service);
-            this.f3306a.m4223a(Message.obtain(null, CommonParams.eL));
+            LogUtil.d(ConnectClient.Tag, "onServiceConnected");
+            this.mConnectClient.mServiceIsConn = true;
+            this.mConnectClient.mServiceMessenger = new Messenger(service);
+            this.mConnectClient.sendMsgToService(Message.obtain(null, CommonParams.eL));
         }
 
         public void onServiceDisconnected(ComponentName name) {
-            LogUtil.d(ConnectClient.f3308a, "onServiceDisconnected");
-            this.f3306a.f3319k = false;
-            this.f3306a.f3315g = null;
+            LogUtil.d(ConnectClient.Tag, "onServiceDisconnected");
+            this.mConnectClient.mServiceIsConn = false;
+            this.mConnectClient.mServiceMessenger = null;
         }
     }
 
     /* compiled from: ConnectClient */
     /* renamed from: com.baidu.carlife.core.connect.d$a */
-    private class C1214a extends Handler {
+    private class ConnectClientHandler extends Handler {
         /* renamed from: a */
-        final /* synthetic */ ConnectClient f3307a;
+        final /* synthetic */ ConnectClient mConnectClient;
 
-        public C1214a(ConnectClient connectClient, Looper looper) {
-            this.f3307a = connectClient;
+        public ConnectClientHandler(ConnectClient connectClient, Looper looper) {
             super(looper);
+            this.mConnectClient = connectClient;
         }
 
         public void handleMessage(Message msg) {
@@ -86,26 +86,26 @@ public class ConnectClient implements KeepClass {
                 switch (msg.what) {
                     case 1031:
                         if (msg.arg1 == CommonParams.fe) {
-                            this.f3307a.f3317i = true;
-                            LogUtil.e(ConnectClient.f3308a, "USB Cable is connected!");
+                            this.mConnectClient.mUSBCableIsConn = true;
+                            LogUtil.e(ConnectClient.Tag, "USB Cable is connected!");
                             return;
                         } else if (msg.arg1 == CommonParams.ff) {
-                            this.f3307a.f3317i = false;
-                            LogUtil.e(ConnectClient.f3308a, "USB Cable is disconnected!");
-                            if (ConnectManager.newInstance().getType() == 2 && this.f3307a.f3318j) {
-                                this.f3307a.m4222a(false);
+                            this.mConnectClient.mUSBCableIsConn = false;
+                            LogUtil.e(ConnectClient.Tag, "USB Cable is disconnected!");
+                            if (ConnectManager.newInstance().getType() == 2 && this.mConnectClient.mIS) {
+                                this.mConnectClient.setIS(false);
                                 return;
                             }
                             return;
                         } else {
                             return;
                         }
-                    case CommonParams.fg /*1034*/:
+                    case 1034:
                         if (msg.arg1 == CommonParams.fh) {
-                            this.f3307a.m4215g();
+                            this.mConnectClient.bindConnectService();
                             return;
                         } else if (msg.arg1 == CommonParams.fi) {
-                            this.f3307a.m4216h();
+                            this.mConnectClient.unConnectService();
                             return;
                         } else {
                             return;
@@ -134,108 +134,108 @@ public class ConnectClient implements KeepClass {
     }
 
     /* renamed from: a */
-    public void m4221a(Context context) {
-        LogUtil.d(f3308a, "init");
-        this.f3311c = context;
-        HandlerThread handlerThread = new HandlerThread(f3309b);
+    public void init(Context context) {
+        LogUtil.d(Tag, "init");
+        this.mContext = context;
+        HandlerThread handlerThread = new HandlerThread(ConnectClientHandlerThreadTag);
         handlerThread.start();
-        this.f3314f = new C1214a(this, handlerThread.getLooper());
-        this.f3316h = new Messenger(this.f3314f);
-        this.f3312d = new ConnectServiceReceiver(context, this.f3314f);
-        this.f3313e = new UsbConnectStateReceiver(context, this.f3314f);
+        this.mClientHandler = new ConnectClientHandler(this, handlerThread.getLooper());
+        this.mClientMessenger = new Messenger(this.mClientHandler);
+        this.mServiceReceiver = new ConnectServiceReceiver(context, this.mClientHandler);
+        this.mStateReceiver = new UsbConnectStateReceiver(context, this.mClientHandler);
         try {
-            m4217i();
-            m4218j();
-            m4215g();
+            regConnectServiceReceiver();
+            regUsbConnectStateReceiver();
+            bindConnectService();
         } catch (Exception e) {
-            LogUtil.e(f3308a, "UsbConnectStateManager init fail");
+            LogUtil.e(Tag, "UsbConnectStateManager init fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: b */
-    public void m4224b() {
-        LogUtil.d(f3308a, "uninit");
+    public void uninit() {
+        LogUtil.d(Tag, "uninit");
         try {
-            m4219k();
-            m4220l();
-            m4216h();
+            unConnectServiceReceiver();
+            unUsbConnectStateReceiver();
+            unConnectService();
         } catch (Exception e) {
-            LogUtil.e(f3308a, "UsbConnectStateManager uninit fail");
+            LogUtil.e(Tag, "UsbConnectStateManager uninit fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: e */
-    private void m4213e() {
-        LogUtil.d(f3308a, "start ConnectService");
-        this.f3311c.startService(new Intent(this.f3311c, ConnectService.class));
+    private void startConnectService() {
+        LogUtil.d(Tag, "start ConnectService");
+        this.mContext.startService(new Intent(this.mContext, ConnectService.class));
     }
 
     /* renamed from: f */
-    private void m4214f() {
-        LogUtil.d(f3308a, "stop ConnectService");
-        this.f3311c.stopService(new Intent(this.f3311c, ConnectService.class));
+    private void stopConnectService() {
+        LogUtil.d(Tag, "stop ConnectService");
+        this.mContext.stopService(new Intent(this.mContext, ConnectService.class));
     }
 
     /* renamed from: g */
-    private void m4215g() {
-        LogUtil.d(f3308a, "bind ConnectService");
-        this.f3311c.bindService(new Intent(this.f3311c, ConnectService.class), this.f3320m, 1);
+    private void bindConnectService() {
+        LogUtil.d(Tag, "bind ConnectService");
+        this.mContext.bindService(new Intent(this.mContext, ConnectService.class), this.mClientService, Context.BIND_AUTO_CREATE);
     }
 
     /* renamed from: h */
-    private void m4216h() {
-        LogUtil.d(f3308a, "unbind ConnectService");
-        this.f3311c.unbindService(this.f3320m);
-        m4223a(Message.obtain(null, CommonParams.eM));
+    private void unConnectService() {
+        LogUtil.d(Tag, "unbind ConnectService");
+        this.mContext.unbindService(this.mClientService);
+        sendMsgToService(Message.obtain(null, CommonParams.eM));
     }
 
     /* renamed from: i */
-    private void m4217i() {
-        if (this.f3312d != null) {
-            this.f3312d.m4101a();
-            LogUtil.d(f3308a, "register ConnectServiceReceiver");
+    private void regConnectServiceReceiver() {
+        if (this.mServiceReceiver != null) {
+            this.mServiceReceiver.registerReceiver();
+            LogUtil.d(Tag, "register ConnectServiceReceiver");
         }
     }
 
     /* renamed from: j */
-    private void m4218j() {
-        if (this.f3313e != null) {
-            this.f3313e.m4103a();
-            LogUtil.d(f3308a, "register UsbConnectStateReceiver");
+    private void regUsbConnectStateReceiver() {
+        if (this.mStateReceiver != null) {
+            this.mStateReceiver.registerReceiver();
+            LogUtil.d(Tag, "register UsbConnectStateReceiver");
         }
     }
 
     /* renamed from: k */
-    private void m4219k() {
-        if (this.f3312d != null) {
-            this.f3312d.m4102b();
-            LogUtil.d(f3308a, "unregister ConnectServiceReceiver");
+    private void unConnectServiceReceiver() {
+        if (this.mServiceReceiver != null) {
+            this.mServiceReceiver.unregisterReceiver();
+            LogUtil.d(Tag, "unregister ConnectServiceReceiver");
         }
     }
 
     /* renamed from: l */
-    private void m4220l() {
-        if (this.f3313e != null) {
-            this.f3313e.m4104b();
-            LogUtil.d(f3308a, "unregister UsbConnectStateReceiver");
+    private void unUsbConnectStateReceiver() {
+        if (this.mStateReceiver != null) {
+            this.mStateReceiver.unregisterReceiver();
+            LogUtil.d(Tag, "unregister UsbConnectStateReceiver");
         }
     }
 
     /* renamed from: a */
-    public boolean m4223a(Message msg) {
-        LogUtil.d(f3308a, "Send Msg to Service, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
-        if (this.f3315g == null) {
-            LogUtil.e(f3308a, "mConnectService is null");
+    public boolean sendMsgToService(Message msg) {
+        LogUtil.d(Tag, "Send Msg to Service, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
+        if (this.mServiceMessenger == null) {
+            LogUtil.e(Tag, "mConnectService is null");
             return false;
-        } else if (this.f3316h == null) {
-            LogUtil.e(f3308a, "mConnectClient is null");
+        } else if (this.mClientMessenger == null) {
+            LogUtil.e(Tag, "mConnectClient is null");
             return false;
         } else {
             try {
-                msg.replyTo = this.f3316h;
-                this.f3315g.send(msg);
+                msg.replyTo = this.mClientMessenger;
+                this.mServiceMessenger.send(msg);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -245,23 +245,23 @@ public class ConnectClient implements KeepClass {
     }
 
     /* renamed from: a */
-    public synchronized void m4222a(boolean is) {
-        if (m4225c() && !is) {
-            this.f3318j = is;
+    public synchronized void setIS(boolean is) {
+        if (getIS() && !is) {
+            this.mIS = is;
             MsgHandlerCenter.dispatchMessage(1002);
-        } else if (!m4225c() && is) {
-            this.f3318j = is;
+        } else if (!getIS() && is) {
+            this.mIS = is;
             MsgHandlerCenter.dispatchMessage(1004);
         }
     }
 
     /* renamed from: c */
-    public boolean m4225c() {
-        return this.f3318j;
+    public boolean getIS() {
+        return this.mIS;
     }
 
     /* renamed from: d */
-    public boolean m4226d() {
-        return this.f3317i;
+    public boolean getUSBCableIsConn() {
+        return this.mUSBCableIsConn;
     }
 }

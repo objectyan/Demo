@@ -4,6 +4,7 @@ import android.os.SystemClock;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
 import com.baidu.carlife.core.screen.OnTouchListener;
 
 /* compiled from: CarlifeInstrumentation */
@@ -22,11 +23,11 @@ public class CarlifeInstrumentation {
     /* renamed from: f */
     private static final int f3674f = 0;
     /* renamed from: g */
-    private OnTouchListener f3675g;
+    private OnTouchListener mOnTouchListener;
 
     /* renamed from: a */
-    public void m4513a(OnTouchListener touchListener) {
-        this.f3675g = touchListener;
+    public void initOnTouchListener(OnTouchListener touchListener) {
+        this.mOnTouchListener = touchListener;
     }
 
     /* renamed from: a */
@@ -34,8 +35,8 @@ public class CarlifeInstrumentation {
         if ((event.getSource() & 2) == 0) {
             event.setSource(4098);
         }
-        if (this.f3675g != null) {
-            this.f3675g.mo1451a(event, true);
+        if (this.mOnTouchListener != null) {
+            this.mOnTouchListener.mo1451a(event, true);
         }
     }
 
@@ -72,8 +73,8 @@ public class CarlifeInstrumentation {
             downTime = eventTime;
         }
         KeyEvent newEvent = new KeyEvent(downTime, eventTime, action, code, repeatCount, metaState, deviceId, scancode, flags | 8, source);
-        if (this.f3675g != null) {
-            this.f3675g.mo1451a(newEvent, inTouchMode);
+        if (this.mOnTouchListener != null) {
+            this.mOnTouchListener.mo1451a(newEvent, inTouchMode);
         }
     }
 
@@ -100,10 +101,10 @@ public class CarlifeInstrumentation {
 
     /* renamed from: a */
     private void m4508a(int inputSource, int action, long when, float x, float y, float pressure) {
-        InputEvent event = MotionEvent.obtain(when, when, action, x, y, pressure, 1.0f, 0, 1.0f, 1.0f, 0, 0);
+        MotionEvent event = MotionEvent.obtain(when, when, action, x, y, pressure, 1.0f, 0, 1.0f, 1.0f, 0, 0);
         event.setSource(inputSource);
-        if (this.f3675g != null) {
-            this.f3675g.mo1451a(event, true);
+        if (this.mOnTouchListener != null) {
+            this.mOnTouchListener.mo1451a(event, true);
         }
     }
 

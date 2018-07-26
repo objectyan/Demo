@@ -1,15 +1,16 @@
 package com.baidu.carlife.core.connect;
 
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
+
 import com.baidu.carlife.core.LogUtil;
 
 /* compiled from: WifiP2pActionListener */
 /* renamed from: com.baidu.carlife.core.connect.i */
 public class WifiP2pActionListener {
     /* renamed from: a */
-    private static final String f3437a = "[WifiDirect]";
+    private static final String Tag = "[WifiDirect]";
     /* renamed from: i */
-    private static WifiP2pActionListener f3438i = null;
+    private static WifiP2pActionListener sP2pActionListener = null;
     /* renamed from: b */
     private ActionListener f3439b = new C1244g(this);
     /* renamed from: c */
@@ -19,47 +20,47 @@ public class WifiP2pActionListener {
     /* renamed from: e */
     private ActionListener f3442e = new C1245h(this);
     /* renamed from: f */
-    private ActionListener f3443f = new C1238a(this);
+    private ActionListener mAddedLocalServiceListener = new AddedLocalServiceListener(this);
     /* renamed from: g */
-    private ActionListener f3444g = new C1239b(this);
+    private ActionListener mAddServiceRequestListener = new AddServiceRequestListener(this);
     /* renamed from: h */
     private ActionListener f3445h = new C1243f(this);
 
     /* compiled from: WifiP2pActionListener */
     /* renamed from: com.baidu.carlife.core.connect.i$a */
-    class C1238a implements ActionListener {
+    class AddedLocalServiceListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiP2pActionListener f3427a;
+        final /* synthetic */ WifiP2pActionListener mWifiP2pActionListener;
 
-        C1238a(WifiP2pActionListener this$0) {
-            this.f3427a = this$0;
+        AddedLocalServiceListener(WifiP2pActionListener this$0) {
+            this.mWifiP2pActionListener = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": Added Local Service onSuccess");
+            LogUtil.d(WifiP2pActionListener.Tag, ": Added Local Service onSuccess");
         }
 
         public void onFailure(int error) {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": onFailure");
+            LogUtil.d(WifiP2pActionListener.Tag, ": onFailure");
         }
     }
 
     /* compiled from: WifiP2pActionListener */
     /* renamed from: com.baidu.carlife.core.connect.i$b */
-    class C1239b implements ActionListener {
+    class AddServiceRequestListener implements ActionListener {
         /* renamed from: a */
-        final /* synthetic */ WifiP2pActionListener f3428a;
+        final /* synthetic */ WifiP2pActionListener mWifiP2pActionListener;
 
-        C1239b(WifiP2pActionListener this$0) {
-            this.f3428a = this$0;
+        AddServiceRequestListener(WifiP2pActionListener this$0) {
+            this.mWifiP2pActionListener = this$0;
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": addServiceRequest onSuccess");
+            LogUtil.d(WifiP2pActionListener.Tag, ": addServiceRequest onSuccess");
         }
 
         public void onFailure(int arg0) {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": addServiceRequest onFailure");
+            LogUtil.d(WifiP2pActionListener.Tag, ": addServiceRequest onFailure");
         }
     }
 
@@ -115,12 +116,12 @@ public class WifiP2pActionListener {
 
         public void onSuccess() {
             if (this.f3433c) {
-                LogUtil.d(WifiP2pActionListener.f3437a, this.f3432b + " : onSuccess");
+                LogUtil.d(WifiP2pActionListener.Tag, this.f3432b + " : onSuccess");
             }
         }
 
         public void onFailure(int reason) {
-            LogUtil.d(WifiP2pActionListener.f3437a, this.f3432b + " : onFailure");
+            LogUtil.d(WifiP2pActionListener.Tag, this.f3432b + " : onFailure");
         }
     }
 
@@ -135,11 +136,11 @@ public class WifiP2pActionListener {
         }
 
         public void onSuccess() {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": Service discovery initiated onSuccess");
+            LogUtil.d(WifiP2pActionListener.Tag, ": Service discovery initiated onSuccess");
         }
 
         public void onFailure(int arg0) {
-            LogUtil.d(WifiP2pActionListener.f3437a, ": Service discovery initiated onFailure");
+            LogUtil.d(WifiP2pActionListener.Tag, ": Service discovery initiated onFailure");
         }
     }
 
@@ -182,14 +183,14 @@ public class WifiP2pActionListener {
 
     /* renamed from: a */
     public static WifiP2pActionListener m4306a() {
-        if (f3438i == null) {
+        if (sP2pActionListener == null) {
             synchronized (WifiP2pActionListener.class) {
-                if (f3438i == null) {
-                    f3438i = new WifiP2pActionListener();
+                if (sP2pActionListener == null) {
+                    sP2pActionListener = new WifiP2pActionListener();
                 }
             }
         }
-        return f3438i;
+        return sP2pActionListener;
     }
 
     /* renamed from: b */
@@ -214,12 +215,12 @@ public class WifiP2pActionListener {
 
     /* renamed from: f */
     public ActionListener m4312f() {
-        return this.f3443f;
+        return this.mAddedLocalServiceListener;
     }
 
     /* renamed from: g */
     public ActionListener m4313g() {
-        return this.f3444g;
+        return this.mAddServiceRequestListener;
     }
 
     /* renamed from: h */

@@ -6,13 +6,14 @@ import com.baidu.carlife.core.connect.config.EncryptSetupManager;
 import com.baidu.carlife.protobuf.CarlifeMusicInitProto.CarlifeMusicInit;
 import com.baidu.carlife.protobuf.CarlifeMusicInitProto.CarlifeMusicInit.Builder;
 import com.baidu.carlife.protobuf.CarlifeTTSInitProto.CarlifeTTSInit;
+
 import java.util.Arrays;
 
 /* compiled from: PCMPackageHead */
 /* renamed from: com.baidu.carlife.core.audio.o */
 public class PCMPackageHead {
     /* renamed from: a */
-    private static final String f3138a = (AudioUtil.AUDIO + PCMPackageHead.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + PCMPackageHead.class.getSimpleName());
     /* renamed from: b */
     private byte[] f3139b;
     /* renamed from: c */
@@ -20,7 +21,7 @@ public class PCMPackageHead {
     /* renamed from: d */
     private int f3141d;
     /* renamed from: e */
-    private AESManager f3142e = new AESManager();
+    private AESManager mAESManager = new AESManager();
 
     public PCMPackageHead() {
         AudioUtil.newInstance();
@@ -74,7 +75,7 @@ public class PCMPackageHead {
     }
 
     /* renamed from: a */
-    public int m4046a(int sampleRate, int channelConfig, int sampleFormat, byte[] byteData) {
+    public int encryptMusicLength(int sampleRate, int channelConfig, int sampleFormat, byte[] byteData) {
         Builder builder = CarlifeMusicInit.newBuilder();
         builder.setSampleRate(sampleRate);
         builder.setChannelConfig(channelConfig);
@@ -82,22 +83,22 @@ public class PCMPackageHead {
         byte[] initParameter = builder.build().toByteArray();
         byte[] encryptData = initParameter;
         if (EncryptSetupManager.newInstance().getFlag() && initParameter.length > 0) {
-            encryptData = this.f3142e.m4112a(initParameter, initParameter.length);
+            encryptData = this.mAESManager.encrypt(initParameter, initParameter.length);
             if (encryptData == null) {
-                LogUtil.e(f3138a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
                 return -1;
             }
         }
         System.arraycopy(encryptData, 0, byteData, this.f3140c, byteData.length > encryptData.length ? encryptData.length : byteData.length);
         if (encryptData.length > byteData.length) {
-            LogUtil.d(f3138a, "initParameter.length>byteData.length!!");
+            LogUtil.d(Tag, "initParameter.length>byteData.length!!");
         }
-        LogUtil.d(f3138a, "byteData:" + Arrays.toString(byteData));
+        LogUtil.d(Tag, "byteData:" + Arrays.toString(byteData));
         return encryptData.length;
     }
 
     /* renamed from: b */
-    public int m4050b(int sampleRate, int channelConfig, int sampleFormat, byte[] byteData) {
+    public int encryptTTSLength(int sampleRate, int channelConfig, int sampleFormat, byte[] byteData) {
         CarlifeTTSInit.Builder builder = CarlifeTTSInit.newBuilder();
         builder.setSampleRate(sampleRate);
         builder.setChannelConfig(channelConfig);
@@ -105,9 +106,9 @@ public class PCMPackageHead {
         byte[] initParamter = builder.build().toByteArray();
         byte[] encryptData = initParamter;
         if (EncryptSetupManager.newInstance().getFlag() && initParamter.length > 0) {
-            encryptData = this.f3142e.m4112a(initParamter, initParamter.length);
+            encryptData = this.mAESManager.encrypt(initParamter, initParamter.length);
             if (encryptData == null) {
-                LogUtil.e(f3138a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
                 return -1;
             }
         }

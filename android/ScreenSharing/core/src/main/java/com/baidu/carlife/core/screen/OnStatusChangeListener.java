@@ -10,13 +10,13 @@ public interface OnStatusChangeListener extends KeepClass {
     void mo1346a(int i, int i2);
 
     /* renamed from: a */
-    void mo1347a(Intent intent, int i);
+    void startActivity(Intent intent, int i);
 
     /* renamed from: o */
-    void mo1348o();
+    void onVehicleConnected();
 
     /* renamed from: p */
-    void mo1355p();
+    void onVehicleDisconnect();
 
     /* renamed from: q */
     boolean mo1356q();

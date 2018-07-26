@@ -1088,7 +1088,7 @@ public class C1977e {
         if (this.f6315n != null) {
             Builder builder = new Builder(this.f6315n).setSmallIcon(R.drawable.ic_launcher).setContentTitle(this.f6315n.getString(R.string.carlife_update_download_finish)).setContentText(this.f6315n.getString(R.string.carlife_update_click_to_install));
             Intent intent = new Intent("android.intent.action.VIEW");
-            intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+            intent.addFlags(268435456);
             intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.f6315n);
             stackBuilder.addParentStack(CarlifeActivity.class);

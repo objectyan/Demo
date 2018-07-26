@@ -7,5 +7,5 @@ import com.baidu.carlife.core.screen.presentation.DisplaySpec;
 /* renamed from: com.baidu.carlife.core.screen.k */
 public interface OnSurfaceListener extends KeepClass {
     /* renamed from: a */
-    void mo1453a(DisplaySpec displaySpec);
+    void bindServiceForDisplaySpec(DisplaySpec displaySpec);
 }

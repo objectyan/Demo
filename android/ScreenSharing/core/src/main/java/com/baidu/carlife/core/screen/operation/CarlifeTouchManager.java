@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 import android.view.MotionEvent;
+
 import com.baidu.carlife.core.MsgBaseHandler;
 import com.baidu.carlife.core.CarlifeScreenUtil;
 import com.baidu.carlife.core.CommonParams;
@@ -19,6 +20,7 @@ import com.baidu.carlife.protobuf.CarlifeCarHardKeyCodeProto.CarlifeCarHardKeyCo
 import com.baidu.carlife.protobuf.CarlifeTouchActionProto.CarlifeTouchAction;
 import com.baidu.carlife.protobuf.CarlifeTouchSinglePointProto.CarlifeTouchSinglePoint;
 import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.InetAddress;
@@ -42,39 +44,39 @@ public class CarlifeTouchManager {
     /* renamed from: f */
     public static final int f3684f = 305;
     /* renamed from: g */
-    private static final String f3685g = "CarlifeTouchManager";
+    private static final String Tag = "CarlifeTouchManager";
     /* renamed from: h */
-    private static final String f3686h = "TouchManagerHandlerThread";
+    private static final String TouchManagerHandlerThreadTag = "TouchManagerHandlerThread";
     /* renamed from: i */
-    private static final String f3687i = "127.0.0.1";
+    private static final String LOCAL_HOST = "127.0.0.1";
     /* renamed from: j */
     private static final int f3688j = 8270;
     /* renamed from: k */
     private static final int f3689k = 10000;
     /* renamed from: l */
-    private static CarlifeTouchManager f3690l = null;
+    private static CarlifeTouchManager sCarlifeTouchManager = null;
     /* renamed from: A */
-    private long f3691A = 0;
+    private long mElapsedRealtime = 0;
     /* renamed from: C */
     private boolean f3692C = true;
     /* renamed from: D */
     private boolean f3693D = false;
     /* renamed from: E */
-    private OnHardKeyCodeEventListener f3694E;
+    private OnHardKeyCodeEventListener mOnHardKeyCodeEventListener;
     /* renamed from: m */
-    private MsgBaseHandler f3695m;
+    private MsgBaseHandler mMsgBaseHandler;
     /* renamed from: n */
-    private CarlifeInstrumentation f3696n;
+    private CarlifeInstrumentation mCarlifeInstrumentation;
     /* renamed from: o */
-    private Instrumentation f3697o = null;
+    private Instrumentation mInstrumentation = null;
     /* renamed from: p */
-    private Socket f3698p = null;
+    private Socket mSocket = null;
     /* renamed from: q */
-    private InetAddress f3699q = null;
+    private InetAddress mInetAddress = null;
     /* renamed from: r */
-    private DataInputStream f3700r = null;
+    private DataInputStream mDataInputStream = null;
     /* renamed from: s */
-    private DataOutputStream f3701s = null;
+    private DataOutputStream mDataOutputStream = null;
     /* renamed from: t */
     private int f3702t = 0;
     /* renamed from: u */
@@ -92,23 +94,23 @@ public class CarlifeTouchManager {
 
     /* compiled from: CarlifeTouchManager */
     /* renamed from: com.baidu.carlife.core.screen.b.f$1 */
-    class C12741 extends Thread {
+    class CarlifeTouchManagerThread extends Thread {
         /* renamed from: a */
-        final /* synthetic */ CarlifeTouchManager f3676a;
+        final /* synthetic */ CarlifeTouchManager mCarlifeTouchManager;
 
-        C12741(CarlifeTouchManager this$0) {
-            this.f3676a = this$0;
+        CarlifeTouchManagerThread(CarlifeTouchManager this$0) {
+            this.mCarlifeTouchManager = this$0;
         }
 
         public void run() {
             try {
-                this.f3676a.f3699q = InetAddress.getByName(CarlifeTouchManager.f3687i);
-                this.f3676a.f3698p = new Socket(this.f3676a.f3699q, CarlifeTouchManager.f3688j);
-                this.f3676a.f3700r = new DataInputStream(this.f3676a.f3698p.getInputStream());
-                this.f3676a.f3701s = new DataOutputStream(this.f3676a.f3698p.getOutputStream());
+                this.mCarlifeTouchManager.mInetAddress = InetAddress.getByName(CarlifeTouchManager.LOCAL_HOST);
+                this.mCarlifeTouchManager.mSocket = new Socket(this.mCarlifeTouchManager.mInetAddress, CarlifeTouchManager.f3688j);
+                this.mCarlifeTouchManager.mDataInputStream = new DataInputStream(this.mCarlifeTouchManager.mSocket.getInputStream());
+                this.mCarlifeTouchManager.mDataOutputStream = new DataOutputStream(this.mCarlifeTouchManager.mSocket.getOutputStream());
             } catch (Exception e) {
-                LogUtil.e(CarlifeTouchManager.f3685g, "initLocalSocket fail in thread");
-                this.f3676a.f3698p = null;
+                LogUtil.e(CarlifeTouchManager.Tag, "initLocalSocket fail in thread");
+                this.mCarlifeTouchManager.mSocket = null;
                 e.printStackTrace();
             }
         }
@@ -116,203 +118,194 @@ public class CarlifeTouchManager {
 
     /* compiled from: CarlifeTouchManager */
     /* renamed from: com.baidu.carlife.core.screen.b.f$a */
-    private class C1275a extends MsgBaseHandler {
+    private class CarlifeTouchManagerHandler extends MsgBaseHandler {
         /* renamed from: a */
-        final /* synthetic */ CarlifeTouchManager f3677a;
+        final /* synthetic */ CarlifeTouchManager mCarlifeTouchManager;
 
-        public C1275a(CarlifeTouchManager carlifeTouchManager, Looper looper) {
-            this.f3677a = carlifeTouchManager;
+        public CarlifeTouchManagerHandler(CarlifeTouchManager carlifeTouchManager, Looper looper) {
             super(looper);
+            this.mCarlifeTouchManager = carlifeTouchManager;
         }
 
         public void handleMessage(Message msg) {
-            LightnessControlManager.m4481b().m4501i();
-            if (this.f3677a.m4533x()) {
-                CarlifeCmdMessage carlifeMsg;
+            LightnessControlManager.newInstance().vehicleTouchmanage();
+            if (this.mCarlifeTouchManager.m4533x()) {
+                CarlifeCmdMessage carlifeMsg = (CarlifeCmdMessage) msg.obj;
                 int tx;
                 int ty;
                 CarlifeTouchSinglePoint singlePoint;
                 switch (msg.what) {
-                    case CommonParams.bE /*425985*/:
-                        carlifeMsg = msg.obj;
+                    case 425985:
                         if (carlifeMsg != null) {
                             try {
                                 CarlifeTouchAction touchAction = CarlifeTouchAction.parseFrom(carlifeMsg.getData());
-                                tx = (touchAction.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (touchAction.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION: " + ("x = " + tx + ", y = " + ty + ", action = " + touchAction.getAction()));
+                                tx = (touchAction.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (touchAction.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION: " + ("x = " + tx + ", y = " + ty + ", action = " + touchAction.getAction()));
                                 if (touchAction.getAction() == 2) {
-                                    this.f3677a.f3691A = SystemClock.elapsedRealtime();
-                                    LogUtil.d(CarlifeTouchManager.f3685g, "preTimeMove = " + this.f3677a.f3708z + ", curTimeMove = " + this.f3677a.f3691A);
-                                    if (this.f3677a.f3691A - this.f3677a.f3708z < CarlifeTouchManager.f3678B) {
-                                        LogUtil.d(CarlifeTouchManager.f3685g, "move event is too much, ignore");
+                                    this.mCarlifeTouchManager.mElapsedRealtime = SystemClock.elapsedRealtime();
+                                    LogUtil.d(CarlifeTouchManager.Tag, "preTimeMove = " + this.mCarlifeTouchManager.f3708z + ", curTimeMove = " + this.mCarlifeTouchManager.mElapsedRealtime);
+                                    if (this.mCarlifeTouchManager.mElapsedRealtime - this.mCarlifeTouchManager.f3708z < CarlifeTouchManager.f3678B) {
+                                        LogUtil.d(CarlifeTouchManager.Tag, "move event is too much, ignore");
                                         return;
                                     }
-                                    this.f3677a.f3708z = this.f3677a.f3691A;
+                                    this.mCarlifeTouchManager.f3708z = this.mCarlifeTouchManager.mElapsedRealtime;
                                 }
-                                this.f3677a.m4536a(tx, ty, touchAction.getAction());
+                                this.mCarlifeTouchManager.m4536a(tx, ty, touchAction.getAction());
                                 return;
                             } catch (InvalidProtocolBufferException e) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION Error");
                                 e.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bF /*425986*/:
-                        carlifeMsg = msg.obj;
+                    case 425986:
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4535a(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_DOWN: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4535a(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e2) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_DOWN Error");
                                 e2.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_DOWN CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bG /*425987*/:
-                        carlifeMsg = msg.obj;
+                    case 425987:
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4543b(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_UP: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4543b(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e22) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_UP Error");
                                 e22.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_UP CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bH /*425988*/:
-                        this.f3677a.f3691A = SystemClock.elapsedRealtime();
-                        LogUtil.d(CarlifeTouchManager.f3685g, "preTimeMove = " + this.f3677a.f3708z + ", curTimeMove = " + this.f3677a.f3691A);
-                        if (this.f3677a.f3691A - this.f3677a.f3708z < CarlifeTouchManager.f3678B) {
-                            LogUtil.d(CarlifeTouchManager.f3685g, "move event is too much, ignore");
+                    case 425988:
+                        this.mCarlifeTouchManager.mElapsedRealtime = SystemClock.elapsedRealtime();
+                        LogUtil.d(CarlifeTouchManager.Tag, "preTimeMove = " + this.mCarlifeTouchManager.f3708z + ", curTimeMove = " + this.mCarlifeTouchManager.mElapsedRealtime);
+                        if (this.mCarlifeTouchManager.mElapsedRealtime - this.mCarlifeTouchManager.f3708z < CarlifeTouchManager.f3678B) {
+                            LogUtil.d(CarlifeTouchManager.Tag, "move event is too much, ignore");
                             return;
                         }
-                        this.f3677a.f3708z = this.f3677a.f3691A;
-                        carlifeMsg = msg.obj;
+                        this.mCarlifeTouchManager.f3708z = this.mCarlifeTouchManager.mElapsedRealtime;
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4547c(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_MOVE: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4547c(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e222) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_MOVE Error");
                                 e222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_ACTION_MOVE CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bI /*425989*/:
-                        carlifeMsg = msg.obj;
+                    case 425989:
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4550d(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_SINGLE_CLICK: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4550d(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e2222) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_SINGLE_CLICK Error");
                                 e2222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_SINGLE_CLICK CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bJ /*425990*/:
-                        carlifeMsg = msg.obj;
+                    case 425990:
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4556f(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_DOUBLE_CLICK: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4556f(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e22222) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_DOUBLE_CLICK Error");
                                 e22222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_DOUBLE_CLICK CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bK /*425991*/:
-                        carlifeMsg = msg.obj;
+                    case 425991:
                         if (carlifeMsg != null) {
                             try {
                                 singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS: " + ("x = " + tx + ", y = " + ty));
-                                this.f3677a.m4558g(tx, ty);
+                                tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_LONG_PRESS: " + ("x = " + tx + ", y = " + ty));
+                                this.mCarlifeTouchManager.m4558g(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e222222) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_LONG_PRESS Error");
                                 e222222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_CMD_TOUCH_LONG_PRESS CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bL /*425992*/:
-                        carlifeMsg = msg.obj;
+                    case 425992:
                         if (carlifeMsg != null) {
                             try {
                                 int code = CarlifeCarHardKeyCode.parseFrom(carlifeMsg.getData()).getKeycode();
-                                LogUtil.d(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE: " + ("keycode = " + code));
-                                this.f3677a.m4555f(code);
+                                LogUtil.d(CarlifeTouchManager.Tag, "MSG_TOUCH_CAR_HARD_KEY_CODE: " + ("keycode = " + code));
+                                this.mCarlifeTouchManager.onHardKeyCodeEvent(code);
                                 return;
                             } catch (InvalidProtocolBufferException e2222222) {
-                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE Error");
+                                LogUtil.e(CarlifeTouchManager.Tag, "MSG_TOUCH_CAR_HARD_KEY_CODE Error");
                                 e2222222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.Tag, "MSG_TOUCH_CAR_HARD_KEY_CODE CarlifeCmdMessage is null");
                         return;
-                    case CommonParams.bN /*425994*/:
-                        if (this.f3677a.f3692C) {
-                            carlifeMsg = msg.obj;
+                    case 425994:
+                        if (this.mCarlifeTouchManager.f3692C) {
                             if (carlifeMsg != null) {
                                 try {
                                     singlePoint = CarlifeTouchSinglePoint.parseFrom(carlifeMsg.getData());
-                                    tx = (singlePoint.getX() * this.f3677a.f3705w) / this.f3677a.f3703u;
-                                    ty = (singlePoint.getY() * this.f3677a.f3706x) / this.f3677a.f3704v;
-                                    LogUtil.d(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN: " + ("x = " + tx + ", y = " + ty));
-                                    LogUtil.m4440c(CarlifeTouchManager.f3685g, "ty = " + ty + ", phoneHeight = " + CarlifeScreenUtil.m4331a().m4355l() + ", avaibleHeight = " + (CarlifeScreenUtil.m4331a().m4355l() - this.f3677a.f3707y));
-                                    if (ty > CarlifeScreenUtil.m4331a().m4355l() - this.f3677a.f3707y) {
-                                        this.f3677a.m4553e(tx, ty);
+                                    tx = (singlePoint.getX() * this.mCarlifeTouchManager.f3705w) / this.mCarlifeTouchManager.f3703u;
+                                    ty = (singlePoint.getY() * this.mCarlifeTouchManager.f3706x) / this.mCarlifeTouchManager.f3704v;
+                                    LogUtil.d(CarlifeTouchManager.Tag, "MSG_TOUCH_UI_ACTION_BEGIN: " + ("x = " + tx + ", y = " + ty));
+                                    LogUtil.m4440c(CarlifeTouchManager.Tag, "ty = " + ty + ", phoneHeight = " + CarlifeScreenUtil.m4331a().m4355l() + ", avaibleHeight = " + (CarlifeScreenUtil.m4331a().m4355l() - this.mCarlifeTouchManager.f3707y));
+                                    if (ty > CarlifeScreenUtil.m4331a().m4355l() - this.mCarlifeTouchManager.f3707y) {
+                                        this.mCarlifeTouchManager.m4553e(tx, ty);
                                         return;
                                     }
                                     return;
                                 } catch (InvalidProtocolBufferException e22222222) {
-                                    LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN Error");
+                                    LogUtil.e(CarlifeTouchManager.Tag, "MSG_TOUCH_UI_ACTION_BEGIN Error");
                                     e22222222.printStackTrace();
                                     return;
                                 }
                             }
-                            LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN CarlifeCmdMessage is null");
+                            LogUtil.e(CarlifeTouchManager.Tag, "MSG_TOUCH_UI_ACTION_BEGIN CarlifeCmdMessage is null");
                             return;
                         }
                         return;
@@ -323,32 +316,32 @@ public class CarlifeTouchManager {
         }
 
         public void careAbout() {
-            addMsg(CommonParams.bE);
-            addMsg(CommonParams.bF);
-            addMsg(CommonParams.bG);
-            addMsg(CommonParams.bH);
-            addMsg(CommonParams.bI);
-            addMsg(CommonParams.bJ);
-            addMsg(CommonParams.bK);
-            addMsg(CommonParams.bL);
+            addMsg(425985);
+            addMsg(425986);
+            addMsg(425987);
+            addMsg(425988);
+            addMsg(425989);
+            addMsg(425990);
+            addMsg(425991);
+            addMsg(425992);
         }
     }
 
     /* renamed from: a */
-    public void m4538a(OnHardKeyCodeEventListener listener) {
-        this.f3694E = listener;
+    public void initOnHardKeyCodeEventListener(OnHardKeyCodeEventListener listener) {
+        this.mOnHardKeyCodeEventListener = listener;
     }
 
     /* renamed from: a */
-    public static CarlifeTouchManager m4515a() {
-        if (f3690l == null) {
+    public static CarlifeTouchManager newInstance() {
+        if (sCarlifeTouchManager == null) {
             synchronized (CarlifeTouchManager.class) {
-                if (f3690l == null) {
-                    f3690l = new CarlifeTouchManager();
+                if (sCarlifeTouchManager == null) {
+                    sCarlifeTouchManager = new CarlifeTouchManager();
                 }
             }
         }
-        return f3690l;
+        return sCarlifeTouchManager;
     }
 
     private CarlifeTouchManager() {
@@ -367,56 +360,56 @@ public class CarlifeTouchManager {
             return;
         }
         this.f3693D = true;
-        this.f3694E = listener;
+        this.mOnHardKeyCodeEventListener = listener;
         this.f3707y = bottomBarHeight;
-        HandlerThread handlerThread = new HandlerThread(f3686h);
+        HandlerThread handlerThread = new HandlerThread(TouchManagerHandlerThreadTag);
         handlerThread.start();
-        this.f3695m = new C1275a(this, handlerThread.getLooper());
-        MsgHandlerCenter.registerMessageHandler(this.f3695m);
+        this.mMsgBaseHandler = new CarlifeTouchManagerHandler(this, handlerThread.getLooper());
+        MsgHandlerCenter.registerMessageHandler(this.mMsgBaseHandler);
         this.f3705w = CarlifeScreenUtil.m4331a().m4351h();
         this.f3706x = CarlifeScreenUtil.m4331a().m4352i();
-        this.f3697o = new Instrumentation();
-        this.f3696n = new CarlifeInstrumentation();
+        this.mInstrumentation = new Instrumentation();
+        this.mCarlifeInstrumentation = new CarlifeInstrumentation();
     }
 
     /* renamed from: b */
-    public void m4541b() {
-        LogUtil.d(f3685g, "iniLocalSocket");
+    public void iniLocalSocket() {
+        LogUtil.d(Tag, "iniLocalSocket");
         try {
-            new C12741(this).start();
+            new CarlifeTouchManagerThread(this).start();
         } catch (Exception e) {
-            LogUtil.e(f3685g, "initLocalSocket fail");
-            this.f3698p = null;
+            LogUtil.e(Tag, "initLocalSocket fail");
+            this.mSocket = null;
             e.printStackTrace();
         }
     }
 
     /* renamed from: c */
-    public void m4545c() {
-        LogUtil.d(f3685g, "uniniLocalSocket");
+    public void uniniLocalSocket() {
+        LogUtil.d(Tag, "uniniLocalSocket");
         try {
-            this.f3700r.close();
+            this.mDataInputStream.close();
         } catch (Exception e) {
-            LogUtil.e(f3685g, "mReader close fail");
+            LogUtil.e(Tag, "mReader close fail");
             e.printStackTrace();
         } finally {
-            this.f3700r = null;
+            this.mDataInputStream = null;
         }
         try {
-            this.f3701s.close();
+            this.mDataOutputStream.close();
         } catch (Exception e2) {
-            LogUtil.e(f3685g, "mWriter close fail");
+            LogUtil.e(Tag, "mWriter close fail");
             e2.printStackTrace();
         } finally {
-            this.f3701s = null;
+            this.mDataOutputStream = null;
         }
         try {
-            this.f3698p.close();
+            this.mSocket.close();
         } catch (Exception e22) {
-            LogUtil.e(f3685g, "mSocket close fail");
+            LogUtil.e(Tag, "mSocket close fail");
             e22.printStackTrace();
         } finally {
-            this.f3698p = null;
+            this.mSocket = null;
         }
     }
 
@@ -479,23 +472,23 @@ public class CarlifeTouchManager {
     }
 
     /* renamed from: b */
-    private void m4523b(int x, int y, int action) {
+    private void writeToLocalSocket(int x, int y, int action) {
         try {
-            LogUtil.d(f3685g, "Write to LocalSocket");
-            this.f3701s.writeInt(x);
-            this.f3701s.writeInt(y);
-            this.f3701s.writeInt(action);
+            LogUtil.d(Tag, "Write to LocalSocket");
+            this.mDataOutputStream.writeInt(x);
+            this.mDataOutputStream.writeInt(y);
+            this.mDataOutputStream.writeInt(action);
         } catch (Exception e) {
-            LogUtil.e(f3685g, "Write to LocalSocket Failed");
+            LogUtil.e(Tag, "Write to LocalSocket Failed");
             e.printStackTrace();
             try {
                 if (this.f3702t % 20 == 0) {
-                    LogUtil.e(f3685g, "cntShowToast: " + this.f3702t);
+                    LogUtil.e(Tag, "cntShowToast: " + this.f3702t);
                     MsgHandlerCenter.dispatchMessage((int) CommonParams.fl);
                 }
                 this.f3702t++;
             } catch (Exception ex) {
-                LogUtil.e(f3685g, "Write to LocalSocket Failed 1");
+                LogUtil.e(Tag, "Write to LocalSocket Failed 1");
                 ex.printStackTrace();
             }
         }
@@ -518,14 +511,14 @@ public class CarlifeTouchManager {
             long time = SystemClock.uptimeMillis();
             MotionEvent event = MotionEvent.obtain(time, time, 0, (float) x, (float) y, 0);
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4512a(event);
+                this.mCarlifeInstrumentation.m4512a(event);
             } else {
-                this.f3697o.sendPointerSync(event);
+                this.mInstrumentation.sendPointerSync(event);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 0);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 0);
         }
     }
 
@@ -535,14 +528,14 @@ public class CarlifeTouchManager {
             long time = SystemClock.uptimeMillis();
             MotionEvent event = MotionEvent.obtain(time, time, 1, (float) x, (float) y, 0);
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4512a(event);
+                this.mCarlifeInstrumentation.m4512a(event);
             } else {
-                this.f3697o.sendPointerSync(event);
+                this.mInstrumentation.sendPointerSync(event);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 1);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 1);
         }
     }
 
@@ -552,14 +545,14 @@ public class CarlifeTouchManager {
             long time = SystemClock.uptimeMillis();
             MotionEvent event = MotionEvent.obtain(time, time, 2, (float) x, (float) y, 0);
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4512a(event);
+                this.mCarlifeInstrumentation.m4512a(event);
             } else {
-                this.f3697o.sendPointerSync(event);
+                this.mInstrumentation.sendPointerSync(event);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 2);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 2);
         }
     }
 
@@ -573,17 +566,17 @@ public class CarlifeTouchManager {
             if (CarlifeConfig.m4065a()) {
                 event1.setSource(4098);
                 event2.setSource(4098);
-                this.f3696n.m4512a(event1);
-                this.f3696n.m4512a(event2);
+                this.mCarlifeInstrumentation.m4512a(event1);
+                this.mCarlifeInstrumentation.m4512a(event2);
                 return;
             }
-            this.f3697o.sendPointerSync(event1);
-            this.f3697o.sendPointerSync(event2);
+            this.mInstrumentation.sendPointerSync(event1);
+            this.mInstrumentation.sendPointerSync(event2);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 0);
-            m4523b(x, y, 1);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 0);
+            writeToLocalSocket(x, y, 1);
         }
     }
 
@@ -597,12 +590,12 @@ public class CarlifeTouchManager {
             if (CarlifeConfig.m4065a()) {
                 event1.setSource(4098);
                 event2.setSource(4098);
-                this.f3696n.m4512a(event1);
-                this.f3696n.m4512a(event2);
+                this.mCarlifeInstrumentation.m4512a(event1);
+                this.mCarlifeInstrumentation.m4512a(event2);
                 return;
             }
-            this.f3697o.sendPointerSync(event1);
-            this.f3697o.sendPointerSync(event2);
+            this.mInstrumentation.sendPointerSync(event1);
+            this.mInstrumentation.sendPointerSync(event2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -618,17 +611,17 @@ public class CarlifeTouchManager {
             if (CarlifeConfig.m4065a()) {
                 event1.setSource(4098);
                 event2.setSource(4098);
-                this.f3696n.m4512a(event1);
-                this.f3696n.m4512a(event2);
+                this.mCarlifeInstrumentation.m4512a(event1);
+                this.mCarlifeInstrumentation.m4512a(event2);
                 return;
             }
-            this.f3697o.sendPointerSync(event1);
-            this.f3697o.sendPointerSync(event2);
+            this.mInstrumentation.sendPointerSync(event1);
+            this.mInstrumentation.sendPointerSync(event2);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 0);
-            m4523b(x, y, 1);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 0);
+            writeToLocalSocket(x, y, 1);
         }
     }
 
@@ -646,251 +639,251 @@ public class CarlifeTouchManager {
             long time5 = time1 + 700;
             MotionEvent event5 = MotionEvent.obtain(time5, time5, 2, (float) x, (float) y, 0);
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4509a((float) x, (float) y);
+                this.mCarlifeInstrumentation.m4509a((float) x, (float) y);
                 return;
             }
-            this.f3697o.sendPointerSync(event1);
-            this.f3697o.sendPointerSync(event2);
-            this.f3697o.sendPointerSync(event3);
-            this.f3697o.sendPointerSync(event4);
-            this.f3697o.sendPointerSync(event5);
+            this.mInstrumentation.sendPointerSync(event1);
+            this.mInstrumentation.sendPointerSync(event2);
+            this.mInstrumentation.sendPointerSync(event3);
+            this.mInstrumentation.sendPointerSync(event4);
+            this.mInstrumentation.sendPointerSync(event5);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "Please Enter into Carlife App!");
-            m4523b(x, y, 0);
-            m4523b(x, y, 2);
-            m4523b(x, y, 2);
-            m4523b(x, y, 2);
-            m4523b(x, y, 2);
+            LogUtil.e(Tag, "Please Enter into Carlife App!");
+            writeToLocalSocket(x, y, 0);
+            writeToLocalSocket(x, y, 2);
+            writeToLocalSocket(x, y, 2);
+            writeToLocalSocket(x, y, 2);
+            writeToLocalSocket(x, y, 2);
         }
     }
 
     /* renamed from: i */
-    public void m4560i() {
+    public void onKeyBackEvent() {
         try {
-            LogUtil.e(f3685g, "onKeyBackEvent keycode=4");
+            LogUtil.e(Tag, "onKeyBackEvent keycode=4");
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(4);
+                this.mCarlifeInstrumentation.m4510a(4);
             } else {
-                this.f3697o.sendKeyDownUpSync(4);
+                this.mInstrumentation.sendKeyDownUpSync(4);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeyBackEvent get execption!");
+            LogUtil.e(Tag, "onKeyBackEvent get execption!");
         }
     }
 
     /* renamed from: j */
-    public void m4561j() {
+    public void onKeySelectorRightEvent22() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(22);
+                this.mCarlifeInstrumentation.m4510a(22);
             } else {
-                this.f3697o.sendKeyDownUpSync(22);
+                this.mInstrumentation.sendKeyDownUpSync(22);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightEvent get execption!");
         }
     }
 
     /* renamed from: k */
-    public void m4562k() {
+    public void onKeySelectorRightEvent21() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(21);
+                this.mCarlifeInstrumentation.m4510a(21);
             } else {
-                this.f3697o.sendKeyDownUpSync(21);
+                this.mInstrumentation.sendKeyDownUpSync(21);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightEvent get execption!");
         }
     }
 
     /* renamed from: l */
-    public void m4563l() {
+    public void onKeySelectorUpEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(19);
+                this.mCarlifeInstrumentation.m4510a(19);
             } else {
-                this.f3697o.sendKeyDownUpSync(19);
+                this.mInstrumentation.sendKeyDownUpSync(19);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorUpEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorUpEvent get execption!");
         }
     }
 
     /* renamed from: m */
-    public void m4564m() {
+    public void onKeySelectorRightDownEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(305);
+                this.mCarlifeInstrumentation.m4510a(305);
             } else {
-                this.f3697o.sendKeyDownUpSync(305);
+                this.mInstrumentation.sendKeyDownUpSync(305);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightDownEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightDownEvent get execption!");
         }
     }
 
     /* renamed from: n */
-    public void m4565n() {
+    public void sendKeyDownUpSync() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(303);
+                this.mCarlifeInstrumentation.m4510a(303);
             } else {
-                this.f3697o.sendKeyDownUpSync(303);
+                this.mInstrumentation.sendKeyDownUpSync(303);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorLeftDownEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorLeftDownEvent get execption!");
         }
     }
 
     /* renamed from: o */
-    public void m4566o() {
+    public void onKeySelectorRightUpEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(304);
+                this.mCarlifeInstrumentation.m4510a(304);
             } else {
-                this.f3697o.sendKeyDownUpSync(304);
+                this.mInstrumentation.sendKeyDownUpSync(304);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightUpEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightUpEvent get execption!");
         }
     }
 
     /* renamed from: p */
-    public void m4567p() {
+    public void onKeySelectorLeftUpEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(302);
+                this.mCarlifeInstrumentation.m4510a(302);
             } else {
-                this.f3697o.sendKeyDownUpSync(302);
+                this.mInstrumentation.sendKeyDownUpSync(302);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorLeftUpEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorLeftUpEvent get execption!");
         }
     }
 
     /* renamed from: q */
-    public void m4568q() {
+    public void onKeySelectorDownEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(20);
+                this.mCarlifeInstrumentation.m4510a(20);
             } else {
-                this.f3697o.sendKeyDownUpSync(20);
+                this.mInstrumentation.sendKeyDownUpSync(20);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorDownEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorDownEvent get execption!");
         }
     }
 
     /* renamed from: r */
-    public void m4569r() {
+    public void onKeyOkEvent() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(23);
+                this.mCarlifeInstrumentation.m4510a(23);
             } else {
-                this.f3697o.sendKeyDownUpSync(23);
+                this.mInstrumentation.sendKeyDownUpSync(23);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeyOkEvent get execption!");
+            LogUtil.e(Tag, "onKeyOkEvent get execption!");
         }
     }
 
     /* renamed from: s */
-    public void m4570s() {
+    public void onKeySelectorRightEvent300() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(300);
+                this.mCarlifeInstrumentation.m4510a(300);
             } else {
-                this.f3697o.sendKeyDownUpSync(300);
+                this.mInstrumentation.sendKeyDownUpSync(300);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightEvent get execption!");
         }
     }
 
     /* renamed from: t */
-    public void m4571t() {
+    public void onKeySelectorRightEvent301() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(301);
+                this.mCarlifeInstrumentation.m4510a(301);
             } else {
-                this.f3697o.sendKeyDownUpSync(301);
+                this.mInstrumentation.sendKeyDownUpSync(301);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(Tag, "onKeySelectorRightEvent get execption!");
         }
     }
 
     /* renamed from: u */
-    public void m4572u() {
+    public void onKeyClear() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(28);
+                this.mCarlifeInstrumentation.m4510a(28);
             } else {
-                this.f3697o.sendKeyDownUpSync(28);
+                this.mInstrumentation.sendKeyDownUpSync(28);
             }
         } catch (Exception e) {
-            LogUtil.e(f3685g, "onKeyClear get execption:" + e.toString());
+            LogUtil.e(Tag, "onKeyClear get execption:" + e.toString());
         }
     }
 
     /* renamed from: v */
-    public void m4573v() {
+    public void onKeyDelete67() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(67);
+                this.mCarlifeInstrumentation.m4510a(67);
             } else {
-                this.f3697o.sendKeyDownUpSync(67);
+                this.mInstrumentation.sendKeyDownUpSync(67);
             }
         } catch (Exception e) {
-            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(Tag, "onKeyDelete get execption:" + e.toString());
         }
     }
 
     /* renamed from: e */
-    public void m4552e(int num) {
+    public void onKeyDeleteByCode(int num) {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(num + 7);
+                this.mCarlifeInstrumentation.m4510a(num + 7);
             } else {
-                this.f3697o.sendKeyDownUpSync(num + 7);
+                this.mInstrumentation.sendKeyDownUpSync(num + 7);
             }
         } catch (Exception e) {
-            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(Tag, "onKeyDelete get execption:" + e.toString());
         }
     }
 
     /* renamed from: w */
-    public void m4574w() {
+    public void onKeyDelete157() {
         try {
             if (CarlifeConfig.m4065a()) {
-                this.f3696n.m4510a(157);
+                this.mCarlifeInstrumentation.m4510a(157);
             } else {
-                this.f3697o.sendKeyDownUpSync(157);
+                this.mInstrumentation.sendKeyDownUpSync(157);
             }
         } catch (Exception e) {
-            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(Tag, "onKeyDelete get execption:" + e.toString());
         }
     }
 
     /* renamed from: f */
-    public void m4555f(int keycode) {
-        LogUtil.d(f3685g, "keycode is " + keycode);
+    public void onHardKeyCodeEvent(int keycode) {
+        LogUtil.d(Tag, "keycode is " + keycode);
         try {
-            if (this.f3694E == null || !this.f3694E.mo1339a(keycode)) {
+            if (this.mOnHardKeyCodeEventListener == null || !this.mOnHardKeyCodeEventListener.mo1339a(keycode)) {
                 switch (keycode) {
                     case 2:
                         MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fS, 0, 0, null);
@@ -899,40 +892,40 @@ public class CarlifeTouchManager {
                         MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fT, 0, 0, null);
                         return;
                     case 6:
-                        m4570s();
+                        onKeySelectorRightEvent300();
                         return;
                     case 7:
-                        m4571t();
+                        onKeySelectorRightEvent301();
                         return;
                     case 14:
-                        m4560i();
+                        onKeyBackEvent();
                         return;
                     case 20:
-                        m4569r();
+                        onKeyOkEvent();
                         return;
                     case 21:
-                        m4562k();
+                        onKeySelectorRightEvent21();
                         return;
                     case 22:
-                        m4561j();
+                        onKeySelectorRightEvent22();
                         return;
                     case 23:
-                        m4563l();
+                        onKeySelectorUpEvent();
                         return;
                     case 24:
-                        m4568q();
+                        onKeySelectorDownEvent();
                         return;
                     case 25:
-                        m4567p();
+                        onKeySelectorLeftUpEvent();
                         return;
                     case 26:
-                        m4566o();
+                        onKeySelectorRightUpEvent();
                         return;
                     case 27:
-                        m4565n();
+                        sendKeyDownUpSync();
                         return;
                     case 28:
-                        m4564m();
+                        onKeySelectorRightDownEvent();
                         return;
                     case 35:
                     case 36:
@@ -946,31 +939,29 @@ public class CarlifeTouchManager {
                     case 44:
                     case 45:
                     case 46:
-                        m4552e(keycode - 35);
+                        onKeyDeleteByCode(keycode - 35);
                         return;
                     case 47:
-                        m4573v();
+                        onKeyDelete67();
                         return;
                     case 48:
-                        m4572u();
+                        onKeyClear();
                         return;
                     case 49:
-                        m4574w();
+                        onKeyDelete157();
                         return;
                     default:
                         return;
                 }
-                e.printStackTrace();
-                LogUtil.e(f3685g, "onHardKeyCodeEvent get exception!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(f3685g, "onHardKeyCodeEvent get exception!");
+            LogUtil.e(Tag, "onHardKeyCodeEvent get exception!");
         }
     }
 
     /* renamed from: a */
-    public void m4539a(OnTouchListener touchListener) {
-        this.f3696n.m4513a(touchListener);
+    public void initOnTouchListener(OnTouchListener touchListener) {
+        this.mCarlifeInstrumentation.initOnTouchListener(touchListener);
     }
 }

@@ -5,15 +5,14 @@ import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.ConnectManager;
 import com.baidu.carlife.core.connect.config.AESManager;
 import com.baidu.carlife.core.connect.config.EncryptSetupManager;
-import com.baidu.platform.comapi.UIMsg.m_AppUI;
 
 /* compiled from: VRAudioManager */
 /* renamed from: com.baidu.carlife.core.audio.q */
 public class VRAudioManager extends AudioSourceManagerBase {
     /* renamed from: a */
-    private static final String f3145a = (AudioUtil.AUDIO + VRAudioManager.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + VRAudioManager.class.getSimpleName());
     /* renamed from: b */
-    private PCMPackageHead f3146b = new PCMPackageHead();
+    private PCMPackageHead mPCMPackageHead = new PCMPackageHead();
     /* renamed from: c */
     private byte[] f3147c = new byte[120];
     /* renamed from: d */
@@ -21,11 +20,11 @@ public class VRAudioManager extends AudioSourceManagerBase {
     /* renamed from: e */
     private int f3149e;
     /* renamed from: f */
-    private Pair f3150f = new Pair();
+    private Pair mPair = new Pair();
     /* renamed from: g */
-    private ArrayAdd f3151g = new ArrayAdd();
+    private ArrayAdd mArrayAdd = new ArrayAdd();
     /* renamed from: h */
-    private AESManager f3152h = new AESManager();
+    private AESManager mAESManager = new AESManager();
 
     public VRAudioManager() {
         AudioUtil.newInstance();
@@ -38,8 +37,8 @@ public class VRAudioManager extends AudioSourceManagerBase {
             int revisedSampleRate;
             int revisedChannelConfig;
             int revisedFormat;
-            LogUtil.d(f3145a, "sampleRate: " + sampleRate + " channelConfig: " + channelConfig + " sampleFormat: " + sampleFormat);
-            if (sampleRate < m_AppUI.MSG_APP_SAVESCREEN || sampleRate > 48000) {
+            LogUtil.d(Tag, "sampleRate: " + sampleRate + " channelConfig: " + channelConfig + " sampleFormat: " + sampleFormat);
+            if (sampleRate < 4000 || sampleRate > 48000) {
                 revisedSampleRate = 16000;
             } else {
                 revisedSampleRate = sampleRate;
@@ -54,21 +53,21 @@ public class VRAudioManager extends AudioSourceManagerBase {
             } else {
                 revisedFormat = 16;
             }
-            this.f3146b.m4053c(CommonParams.bz);
-            this.f3148d = this.f3146b.m4050b(revisedSampleRate, revisedChannelConfig, revisedFormat, this.f3147c);
-            this.f3146b.m4047a(this.f3148d);
-            System.arraycopy(this.f3146b.m4048a(), 0, this.f3147c, 0, this.f3149e);
-            m4059b(this.f3147c, this.f3149e + this.f3148d);
+            this.mPCMPackageHead.m4053c(CommonParams.bz);
+            this.f3148d = this.mPCMPackageHead.encryptTTSLength(revisedSampleRate, revisedChannelConfig, revisedFormat, this.f3147c);
+            this.mPCMPackageHead.m4047a(this.f3148d);
+            System.arraycopy(this.mPCMPackageHead.m4048a(), 0, this.f3147c, 0, this.f3149e);
+            writeVR(this.f3147c, this.f3149e + this.f3148d);
         }
     }
 
     /* renamed from: a */
     public synchronized void send() {
         if (AudioUtil.getIs()) {
-            LogUtil.d(f3145a, "VR stop");
-            this.f3146b.m4053c(CommonParams.bB);
-            this.f3146b.m4047a(0);
-            m4059b(this.f3146b.m4048a(), this.f3146b.m4049b());
+            LogUtil.d(Tag, "VR stop");
+            this.mPCMPackageHead.m4053c(CommonParams.bB);
+            this.mPCMPackageHead.m4047a(0);
+            writeVR(this.mPCMPackageHead.m4048a(), this.mPCMPackageHead.m4049b());
         }
     }
 
@@ -77,25 +76,25 @@ public class VRAudioManager extends AudioSourceManagerBase {
         byte[] sendData = data;
         int sendLen = len;
         if (EncryptSetupManager.newInstance().getFlag() && len > 0) {
-            sendData = this.f3152h.m4112a(data, len);
+            sendData = this.mAESManager.encrypt(data, len);
             if (sendData == null) {
-                LogUtil.e(f3145a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
             } else {
                 sendLen = sendData.length;
             }
         }
         if (AudioUtil.getIs()) {
-            LogUtil.d(f3145a, "VR write " + sendLen);
-            this.f3146b.m4053c(CommonParams.bA);
-            this.f3146b.m4047a(sendLen);
-            this.f3146b.m4052c();
-            this.f3151g.merge(this.f3146b.m4048a(), this.f3149e, sendData, sendLen, this.f3150f);
-            m4059b(this.f3150f.getData(), this.f3150f.getSize());
+            LogUtil.d(Tag, "VR write " + sendLen);
+            this.mPCMPackageHead.m4053c(CommonParams.bA);
+            this.mPCMPackageHead.m4047a(sendLen);
+            this.mPCMPackageHead.m4052c();
+            this.mArrayAdd.merge(this.mPCMPackageHead.m4048a(), this.f3149e, sendData, sendLen, this.mPair);
+            writeVR(this.mPair.getData(), this.mPair.getSize());
         }
     }
 
     /* renamed from: b */
-    private int m4059b(byte[] data, int size) {
+    private int writeVR(byte[] data, int size) {
         if (AudioUtil.newInstance().isBlueToothMode()) {
             return -1;
         }

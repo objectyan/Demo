@@ -601,7 +601,7 @@ public class C1868q {
         Intent it = new Intent();
         it.setAction("android.intent.action.CALL");
         it.setData(uri);
-        it.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        it.setFlags(268435456);
         try {
             context.startActivity(it);
             this.f5790y = m7117c(phoneNum);

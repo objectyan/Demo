@@ -22,10 +22,10 @@ public class DisplayUtils {
 
     /* renamed from: b */
     private VirtualDisplay m4467b(DisplaySpec spec, String displayName) {
-        if (spec.m4789e() == 0) {
-            spec.m4788d(9);
+        if (spec.getFlag() == 0) {
+            spec.setFlag(9);
         }
-        return ((DisplayManager) AppContext.getAppContext().getSystemService("display")).createVirtualDisplay(displayName, spec.m4780a(), spec.m4783b(), spec.m4785c(), spec.m4787d(), spec.m4789e());
+        return ((DisplayManager) AppContext.getAppContext().getSystemService("display")).createVirtualDisplay(displayName, spec.getWidth(), spec.getHeight(), spec.getDensityDpi(), spec.getSurface(), spec.getFlag());
     }
 
     /* renamed from: a */

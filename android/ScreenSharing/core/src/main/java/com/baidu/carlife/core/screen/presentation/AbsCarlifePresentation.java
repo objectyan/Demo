@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
-import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
+
 import com.baidu.carlife.core.KeepClass;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
@@ -22,32 +22,32 @@ import com.baidu.carlife.core.screen.presentation.view.CarLifePresentationContro
 /* renamed from: com.baidu.carlife.core.screen.presentation.b */
 public abstract class AbsCarlifePresentation extends Presentation implements KeepClass, OnTouchListener {
     /* renamed from: b */
-    public static String f3714b = "CarlifeTouchManager#Presentation";
+    public static String Tag = "CarlifeTouchManager#Presentation";
 
     /* renamed from: a */
     public abstract AbsCarlifeWindowCallback mo1452a(Window window);
 
-    public AbsCarlifePresentation(AbsCarlifeActivityService outerContext, Display display) {
+    public AbsCarlifePresentation(AbsCarlifeActivityService context, AbsCarlifeActivityService outerContext, Display display) {
         super(outerContext, display);
         m4589a();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View decorView = CarLifePresentationController.m4626b().m4637e();
+        View decorView = CarLifePresentationController.newInstance().getView();
         if (decorView != null) {
             m4590a(decorView);
             setContentView(decorView);
             return;
         }
-        LogUtil.d(f3714b, "decorView must be not null.");
+        LogUtil.d(Tag, "decorView must be not null.");
     }
 
     /* renamed from: a */
     private void m4590a(View decorView) {
         ViewParent decorViewParent = decorView.getParent();
         if (decorViewParent == null || !(decorViewParent instanceof ViewGroup)) {
-            LogUtil.d(f3714b, "decorViewParent is null or not is ViewGroup.");
+            LogUtil.d(Tag, "decorViewParent is null or not is ViewGroup.");
             return;
         }
         ((ViewGroup) decorViewParent).removeView(decorView);
@@ -56,8 +56,8 @@ public abstract class AbsCarlifePresentation extends Presentation implements Kee
 
     /* renamed from: a */
     private void m4591a(ViewGroup decorViewParent) {
-        if (CarLifePresentationController.m4626b().m4636d() != null) {
-            View maskView = CarLifePresentationController.m4626b().m4636d().m4743b();
+        if (CarLifePresentationController.newInstance().getCarlifeMaskView() != null) {
+            View maskView = CarLifePresentationController.newInstance().getCarlifeMaskView().getFrameLayout();
             if (maskView != null) {
                 if (maskView.getParent() != null) {
                     ((ViewGroup) maskView.getParent()).removeView(maskView);
@@ -66,10 +66,10 @@ public abstract class AbsCarlifePresentation extends Presentation implements Kee
                 decorViewParent.invalidate();
                 return;
             }
-            LogUtil.d(f3714b, "maskView is null.");
+            LogUtil.d(Tag, "maskView is null.");
             return;
         }
-        LogUtil.d(f3714b, "carlifeMaskView is null.");
+        LogUtil.d(Tag, "carlifeMaskView is null.");
     }
 
     /* renamed from: a */
@@ -80,7 +80,7 @@ public abstract class AbsCarlifePresentation extends Presentation implements Kee
     /* renamed from: b */
     public void m4594b(InputEvent event, boolean inTouchMode) {
         Window window = getWindow();
-        LogUtil.d(f3714b, "injectInputEvent event:" + event);
+        LogUtil.d(Tag, "injectInputEvent event:" + event);
         window.setLocalFocus(true, inTouchMode);
         window.injectInputEvent(event);
     }
@@ -89,7 +89,7 @@ public abstract class AbsCarlifePresentation extends Presentation implements Kee
     private void m4589a() {
         Window window = getWindow();
         window.setType(CommonParams.fW);
-        window.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        window.addFlags(268435456);
         window.addFlags(16777216);
         window.addFlags(1024);
         window.setCallback(mo1452a(window));
@@ -97,7 +97,7 @@ public abstract class AbsCarlifePresentation extends Presentation implements Kee
 
     public void show() {
         super.show();
-        LogUtil.d(f3714b, "CarlifePresentation. show()");
-        CarlifeTouchManager.m4515a().m4539a((OnTouchListener) this);
+        LogUtil.d(Tag, "CarlifePresentation. show()");
+        CarlifeTouchManager.newInstance().initOnTouchListener((OnTouchListener) this);
     }
 }

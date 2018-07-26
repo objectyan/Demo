@@ -1050,7 +1050,7 @@ public class MusicPlayerFragment extends ContentFragment {
                     }
                 }
             };
-            this.f4606G.schedule(this.f4607H, BNOffScreenParams.MIN_ENTER_INTERVAL);
+            this.f4606G.schedule(this.f4607H, 10000);
         } catch (Exception e) {
             LogUtil.d(C1818h.f5590a, "startTimer get exception");
             e.printStackTrace();

@@ -6,75 +6,75 @@ import android.view.Surface;
 /* renamed from: com.baidu.carlife.core.screen.presentation.i */
 public class DisplaySpec {
     /* renamed from: a */
-    private int f3826a;
+    private int mWidth;
     /* renamed from: b */
-    private int f3827b;
+    private int mHeight;
     /* renamed from: c */
-    private int f3828c;
+    private int mDensityDpi;
     /* renamed from: d */
-    private Surface f3829d;
+    private Surface mSurface;
     /* renamed from: e */
-    private int f3830e;
+    private int mFlag;
 
     /* renamed from: a */
-    public int m4780a() {
-        return this.f3826a;
+    public int getWidth() {
+        return this.mWidth;
     }
 
     /* renamed from: a */
-    public void m4781a(int width) {
-        this.f3826a = width;
+    public void setWidth(int width) {
+        this.mWidth = width;
     }
 
     /* renamed from: b */
-    public int m4783b() {
-        return this.f3827b;
+    public int getHeight() {
+        return this.mHeight;
     }
 
     /* renamed from: b */
-    public void m4784b(int height) {
-        this.f3827b = height;
+    public void setHeight(int height) {
+        this.mHeight = height;
     }
 
     /* renamed from: c */
-    public int m4785c() {
-        return this.f3828c;
+    public int getDensityDpi() {
+        return this.mDensityDpi;
     }
 
     /* renamed from: c */
-    public void m4786c(int densityDpi) {
-        this.f3828c = densityDpi;
+    public void setDensityDpi(int densityDpi) {
+        this.mDensityDpi = densityDpi;
     }
 
     /* renamed from: d */
-    public Surface m4787d() {
-        return this.f3829d;
+    public Surface getSurface() {
+        return this.mSurface;
     }
 
     /* renamed from: a */
-    public void m4782a(Surface surface) {
-        this.f3829d = surface;
+    public void setSurface(Surface surface) {
+        this.mSurface = surface;
     }
 
     /* renamed from: e */
-    public int m4789e() {
-        return this.f3830e;
+    public int getFlag() {
+        return this.mFlag;
     }
 
     /* renamed from: d */
-    public void m4788d(int flag) {
-        this.f3830e = flag;
+    public void setFlag(int flag) {
+        this.mFlag = flag;
     }
 
     public DisplaySpec(int width, int height, int densityDpi, Surface surface, int flag) {
-        this.f3826a = width;
-        this.f3827b = height;
-        this.f3828c = densityDpi;
-        this.f3829d = surface;
-        this.f3830e = flag;
+        this.mWidth = width;
+        this.mHeight = height;
+        this.mDensityDpi = densityDpi;
+        this.mSurface = surface;
+        this.mFlag = flag;
     }
 
     public String toString() {
-        return "DisplaySpec{width=" + this.f3826a + ", height=" + this.f3827b + ", densityDpi=" + this.f3828c + ", surface=" + this.f3829d + ", flag=" + this.f3830e + '}';
+        return "DisplaySpec{width=" + this.mWidth + ", height=" + this.mHeight + ", densityDpi=" + this.mDensityDpi + ", surface=" + this.mSurface + ", flag=" + this.mFlag + '}';
     }
 }

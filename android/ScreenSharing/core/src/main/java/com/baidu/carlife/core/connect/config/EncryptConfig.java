@@ -12,30 +12,30 @@ public class EncryptConfig {
     /* renamed from: c */
     public static int f3243c = 20000;
     /* renamed from: d */
-    public static final String f3244d = "RSA/ECB/PKCS1Padding";
+    public static final String RSA_ECB_PKCS1_PADDING = "RSA/ECB/PKCS1Padding";
     /* renamed from: e */
     public static boolean f3245e = false;
     /* renamed from: g */
-    private static EncryptConfig f3246g;
+    private static EncryptConfig sEncryptConfig;
     /* renamed from: f */
-    private String f3247f = UUID.randomUUID().toString();
+    private String mRandomUUID = UUID.randomUUID().toString();
 
     private EncryptConfig() {
     }
 
     /* renamed from: a */
-    public static EncryptConfig m4118a() {
-        if (f3246g == null) {
-            f3246g = new EncryptConfig();
+    public static EncryptConfig newInstance() {
+        if (sEncryptConfig == null) {
+            sEncryptConfig = new EncryptConfig();
         }
-        return f3246g;
+        return sEncryptConfig;
     }
 
     /* renamed from: b */
-    public String m4119b() {
+    public String getAecSeed() {
         String strAecSeed = "";
-        if (this.f3247f.length() >= 16) {
-            return this.f3247f.substring(0, 16);
+        if (this.mRandomUUID.length() >= 16) {
+            return this.mRandomUUID.substring(0, 16);
         }
         return strAecSeed;
     }

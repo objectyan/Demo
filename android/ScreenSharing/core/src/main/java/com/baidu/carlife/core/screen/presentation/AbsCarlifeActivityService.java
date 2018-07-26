@@ -13,88 +13,91 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.app.OnFragmentListener;
-import android.support.v4.app.Service;
+import android.view.ActionMode;
 import android.view.Display;
+import android.view.SearchEvent;
 import android.view.Window;
 import android.view.WindowManager.InvalidDisplayException;
+
+import com.baidu.carlife.core.DisplayUtils;
 import com.baidu.carlife.core.KeepClass;
 import com.baidu.carlife.core.LogUtil;
-import com.baidu.carlife.core.DisplayUtils;
 import com.baidu.carlife.core.screen.OnSurfaceListener;
 import com.baidu.carlife.core.screen.presentation.view.CarLifePresentationController;
 import com.baidu.carlife.core.screen.video.Recorder;
 
 @TargetApi(19)
-public class AbsCarlifeActivityService extends Service implements KeepClass, OnSurfaceListener {
+public class AbsCarlifeActivityService extends FragmentActivity implements KeepClass, OnSurfaceListener {
     /* renamed from: a */
     public static final int f3717a = 20001;
     /* renamed from: b */
-    private static final String f3718b = "CarlifeActivity#Service";
+    private static final String Tag = "CarlifeActivity#Service";
     /* renamed from: c */
     private static boolean f3719c = true;
     /* renamed from: d */
-    private AbsCarlifePresentation f3720d;
+    private AbsCarlifePresentation mAbsCarlifePresentation;
     /* renamed from: e */
-    private AbsCarlifeFakePresentation f3721e;
+    private AbsCarlifeFakePresentation mAbsCarlifeFakePresentation;
     /* renamed from: f */
-    private VirtualDisplay f3722f;
+    private VirtualDisplay mVirtualDisplay;
     /* renamed from: g */
-    private VirtualDisplay f3723g;
+    private VirtualDisplay mVirtualDisplay1;
     /* renamed from: h */
-    private DisplaySpec f3724h;
+    private DisplaySpec mDisplaySpec;
     /* renamed from: i */
-    private final IBinder f3725i = new C1293a();
+    private final IBinder f3725i = new AbsCarlifeActivityServiceBinder(this);
     /* renamed from: j */
-    private final OnDismissListener f3726j = new C12871(this);
+    private final OnDismissListener mOnDismissListener = new ServiceOnDismissListener(this);
     /* renamed from: k */
-    private Handler f3727k = new C12882(this);
+    private Handler mHandler = new ServiceHandler(this);
 
     /* renamed from: com.baidu.carlife.core.screen.presentation.AbsCarlifeActivityService$1 */
-    class C12871 implements OnDismissListener {
+    class ServiceOnDismissListener implements OnDismissListener {
         /* renamed from: a */
-        final /* synthetic */ AbsCarlifeActivityService f3709a;
+        final /* synthetic */ AbsCarlifeActivityService mAbsCarlifeActivityService;
 
-        C12871(AbsCarlifeActivityService this$0) {
-            this.f3709a = this$0;
+        ServiceOnDismissListener(AbsCarlifeActivityService this$0) {
+            this.mAbsCarlifeActivityService = this$0;
         }
 
         public void onDismiss(DialogInterface dialog) {
-            if (dialog == this.f3709a.f3720d) {
-                this.f3709a.f3720d = null;
-            } else if (dialog != this.f3709a.f3721e) {
+            if (dialog == this.mAbsCarlifeActivityService.mAbsCarlifePresentation) {
+                this.mAbsCarlifeActivityService.mAbsCarlifePresentation = null;
+            } else if (dialog != this.mAbsCarlifeActivityService.mAbsCarlifeFakePresentation) {
             } else {
-                if (this.f3709a.f3720d != null) {
-                    this.f3709a.m4604c(this.f3709a.f3724h);
+                if (this.mAbsCarlifeActivityService.mAbsCarlifePresentation != null) {
+                    this.mAbsCarlifeActivityService.m4604c(this.mAbsCarlifeActivityService.mDisplaySpec);
                 } else {
-                    this.f3709a.f3721e = null;
+                    this.mAbsCarlifeActivityService.mAbsCarlifeFakePresentation = null;
                 }
             }
         }
     }
 
     /* renamed from: com.baidu.carlife.core.screen.presentation.AbsCarlifeActivityService$2 */
-    class C12882 extends Handler {
+    class ServiceHandler extends Handler {
         /* renamed from: a */
-        final /* synthetic */ AbsCarlifeActivityService f3710a;
+        final /* synthetic */ AbsCarlifeActivityService mAbsCarlifeActivityService;
 
-        C12882(AbsCarlifeActivityService this$0) {
-            this.f3710a = this$0;
+        ServiceHandler(AbsCarlifeActivityService this$0) {
+            this.mAbsCarlifeActivityService = this$0;
         }
 
         public void handleMessage(Message msg) {
-            LogUtil.m4440c(AbsCarlifeActivityService.f3718b, "handleMessage=" + msg.what);
+            LogUtil.m4440c(AbsCarlifeActivityService.Tag, "handleMessage=" + msg.what);
             switch (msg.what) {
                 case AbsCarlifeActivityService.f3717a /*20001*/:
-                    if (this.f3710a.getSupportFragmentManager().isPendingActionWillExecuteOrExecuting()) {
-                        LogUtil.m4440c(AbsCarlifeActivityService.f3718b, "MSG_DELAY_VEHICLE_CONNECT what=" + msg.what);
-                        this.f3710a.f3727k.sendEmptyMessageDelayed(AbsCarlifeActivityService.f3717a, 1000);
+                    if (this.mAbsCarlifeActivityService.getSupportFragmentManager().executePendingTransactions()) {
+                        LogUtil.m4440c(AbsCarlifeActivityService.Tag, "MSG_DELAY_VEHICLE_CONNECT what=" + msg.what);
+                        this.mAbsCarlifeActivityService.mHandler.sendEmptyMessageDelayed(AbsCarlifeActivityService.f3717a, 1000);
                         return;
                     }
-                    LogUtil.m4440c(AbsCarlifeActivityService.f3718b, " will execute showPresentationImp.");
-                    if (this.f3710a.f3720d != null) {
-                        this.f3710a.m4608e();
+                    LogUtil.m4440c(AbsCarlifeActivityService.Tag, " will execute showPresentationImp.");
+                    if (this.mAbsCarlifeActivityService.mAbsCarlifePresentation != null) {
+                        this.mAbsCarlifeActivityService.m4608e();
                         return;
                     }
                     return;
@@ -105,17 +108,17 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
     }
 
     /* renamed from: com.baidu.carlife.core.screen.presentation.AbsCarlifeActivityService$a */
-    public class C1293a extends Binder {
+    public class AbsCarlifeActivityServiceBinder extends Binder {
         /* renamed from: a */
-        final /* synthetic */ AbsCarlifeActivityService f3716a;
+        final /* synthetic */ AbsCarlifeActivityService mAbsCarlifeActivityService;
 
-        private C1293a(AbsCarlifeActivityService this$0) {
-            this.f3716a = this$0;
+        private AbsCarlifeActivityServiceBinder(AbsCarlifeActivityService this$0) {
+            this.mAbsCarlifeActivityService = this$0;
         }
 
         /* renamed from: a */
-        public AbsCarlifeActivityService m4596a() {
-            return this.f3716a;
+        public AbsCarlifeActivityService getCarlifeService() {
+            return this.mAbsCarlifeActivityService;
         }
     }
 
@@ -129,165 +132,168 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
     }
 
     public IBinder onBind(Intent intent) {
-        super.onBind(intent);
+//        super.onBind(intent);
         return this.f3725i;
     }
 
     public void onRebind(Intent intent) {
-        super.onRebind(intent);
+//        super.onRebind(intent);
     }
 
     public boolean onUnbind(Intent intent) {
-        LogUtil.d(f3718b, "CarlifeActivityService-onUnbind");
-        return super.onUnbind(intent);
+        LogUtil.d(Tag, "CarlifeActivityService-onUnbind");
+//        return super.onUnbind(intent);
+        return false;
     }
 
     public void onCreate() {
-        super.onCreate();
+//        super.onCreate();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+//        return super.onStartCommand(intent, flags, startId);
+        return 0;
     }
 
     public void onDestroy() {
         super.onDestroy();
-        LogUtil.d(f3718b, "CarlifeActivityService-onDestroy=" + this);
+        LogUtil.d(Tag, "CarlifeActivityService-onDestroy=" + this);
     }
 
     /* renamed from: a */
-    public void mo1453a(DisplaySpec spec) {
-        LogUtil.d(f3718b, "CarlifeActivityService-onSurfaceCreated Fake surface. spec=" + spec);
+    public void bindServiceForDisplaySpec(DisplaySpec spec) {
+        LogUtil.d(Tag, "CarlifeActivityService-onSurfaceCreated Fake surface. spec=" + spec);
         m4607d(spec);
     }
 
     /* renamed from: b */
     public boolean m4616b(DisplaySpec spec) {
         f3719c = false;
-        mo1461a((OnFragmentListener) this);
+//        mo1461a((OnFragmentListener) this);
         Builder builder = new Builder(this);
-        builder.setSmallIcon(CarLifePresentationController.m4626b().m4639g()).setWhen(System.currentTimeMillis());
-        startForeground(1000, builder.build());
-        ((NotificationManager) getSystemService("notification")).notify(1000, new Notification());
+        builder.setSmallIcon(CarLifePresentationController.newInstance().getLaunchIconId()).setWhen(System.currentTimeMillis());
+//        startForeground(1000, builder.build());
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(1000, new Notification());
         m4604c(spec);
         return true;
     }
 
     /* renamed from: b */
     public void m4615b() {
-        this.f3727k.removeMessages(f3717a);
+        this.mHandler.removeMessages(f3717a);
         f3719c = true;
-        if (this.f3720d != null) {
-            Presentation tempPresentation = this.f3720d;
-            this.f3720d = null;
+        if (this.mAbsCarlifePresentation != null) {
+            Presentation tempPresentation = this.mAbsCarlifePresentation;
+            this.mAbsCarlifePresentation = null;
             tempPresentation.dismiss();
             try {
-                this.f3723g.release();
+                this.mVirtualDisplay1.release();
             } catch (Exception e) {
-                LogUtil.d(f3718b, "mVD.release error:" + e.getMessage());
+                LogUtil.d(Tag, "mVD.release error:" + e.getMessage());
             }
-            this.f3723g = null;
+            this.mVirtualDisplay1 = null;
         }
-        if (this.f3721e != null) {
-            tempPresentation = this.f3721e;
-            this.f3721e = null;
-            tempPresentation.dismiss();
-            this.f3722f.release();
-            this.f3722f = null;
+        if (this.mAbsCarlifeFakePresentation != null) {
+//            tempPresentation = this.mAbsCarlifeFakePresentation;
+            this.mAbsCarlifeFakePresentation = null;
+//            tempPresentation.dismiss();
+            this.mVirtualDisplay.release();
+            this.mVirtualDisplay = null;
         }
-        Recorder.m4826b().m4885p();
+        Recorder.newInstance().m4885p();
     }
 
     /* renamed from: c */
     private void m4604c(DisplaySpec spec) {
-        this.f3724h = spec;
-        if (this.f3722f == null) {
-            this.f3722f = DisplayUtils.m4466a().m4468a(spec, "CarlifeFakePresentation");
-            if (this.f3722f == null) {
-                LogUtil.e(f3718b, "Can not make FakeVD");
+        this.mDisplaySpec = spec;
+        if (this.mVirtualDisplay == null) {
+            this.mVirtualDisplay = DisplayUtils.m4466a().m4468a(spec, "CarlifeFakePresentation");
+            if (this.mVirtualDisplay == null) {
+                LogUtil.e(Tag, "Can not make FakeVD");
                 mo1462a("FakeVD创建失败");
                 return;
             }
-        } else if (this.f3721e != null && this.f3721e.getDisplay() == this.f3722f.getDisplay()) {
+        } else if (this.mAbsCarlifeFakePresentation != null && this.mAbsCarlifeFakePresentation.getDisplay() == this.mVirtualDisplay.getDisplay()) {
             try {
-                this.f3721e.show();
+                this.mAbsCarlifeFakePresentation.show();
                 return;
             } catch (InvalidDisplayException ex) {
-                this.f3721e = null;
-                this.f3722f.release();
-                this.f3722f = null;
+                this.mAbsCarlifeFakePresentation = null;
+                this.mVirtualDisplay.release();
+                this.mVirtualDisplay = null;
                 mo1462a("第一层复用时异常：InvalidDisplayException");
-                LogUtil.e(f3718b, ex.getMessage());
+                LogUtil.e(Tag, ex.getMessage());
                 return;
             }
         }
-        if (!(this.f3721e == null || this.f3721e.getDisplay() == this.f3722f.getDisplay())) {
-            this.f3721e.dismiss();
-            this.f3721e = null;
+        if (!(this.mAbsCarlifeFakePresentation == null || this.mAbsCarlifeFakePresentation.getDisplay() == this.mVirtualDisplay.getDisplay())) {
+            this.mAbsCarlifeFakePresentation.dismiss();
+            this.mAbsCarlifeFakePresentation = null;
         }
-        if (this.f3721e == null && this.f3722f.getDisplay() != null) {
-            this.f3721e = mo1459a(this, this.f3722f.getDisplay(), this);
-            this.f3721e.setOnDismissListener(this.f3726j);
+        if (this.mAbsCarlifeFakePresentation == null && this.mVirtualDisplay.getDisplay() != null) {
+            this.mAbsCarlifeFakePresentation = mo1459a(this, this.mVirtualDisplay.getDisplay(), this);
+            this.mAbsCarlifeFakePresentation.setOnDismissListener(this.mOnDismissListener);
             try {
-                this.f3721e.show();
+                this.mAbsCarlifeFakePresentation.show();
             } catch (InvalidDisplayException ex2) {
-                this.f3721e = null;
-                this.f3722f.release();
-                this.f3722f = null;
+                this.mAbsCarlifeFakePresentation = null;
+                this.mVirtualDisplay.release();
+                this.mVirtualDisplay = null;
                 mo1462a("第一层异常：InvalidDisplayException");
-                LogUtil.e(f3718b, ex2.getMessage());
+                LogUtil.e(Tag, ex2.getMessage());
             }
         }
     }
 
     /* renamed from: d */
     private void m4607d(DisplaySpec spec) {
-        if (this.f3723g != null) {
-            this.f3723g.release();
+        if (this.mVirtualDisplay1 != null) {
+            this.mVirtualDisplay1.release();
         }
-        this.f3723g = DisplayUtils.m4466a().m4468a(spec, "CarlifePresentation");
-        if (this.f3720d != null) {
-            if (this.f3720d.getDisplay() != this.f3723g.getDisplay()) {
-                this.f3720d.dismiss();
-                this.f3720d = null;
+        this.mVirtualDisplay1 = DisplayUtils.m4466a().m4468a(spec, "CarlifePresentation");
+        if (this.mAbsCarlifePresentation != null) {
+            if (this.mAbsCarlifePresentation.getDisplay() != this.mVirtualDisplay1.getDisplay()) {
+                this.mAbsCarlifePresentation.dismiss();
+                this.mAbsCarlifePresentation = null;
             } else {
-                this.f3720d.show();
+                this.mAbsCarlifePresentation.show();
                 return;
             }
         }
-        if (this.f3720d == null && this.f3723g.getDisplay() != null) {
-            this.f3720d = mo1460a(this, this.f3723g.getDisplay());
-            this.f3720d.setOnDismissListener(this.f3726j);
+        if (this.mAbsCarlifePresentation == null && this.mVirtualDisplay1.getDisplay() != null) {
+            this.mAbsCarlifePresentation = mo1460a(this, this.mVirtualDisplay1.getDisplay());
+            this.mAbsCarlifePresentation.setOnDismissListener(this.mOnDismissListener);
             int delay = 0;
-            if (getSupportFragmentManager().isPendingActionWillExecuteOrExecuting()) {
+            if (getSupportFragmentManager().executePendingTransactions()) {
                 delay = 1000;
             }
-            this.f3727k.sendEmptyMessageDelayed(f3717a, (long) delay);
+            this.mHandler.sendEmptyMessageDelayed(f3717a, (long) delay);
         }
     }
 
     /* renamed from: d */
     private void m4606d() {
-        setFragmentWindow(this.f3720d.getWindow());
-        bindDialog(this.f3720d);
+
+//        setFragmentWindow(this.mAbsCarlifePresentation.getWindow());
+//        bindDialog(this.mAbsCarlifePresentation);
     }
 
     /* renamed from: e */
     private void m4608e() {
-        LogUtil.m4440c(f3718b, "showPresentationImp  attachHost()");
-        attachHost();
+        LogUtil.m4440c(Tag, "showPresentationImp  attachHost()");
+//        attachHost();
         m4606d();
         try {
-            if (this.f3720d != null) {
-                this.f3720d.show();
+            if (this.mAbsCarlifePresentation != null) {
+                this.mAbsCarlifePresentation.show();
             }
         } catch (InvalidDisplayException ex) {
-            this.f3720d = null;
+            this.mAbsCarlifePresentation = null;
             mo1462a("第二层异常：InvalidDisplayException");
-            if (this.f3723g != null) {
-                this.f3723g.release();
+            if (this.mVirtualDisplay1 != null) {
+                this.mVirtualDisplay1.release();
             }
-            LogUtil.e(f3718b, ex.getMessage());
+            LogUtil.e(Tag, ex.getMessage());
         }
     }
 
@@ -295,13 +301,23 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
     public AbsCarlifePresentation mo1460a(AbsCarlifeActivityService outerContext, Display display) {
         return new AbsCarlifePresentation(this, outerContext, display) {
             /* renamed from: a */
-            final /* synthetic */ AbsCarlifeActivityService f3715a;
+            final /* synthetic */ AbsCarlifeActivityService mAbsCarlifeActivityService = null;
 
             /* renamed from: a */
             public AbsCarlifeWindowCallback mo1452a(Window window) {
                 return new AbsCarlifeWindowCallback(this, window) {
+                    @Override
+                    public boolean onSearchRequested(SearchEvent searchEvent) {
+                        return false;
+                    }
+
+                    @Nullable
+                    @Override
+                    public ActionMode onWindowStartingActionMode(ActionMode.Callback callback, int i) {
+                        return null;
+                    }
                     /* renamed from: a */
-                    final /* synthetic */ C12923 f3713a;
+//                    final /* synthetic */ C12923 f3713a;
 
                     /* renamed from: a */
                     public void mo1450a() {
@@ -317,8 +333,8 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
     }
 
     /* renamed from: a */
-    public void mo1461a(OnFragmentListener listener) {
-    }
+//    public void mo1461a(OnFragmentListener listener) {
+//    }
 
     /* renamed from: c */
     public Notification m4617c() {

@@ -54,7 +54,7 @@ public class NaviAudioManager extends AudioSourceManagerBase {
                 revisedFormat = 16;
             }
             this.mPCMPackageHead.m4053c(CommonParams.bv);
-            this.f3117d = this.mPCMPackageHead.m4050b(revisedSampleRate, revisedChannelConfig, revisedFormat, this.f3116c);
+            this.f3117d = this.mPCMPackageHead.encryptTTSLength(revisedSampleRate, revisedChannelConfig, revisedFormat, this.f3116c);
             this.mPCMPackageHead.m4047a(this.f3117d);
             System.arraycopy(this.mPCMPackageHead.m4048a(), 0, this.f3116c, 0, this.f3118e);
             writeTTS(this.f3116c, this.f3118e + this.f3117d);
@@ -75,7 +75,7 @@ public class NaviAudioManager extends AudioSourceManagerBase {
         byte[] sendData = ttsPCMData;
         int sendLen = dataLen;
         if (EncryptSetupManager.newInstance().getFlag() && dataLen > 0) {
-            sendData = this.mAESManager.m4112a(ttsPCMData, dataLen);
+            sendData = this.mAESManager.encrypt(ttsPCMData, dataLen);
             if (sendData == null) {
                 LogUtil.e(Tag, "encrypt failed!");
             } else {

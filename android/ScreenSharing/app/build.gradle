@@ -40,4 +40,6 @@ dependencies {
     implementation files('libs/baidumapapi_v3_0_0.jar')
     implementation project(':onsdk_all')
     implementation project(':NaviTts')
+    implementation project(path: ':core')
+    implementation project(path: ':protobuf')
 }

@@ -30,7 +30,7 @@ public class CarlifeCmdMessage implements KeepClass {
     }
 
     /* renamed from: a */
-    public boolean m4195a(byte[] msg) {
+    public boolean fromByteArray(byte[] msg) {
         if (msg.length != 8) {
             LogUtil.e(TAG, "fromByteArray fail: length not equal");
             return false;
@@ -49,7 +49,6 @@ public class CarlifeCmdMessage implements KeepClass {
 
     /* renamed from: a */
     public byte[] toByteArray() {
-        Exception e;
         byte[] bytes = new byte[8];
         try {
             byte[] tmpBytes = ByteConvert.m4175a(this.length);
@@ -75,15 +74,14 @@ public class CarlifeCmdMessage implements KeepClass {
                 bytes[i] = tmpBytes[3];
                 return bytes;
             } catch (Exception e2) {
-                e = e2;
                 i2 = i;
                 LogUtil.e(TAG, "toByteArray fail: get exception");
-                e.printStackTrace();
-                return null;
+                e2.printStackTrace();
             }
         } catch (Exception e3) {
-            e = e3;
+            e3.printStackTrace();
         }
+        return null;
     }
 
     public int getIndex() {

@@ -264,7 +264,7 @@ public class LogUtil implements KeepClass {
     }
 
     /* renamed from: b */
-    public static void m4437b(String tag, String format, Object... args) {
+    public static void d(String tag, String format, Object... args) {
         LogUtil.m4427a(3, tag, format, args);
         if (sLogUtil != null) {
             sLogUtil.m4436b("D", tag, format);

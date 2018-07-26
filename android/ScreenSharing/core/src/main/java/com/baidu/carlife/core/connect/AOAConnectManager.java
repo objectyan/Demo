@@ -5,10 +5,12 @@ import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
+
 import com.baidu.carlife.core.KeepClass;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.mobstat.Config;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileDescriptor;
@@ -28,15 +30,15 @@ public class AOAConnectManager implements KeepClass {
     /* renamed from: a */
     public static final int f3262a = 500;
     /* renamed from: b */
-    private static final String f3263b = "AOAConnectManager";
+    private static final String Tag = "AOAConnectManager";
     /* renamed from: c */
-    private static AOAConnectManager f3264c = null;
+    private static AOAConnectManager sAOAConnectManager = null;
     /* renamed from: k */
-    private static final String f3265k = "AOAReadThread";
+    private static final String AOAReadThreadTag = "AOAReadThread";
     /* renamed from: l */
-    private static final String f3266l = "SocketReadThread";
+    private static final String SocketReadThreadTag = "SocketReadThread";
     /* renamed from: m */
-    private static final String f3267m = "127.0.0.1";
+    private static final String LOCALHOST = "127.0.0.1";
     /* renamed from: n */
     private static final int f3268n = 100;
     /* renamed from: o */
@@ -58,80 +60,80 @@ public class AOAConnectManager implements KeepClass {
     /* renamed from: y */
     private static final int f3277y = 67108864;
     /* renamed from: A */
-    private C1198b f3278A = null;
+    private SocketReadThread mWifiReadThread = null;
     /* renamed from: B */
-    private C1198b f3279B = null;
+    private SocketReadThread mVideoReadThread = null;
     /* renamed from: C */
-    private C1198b f3280C = null;
+    private SocketReadThread mAudioReadThread = null;
     /* renamed from: D */
-    private C1198b f3281D = null;
+    private SocketReadThread mTTSReadThread = null;
     /* renamed from: E */
-    private C1198b f3282E = null;
+    private SocketReadThread mVRReadThread = null;
     /* renamed from: F */
-    private C1198b f3283F = null;
+    private SocketReadThread mTouchReadThread = null;
     /* renamed from: G */
-    private C1198b f3284G = null;
+    private SocketReadThread mDataReadThread = null;
     /* renamed from: H */
-    private Timer f3285H = null;
+    private Timer mTimer = null;
     /* renamed from: I */
-    private TimerTask f3286I = null;
+    private TimerTask mTimerTask = null;
     /* renamed from: J */
-    private int f3287J = 0;
+    private int mNumOfHeartBeat = 0;
     /* renamed from: K */
-    private int f3288K = -1;
+    private int mOldNumOfHeartBeat = -1;
     /* renamed from: d */
-    private Context f3289d = null;
+    private Context mContext = null;
     /* renamed from: e */
-    private UsbManager f3290e = null;
+    private UsbManager mUsbManager = null;
     /* renamed from: f */
-    private UsbAccessory f3291f = null;
+    private UsbAccessory mUsbAccessory = null;
     /* renamed from: g */
-    private ParcelFileDescriptor f3292g = null;
+    private ParcelFileDescriptor mParcelFileDescriptor = null;
     /* renamed from: h */
-    private FileDescriptor f3293h = null;
+    private FileDescriptor mFileDescriptor = null;
     /* renamed from: i */
-    private FileOutputStream f3294i = null;
+    private FileOutputStream mFileOutputStream = null;
     /* renamed from: j */
-    private FileInputStream f3295j = null;
+    private FileInputStream mFileInputStream = null;
     /* renamed from: v */
     private Thread f3296v = null;
     /* renamed from: w */
-    private Thread f3297w = null;
+    private Thread mWriteThread = null;
     /* renamed from: z */
-    private C1197a f3298z = null;
+    private AOAReadThread f3298z = null;
 
     /* compiled from: AOAConnectManager */
     /* renamed from: com.baidu.carlife.core.connect.a$1 */
-    class C11941 extends TimerTask {
+    class AOAConnectManagerTask extends TimerTask {
         /* renamed from: a */
-        final /* synthetic */ AOAConnectManager f3206a;
+        final /* synthetic */ AOAConnectManager mAOAConnectManager;
 
-        C11941(AOAConnectManager this$0) {
-            this.f3206a = this$0;
+        AOAConnectManagerTask(AOAConnectManager this$0) {
+            this.mAOAConnectManager = this$0;
         }
 
         public void run() {
-            LogUtil.e(AOAConnectManager.f3263b, "timeout 1");
-            if (this.f3206a.f3285H != null) {
-                LogUtil.e(AOAConnectManager.f3263b, "timeout 2");
-                LogUtil.m4440c(AOAConnectManager.f3263b, "numOfHeartBeat = " + this.f3206a.f3287J + ", oldNumOfHeartBeat = " + this.f3206a.f3288K);
-                if (this.f3206a.f3288K == this.f3206a.f3287J) {
-                    ConnectClient.newInstance().m4222a(false);
-                    this.f3206a.m4169h();
+            LogUtil.e(AOAConnectManager.Tag, "timeout 1");
+            if (this.mAOAConnectManager.mTimer != null) {
+                LogUtil.e(AOAConnectManager.Tag, "timeout 2");
+                LogUtil.m4440c(AOAConnectManager.Tag, "numOfHeartBeat = " + this.mAOAConnectManager.mNumOfHeartBeat + ", oldNumOfHeartBeat = " + this.mAOAConnectManager.mOldNumOfHeartBeat);
+                if (this.mAOAConnectManager.mOldNumOfHeartBeat == this.mAOAConnectManager.mNumOfHeartBeat) {
+                    ConnectClient.newInstance().setIS(false);
+                    this.mAOAConnectManager.stopTimer();
                 }
-                this.f3206a.f3288K = this.f3206a.f3287J;
+                this.mAOAConnectManager.mOldNumOfHeartBeat = this.mAOAConnectManager.mNumOfHeartBeat;
             }
         }
     }
 
     /* compiled from: AOAConnectManager */
     /* renamed from: com.baidu.carlife.core.connect.a$2 */
-    class C11952 extends Thread {
+    class WriteThread extends Thread {
         /* renamed from: a */
-        final /* synthetic */ AOAConnectManager f3207a;
+        final /* synthetic */ AOAConnectManager mAOAConnectManager;
 
-        C11952(AOAConnectManager this$0) {
-            this.f3207a = this$0;
+        WriteThread(AOAConnectManager this$0) {
+            this.mAOAConnectManager = this$0;
         }
 
         /* JADX WARNING: inconsistent code. */
@@ -145,7 +147,7 @@ public class AOAConnectManager implements KeepClass {
             r8 = -1;
             r6 = android.os.SystemClock.elapsedRealtime();
         L_0x0008:
-            r10 = r14.f3207a;	 Catch:{ Exception -> 0x0097 }
+            r10 = r14.mAOAConnectManager;	 Catch:{ Exception -> 0x0097 }
             r9 = r10.m4155j();	 Catch:{ Exception -> 0x0097 }
             if (r9 != 0) goto L_0x004b;
         L_0x0010:
@@ -181,9 +183,9 @@ public class AOAConnectManager implements KeepClass {
             r11 = r11.toString();	 Catch:{ Exception -> 0x0097 }
             com.baidu.carlife.core.LogUtil.d(r10, r11);	 Catch:{ Exception -> 0x0097 }
             r1 = r9.getBytes();	 Catch:{ Exception -> 0x0097 }
-            r10 = r14.f3207a;	 Catch:{ Exception -> 0x0097 }
+            r10 = r14.mAOAConnectManager;	 Catch:{ Exception -> 0x0097 }
             r11 = 163840; // 0x28000 float:2.29589E-40 double:8.09477E-319;
-            r8 = r10.m4160a(r1, r11);	 Catch:{ Exception -> 0x0097 }
+            r8 = r10.bulkTransferOut(r1, r11);	 Catch:{ Exception -> 0x0097 }
             if (r8 >= 0) goto L_0x00b9;
         L_0x007b:
             r10 = "AOAConnectManager";
@@ -197,8 +199,8 @@ public class AOAConnectManager implements KeepClass {
             goto L_0x0010;
         L_0x0097:
             r2 = move-exception;
-            r10 = r14.f3207a;	 Catch:{ IOException -> 0x00bd }
-            r10 = r10.f3294i;	 Catch:{ IOException -> 0x00bd }
+            r10 = r14.mAOAConnectManager;	 Catch:{ IOException -> 0x00bd }
+            r10 = r10.mFileOutputStream;	 Catch:{ IOException -> 0x00bd }
             r10.close();	 Catch:{ IOException -> 0x00bd }
         L_0x00a1:
             r10 = "AOAConnectManager";
@@ -223,19 +225,18 @@ public class AOAConnectManager implements KeepClass {
 
     /* compiled from: AOAConnectManager */
     /* renamed from: com.baidu.carlife.core.connect.a$3 */
-    class C11963 extends Thread {
+    class ReadThread extends Thread {
         /* renamed from: a */
-        final /* synthetic */ AOAConnectManager f3208a;
+        final /* synthetic */ AOAConnectManager mAOAConnectManager;
 
-        C11963(AOAConnectManager this$0) {
-            this.f3208a = this$0;
+        ReadThread(AOAConnectManager this$0) {
+            this.mAOAConnectManager = this$0;
         }
 
         public void run() {
-            Exception e;
             try {
-                LogUtil.e(AOAConnectManager.f3263b, "sleep 1s before read...");
-                C11963.sleep(1000);
+                LogUtil.e(AOAConnectManager.Tag, "sleep 1s before read...");
+                ReadThread.sleep(1000);
             } catch (InterruptedException e2) {
                 e2.printStackTrace();
             }
@@ -244,40 +245,34 @@ public class AOAConnectManager implements KeepClass {
             long mStartTime = SystemClock.elapsedRealtime();
             String str = null;
             while (true) {
-                int ret = this.f3208a.m4144b(data, AOAConnectManager.f3275u);
+                int ret = this.mAOAConnectManager.bulkTransferIn(data, AOAConnectManager.f3275u);
                 if (ret != AOAConnectManager.f3275u) {
-                    LogUtil.e(AOAConnectManager.f3263b, "read data error, ret = " + ret);
-                    String str2 = str;
+                    LogUtil.e(AOAConnectManager.Tag, "read data error, ret = " + ret);
                     return;
                 }
                 cnt++;
                 try {
                     if (cnt >= AOAConnectManager.f3274t) {
-                        LogUtil.e(AOAConnectManager.f3263b, "Read Time = " + (SystemClock.elapsedRealtime() - mStartTime));
+                        LogUtil.e(AOAConnectManager.Tag, "Read Time = " + (SystemClock.elapsedRealtime() - mStartTime));
                     }
-                    str2 = new String(data);
+                    str = new String(data);
                     try {
-                        LogUtil.d(AOAConnectManager.f3263b, "read data:" + cnt + Config.TRACE_TODAY_VISIT_SPLIT + ret + Config.TRACE_TODAY_VISIT_SPLIT + str2.substring(0, 20));
-                        str = str2;
+                        LogUtil.d(AOAConnectManager.Tag, "read data:" + cnt + Config.TRACE_TODAY_VISIT_SPLIT + ret + Config.TRACE_TODAY_VISIT_SPLIT + str.substring(0, 20));
                     } catch (Exception e3) {
-                        e = e3;
+                        LogUtil.e(AOAConnectManager.Tag, "get exception when read");
                     }
                 } catch (Exception e4) {
-                    e = e4;
-                    str2 = str;
+                    LogUtil.e(AOAConnectManager.Tag, e4.toString());
                 }
             }
-            LogUtil.e(AOAConnectManager.f3263b, "get exception when read");
-            LogUtil.e(AOAConnectManager.f3263b, e.toString());
-            e.printStackTrace();
         }
     }
 
     /* compiled from: AOAConnectManager */
     /* renamed from: com.baidu.carlife.core.connect.a$a */
-    private class C1197a extends Thread {
+    private class AOAReadThread extends Thread {
         /* renamed from: a */
-        final /* synthetic */ AOAConnectManager f3209a;
+        final /* synthetic */ AOAConnectManager mAOAConnectManager;
         /* renamed from: b */
         private boolean f3210b = false;
         /* renamed from: c */
@@ -293,10 +288,10 @@ public class AOAConnectManager implements KeepClass {
         /* renamed from: h */
         private int f3216h = -1;
 
-        public C1197a(AOAConnectManager AOAConnectManager) {
-            this.f3209a = AOAConnectManager;
-            LogUtil.d(AOAConnectManager.f3263b, "ReadThread Created");
-            setName(AOAConnectManager.f3265k);
+        public AOAReadThread(AOAConnectManager AOAConnectManager) {
+            this.mAOAConnectManager = AOAConnectManager;
+            LogUtil.d(AOAConnectManager.Tag, "ReadThread Created");
+            setName(AOAConnectManager.AOAReadThreadTag);
         }
 
         /* renamed from: a */
@@ -306,69 +301,69 @@ public class AOAConnectManager implements KeepClass {
 
         public void run() {
             this.f3210b = true;
-            LogUtil.d(AOAConnectManager.f3263b, "Begin to read data by AOA");
+            LogUtil.d(AOAConnectManager.Tag, "Begin to read data by AOA");
             try {
-                C1197a.sleep(100);
+                AOAReadThread.sleep(100);
                 while (this.f3210b) {
                     if (!this.f3210b) {
-                        LogUtil.e(AOAConnectManager.f3263b, "read data cancled");
-                    } else if (this.f3209a.m4144b(this.f3212d, 8) < 0) {
-                        LogUtil.e(AOAConnectManager.f3263b, "bulkTransferIn fail 1");
+                        LogUtil.e(AOAConnectManager.Tag, "read data cancled");
+                    } else if (this.mAOAConnectManager.bulkTransferIn(this.f3212d, 8) < 0) {
+                        LogUtil.e(AOAConnectManager.Tag, "bulkTransferIn fail 1");
                     } else {
                         this.f3213e = ByteConvert.m4178b(new byte[]{this.f3212d[0], this.f3212d[1], this.f3212d[2], this.f3212d[3]});
                         this.f3214f = ByteConvert.m4178b(new byte[]{this.f3212d[4], this.f3212d[5], this.f3212d[6], this.f3212d[7]});
-                        LogUtil.d(AOAConnectManager.f3263b, "typeMsg = " + this.f3213e + ", lenMsg = " + this.f3214f);
+                        LogUtil.d(AOAConnectManager.Tag, "typeMsg = " + this.f3213e + ", lenMsg = " + this.f3214f);
                         int tatalChannel = 6;
                         if (CommonParams.jw) {
                             tatalChannel = 7;
                         }
                         if (this.f3213e < 1 || this.f3213e > tatalChannel || this.f3214f < 0 || this.f3214f > AOAConnectManager.f3277y) {
-                            LogUtil.e(AOAConnectManager.f3263b, "typeMsg or lenMsg is error");
-                            ConnectClient.newInstance().m4222a(false);
+                            LogUtil.e(AOAConnectManager.Tag, "typeMsg or lenMsg is error");
+                            ConnectClient.newInstance().setIS(false);
                         } else {
                             if (this.f3211c.length < this.f3214f) {
                                 this.f3211c = new byte[this.f3214f];
                             }
-                            if (this.f3209a.m4144b(this.f3211c, this.f3214f) < 0) {
-                                LogUtil.e(AOAConnectManager.f3263b, "bulkTransferIn fail 2");
+                            if (this.mAOAConnectManager.bulkTransferIn(this.f3211c, this.f3214f) < 0) {
+                                LogUtil.e(AOAConnectManager.Tag, "bulkTransferIn fail 2");
                             } else {
                                 this.f3216h = -1;
                                 while (this.f3210b) {
                                     this.f3215g++;
                                     if (this.f3215g >= 100) {
-                                        LogUtil.e(AOAConnectManager.f3263b, "write data to socket fail...retry");
+                                        LogUtil.e(AOAConnectManager.Tag, "write data to socket fail...retry");
                                         this.f3215g = 0;
                                         this.f3210b = false;
                                     } else {
                                         switch (this.f3213e) {
                                             case 1:
-                                                this.f3216h = this.f3209a.f3278A.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mWifiReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 2:
-                                                this.f3216h = this.f3209a.f3279B.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mVideoReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 3:
-                                                this.f3216h = this.f3209a.f3280C.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mAudioReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 4:
-                                                this.f3216h = this.f3209a.f3281D.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mTTSReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 5:
-                                                this.f3216h = this.f3209a.f3282E.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mVRReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 6:
-                                                this.f3216h = this.f3209a.f3283F.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mTouchReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             case 7:
-                                                this.f3216h = this.f3209a.f3284G.m4109b(this.f3211c, 0, this.f3214f);
+                                                this.f3216h = this.mAOAConnectManager.mDataReadThread.send(this.f3211c, 0, this.f3214f);
                                                 break;
                                             default:
-                                                LogUtil.e(AOAConnectManager.f3263b, "AOAReadThread typeMsg error");
+                                                LogUtil.e(AOAConnectManager.Tag, "AOAReadThread typeMsg error");
                                                 this.f3210b = false;
                                                 break;
                                         }
                                         if (this.f3216h < 0) {
-                                            C1197a.sleep(100);
+                                            AOAReadThread.sleep(100);
                                         } else {
                                             this.f3215g = 0;
                                         }
@@ -377,11 +372,11 @@ public class AOAConnectManager implements KeepClass {
                             }
                         }
                     }
-                    this.f3209a.m4163b();
+                    this.mAOAConnectManager.unInit();
                 }
-                this.f3209a.m4163b();
+                this.mAOAConnectManager.unInit();
             } catch (Exception e) {
-                LogUtil.e(AOAConnectManager.f3263b, "Exception when read data by AOA");
+                LogUtil.e(AOAConnectManager.Tag, "Exception when read data by AOA");
                 e.printStackTrace();
             }
         }
@@ -389,25 +384,25 @@ public class AOAConnectManager implements KeepClass {
 
     /* compiled from: AOAConnectManager */
     /* renamed from: com.baidu.carlife.core.connect.a$b */
-    private class C1198b extends Thread {
+    private class SocketReadThread extends Thread {
         /* renamed from: a */
-        InetAddress f3217a = null;
+        InetAddress mInetAddress = null;
         /* renamed from: b */
-        final /* synthetic */ AOAConnectManager f3218b;
+        final /* synthetic */ AOAConnectManager mAOAConnectManager;
         /* renamed from: c */
-        private boolean f3219c = false;
+        private boolean mIsOpen = false;
         /* renamed from: d */
-        private int f3220d = -1;
+        private int mPort = -1;
         /* renamed from: e */
-        private String f3221e = null;
+        private String mName = null;
         /* renamed from: f */
-        private String f3222f = null;
+        private String Tag = null;
         /* renamed from: g */
-        private Socket f3223g = null;
+        private Socket mSocket = null;
         /* renamed from: h */
-        private BufferedInputStream f3224h = null;
+        private BufferedInputStream mBufferedInputStream = null;
         /* renamed from: i */
-        private BufferedOutputStream f3225i = null;
+        private BufferedOutputStream mBufferedOutputStream = null;
         /* renamed from: j */
         private int f3226j = -1;
         /* renamed from: k */
@@ -415,311 +410,312 @@ public class AOAConnectManager implements KeepClass {
         /* renamed from: l */
         private int f3228l = -1;
         /* renamed from: m */
-        private byte[] f3229m = new byte[12];
+        private byte[] mReceiveData = new byte[12];
         /* renamed from: n */
-        private byte[] f3230n = new byte[8];
+        private byte[] mSocketByteData = new byte[8];
         /* renamed from: o */
-        private int f3231o = 0;
+        private int mRetryNum = 0;
 
-        public C1198b(AOAConnectManager AOAConnectManager, int port, String name) {
-            this.f3218b = AOAConnectManager;
+        public SocketReadThread(AOAConnectManager AOAConnectManager, int port, String name) {
+            this.mAOAConnectManager = AOAConnectManager;
             try {
-                this.f3222f = name + AOAConnectManager.f3266l;
-                setName(this.f3222f);
-                LogUtil.d(AOAConnectManager.f3263b, "Create " + this.f3222f);
-                this.f3220d = port;
-                this.f3221e = name;
-                this.f3219c = true;
-                if (this.f3221e.equals(CommonParams.SERVER_SOCKET_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(1), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_VIDEO_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(2), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_AUDIO_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(3), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals("TTS")) {
-                    System.arraycopy(ByteConvert.m4175a(4), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_AUDIO_VR_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(5), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(6), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
-                    System.arraycopy(ByteConvert.m4175a(7), 0, this.f3230n, 0, 4);
+                this.Tag = name + AOAConnectManager.SocketReadThreadTag;
+                setName(this.Tag);
+                LogUtil.d(AOAConnectManager.Tag, "Create " + this.Tag);
+                this.mPort = port;
+                this.mName = name;
+                this.mIsOpen = true;
+                if (this.mName.equals(CommonParams.SERVER_SOCKET_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(1), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_VIDEO_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(2), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_AUDIO_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(3), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_AUDIO_TTS_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(4), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_AUDIO_VR_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(5), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(6), 0, this.mSocketByteData, 0, 4);
+                } else if (this.mName.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
+                    System.arraycopy(ByteConvert.m4175a(7), 0, this.mSocketByteData, 0, 4);
                 }
             } catch (Exception e) {
-                LogUtil.e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail");
+                LogUtil.e(AOAConnectManager.Tag, "Create " + this.Tag + " fail");
                 e.printStackTrace();
             }
         }
 
         /* renamed from: a */
-        public void m4108a() {
+        public void close() {
             try {
-                if (this.f3223g != null) {
-                    this.f3223g.close();
-                    this.f3223g = null;
+                if (this.mSocket != null) {
+                    this.mSocket.close();
+                    this.mSocket = null;
                 }
-                if (this.f3224h != null) {
-                    this.f3224h.close();
-                    this.f3224h = null;
+                if (this.mBufferedInputStream != null) {
+                    this.mBufferedInputStream.close();
+                    this.mBufferedInputStream = null;
                 }
-                if (this.f3225i != null) {
-                    this.f3225i.close();
-                    this.f3225i = null;
+                if (this.mBufferedOutputStream != null) {
+                    this.mBufferedOutputStream.close();
+                    this.mBufferedOutputStream = null;
                 }
-                this.f3219c = false;
+                this.mIsOpen = false;
             } catch (Exception e) {
-                LogUtil.e(AOAConnectManager.f3263b, "Close " + this.f3222f + " fail");
+                LogUtil.e(AOAConnectManager.Tag, "Close " + this.Tag + " fail");
                 e.printStackTrace();
             }
         }
 
         /* renamed from: a */
-        public int m4107a(byte[] buffer, int offset, int len) {
+        public int receive(byte[] buffer, int offset, int len) {
             int r = -1;
             try {
-                if (this.f3224h != null) {
+                if (this.mBufferedInputStream != null) {
                     int cnt = len;
                     int dataLen = 0;
                     while (cnt > 0) {
-                        r = this.f3224h.read(buffer, offset + dataLen, cnt);
+                        r = this.mBufferedInputStream.read(buffer, offset + dataLen, cnt);
                         if (r > 0) {
                             cnt -= r;
                             dataLen += r;
                         } else {
-                            LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: ret = " + r);
+                            LogUtil.e(AOAConnectManager.Tag, this.mName + " Receive Data Error: ret = " + r);
                             throw new IOException();
                         }
                     }
                     if (dataLen == len) {
                         return dataLen;
                     }
-                    LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: dataLen = " + dataLen);
+                    LogUtil.e(AOAConnectManager.Tag, this.mName + " Receive Data Error: dataLen = " + dataLen);
                     throw new IOException();
                 }
-                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Fail, mInputStream is null");
+                LogUtil.e(AOAConnectManager.Tag, this.mName + " Receive Data Fail, mInputStream is null");
                 throw new IOException();
             } catch (Exception e) {
-                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " IOException, Receive Data Fail");
-                ConnectClient.newInstance().m4222a(false);
+                LogUtil.e(AOAConnectManager.Tag, this.mName + " IOException, Receive Data Fail");
+                ConnectClient.newInstance().setIS(false);
                 e.printStackTrace();
                 return r;
             }
         }
 
         /* renamed from: b */
-        public int m4109b(byte[] buffer, int offset, int len) {
+        public int send(byte[] buffer, int offset, int len) {
             try {
-                if (this.f3225i != null) {
-                    this.f3225i.write(buffer, offset, len);
-                    this.f3225i.flush();
+                if (this.mBufferedOutputStream != null) {
+                    this.mBufferedOutputStream.write(buffer, offset, len);
+                    this.mBufferedOutputStream.flush();
                     return len;
                 }
-                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Send Data Fail, mOutputStream is null");
+                LogUtil.e(AOAConnectManager.Tag, this.mName + " Send Data Fail, mOutputStream is null");
                 throw new IOException();
             } catch (Exception e) {
-                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " IOException, Send Data Fail");
+                LogUtil.e(AOAConnectManager.Tag, this.mName + " IOException, Send Data Fail");
                 e.printStackTrace();
                 return -1;
             }
         }
 
         public void run() {
-            while (this.f3219c) {
+            while (this.mIsOpen) {
                 try {
-                    C1198b.sleep(100);
-                    this.f3231o++;
-                    LogUtil.d(AOAConnectManager.f3263b, "Try to connect to socket...retry = " + this.f3231o);
-                    if (this.f3231o >= 100) {
-                        LogUtil.d(AOAConnectManager.f3263b, "connect to socket fail");
-                        this.f3231o = 0;
-                        this.f3219c = false;
+                    SocketReadThread.sleep(100);
+                    this.mRetryNum++;
+                    LogUtil.d(AOAConnectManager.Tag, "Try to connect to socket...retry = " + this.mRetryNum);
+                    if (this.mRetryNum >= 100) {
+                        LogUtil.d(AOAConnectManager.Tag, "connect to socket fail");
+                        this.mRetryNum = 0;
+                        this.mIsOpen = false;
                         break;
                     }
-                    this.f3217a = InetAddress.getByName(AOAConnectManager.f3267m);
-                    this.f3223g = new Socket(this.f3217a, this.f3220d);
-                    if (this.f3223g != null) {
-                        LogUtil.d(AOAConnectManager.f3263b, "Connected to: " + this.f3223g.toString());
+                    this.mInetAddress = InetAddress.getByName(AOAConnectManager.LOCALHOST);
+                    this.mSocket = new Socket(this.mInetAddress, this.mPort);
+                    if (this.mSocket != null) {
+                        LogUtil.d(AOAConnectManager.Tag, "Connected to: " + this.mSocket.toString());
                     }
-                    this.f3223g.setTcpNoDelay(true);
-                    this.f3223g.setSendBufferSize(327680);
-                    this.f3223g.setReceiveBufferSize(327680);
-                    this.f3224h = new BufferedInputStream(this.f3223g.getInputStream());
-                    this.f3225i = new BufferedOutputStream(this.f3223g.getOutputStream());
+                    this.mSocket.setTcpNoDelay(true);
+                    this.mSocket.setSendBufferSize(327680);
+                    this.mSocket.setReceiveBufferSize(327680);
+                    this.mBufferedInputStream = new BufferedInputStream(this.mSocket.getInputStream());
+                    this.mBufferedOutputStream = new BufferedOutputStream(this.mSocket.getOutputStream());
                 } catch (Exception e) {
-                    LogUtil.e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail 1");
+                    LogUtil.e(AOAConnectManager.Tag, "Create " + this.Tag + " fail 1");
                     e.printStackTrace();
                 }
             }
             do {
                 try {
-                    if (this.f3223g != null && this.f3219c) {
-                        if (!this.f3223g.isConnected()) {
-                            LogUtil.e(AOAConnectManager.f3263b, "socket is disconnected when read data");
+                    if (this.mSocket != null && this.mIsOpen) {
+                        if (!this.mSocket.isConnected()) {
+                            LogUtil.e(AOAConnectManager.Tag, "socket is disconnected when read data");
                             break;
                         }
-                        if (!this.f3221e.equals(CommonParams.SERVER_SOCKET_NAME) && !this.f3221e.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME) && !this.f3221e.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
-                            if (m4107a(this.f3229m, 0, 12) < 0) {
+                        if (!this.mName.equals(CommonParams.SERVER_SOCKET_NAME) && !this.mName.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME) && !this.mName.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
+                            if (receive(this.mReceiveData, 0, 12) < 0) {
                                 break;
                             }
                             this.f3226j = 12;
-                            this.f3227k = ByteConvert.m4178b(new byte[]{this.f3229m[0], this.f3229m[1], this.f3229m[2], this.f3229m[3]});
-                        } else if (m4107a(this.f3229m, 0, 8) < 0) {
+                            this.f3227k = ByteConvert.m4178b(new byte[]{this.mReceiveData[0], this.mReceiveData[1], this.mReceiveData[2], this.mReceiveData[3]});
+                        } else if (receive(this.mReceiveData, 0, 8) < 0) {
                             break;
                         } else {
                             this.f3226j = 8;
-                            this.f3227k = ByteConvert.m4188d(new byte[]{this.f3229m[0], this.f3229m[1]});
+                            this.f3227k = ByteConvert.m4188d(new byte[]{this.mReceiveData[0], this.mReceiveData[1]});
                         }
-                        LogUtil.d(AOAConnectManager.f3263b, "Channel = " + this.f3221e + ", lenMsgHead = " + this.f3226j + ", lenMsgData = " + this.f3227k);
-                        System.arraycopy(ByteConvert.m4175a(this.f3226j + this.f3227k), 0, this.f3230n, 4, 4);
+                        LogUtil.d(AOAConnectManager.Tag, "Channel = " + this.mName + ", lenMsgHead = " + this.f3226j + ", lenMsgData = " + this.f3227k);
+                        System.arraycopy(ByteConvert.m4175a(this.f3226j + this.f3227k), 0, this.mSocketByteData, 4, 4);
                         this.f3228l = this.f3226j + this.f3227k;
-                        if (this.f3229m.length < this.f3228l) {
-                            byte[] tmpMsg = this.f3229m;
-                            this.f3229m = new byte[this.f3228l];
-                            System.arraycopy(tmpMsg, 0, this.f3229m, 0, this.f3226j);
+                        if (this.mReceiveData.length < this.f3228l) {
+                            byte[] tmpMsg = this.mReceiveData;
+                            this.mReceiveData = new byte[this.f3228l];
+                            System.arraycopy(tmpMsg, 0, this.mReceiveData, 0, this.f3226j);
                         }
-                        if (m4107a(this.f3229m, this.f3226j, this.f3227k) < 0) {
+                        if (receive(this.mReceiveData, this.f3226j, this.f3227k) < 0) {
                             break;
                         }
                     } else {
                         break;
                     }
                 } catch (Exception ex) {
-                    LogUtil.e(AOAConnectManager.f3263b, "get Exception in " + this.f3222f);
+                    LogUtil.e(AOAConnectManager.Tag, "get Exception in " + this.Tag);
                     ex.printStackTrace();
                     return;
                 }
-            } while (this.f3218b.m4161a(this.f3230n, 8, this.f3229m, this.f3228l) >= 0);
-            LogUtil.e(AOAConnectManager.f3263b, "bulkTransferOut fail");
-            this.f3218b.m4163b();
+            }
+            while (this.mAOAConnectManager.bulkTransferOut(this.mSocketByteData, 8, this.mReceiveData, this.f3228l) >= 0);
+            LogUtil.e(AOAConnectManager.Tag, "bulkTransferOut fail");
+            this.mAOAConnectManager.unInit();
         }
     }
 
     /* renamed from: a */
-    public static AOAConnectManager m4143a() {
-        if (f3264c == null) {
+    public static AOAConnectManager newInstance() {
+        if (sAOAConnectManager == null) {
             synchronized (AOAConnectManager.class) {
-                if (f3264c == null) {
-                    f3264c = new AOAConnectManager();
+                if (sAOAConnectManager == null) {
+                    sAOAConnectManager = new AOAConnectManager();
                 }
             }
         }
-        return f3264c;
+        return sAOAConnectManager;
     }
 
     private AOAConnectManager() {
     }
 
     /* renamed from: a */
-    public void m4162a(Context context, UsbAccessory accessory) {
-        LogUtil.e(f3263b, "init");
-        this.f3289d = context;
-        this.f3290e = (UsbManager) this.f3289d.getSystemService("usb");
-        this.f3291f = accessory;
-        if (this.f3291f == null) {
-            LogUtil.e(f3263b, "mUsbAccessory is null");
-        } else if (ConnectClient.newInstance().m4226d()) {
+    public void init(Context context, UsbAccessory accessory) {
+        LogUtil.e(Tag, "init");
+        this.mContext = context;
+        this.mUsbManager = (UsbManager) this.mContext.getSystemService(Context.USB_SERVICE);
+        this.mUsbAccessory = accessory;
+        if (this.mUsbAccessory == null) {
+            LogUtil.e(Tag, "mUsbAccessory is null");
+        } else if (ConnectClient.newInstance().getUSBCableIsConn()) {
             try {
-                this.f3292g = this.f3290e.openAccessory(this.f3291f);
-                this.f3293h = this.f3292g.getFileDescriptor();
-                this.f3294i = new FileOutputStream(this.f3293h);
-                this.f3295j = new FileInputStream(this.f3293h);
+                this.mParcelFileDescriptor = this.mUsbManager.openAccessory(this.mUsbAccessory);
+                this.mFileDescriptor = this.mParcelFileDescriptor.getFileDescriptor();
+                this.mFileOutputStream = new FileOutputStream(this.mFileDescriptor);
+                this.mFileInputStream = new FileInputStream(this.mFileDescriptor);
                 ConnectManager.newInstance().setType(2);
-                m4166e();
-                m4164c();
+                startSocketReadThread();
+                startAOAReadThread();
             } catch (Exception ex) {
-                LogUtil.e(f3263b, "get fd fail");
+                LogUtil.e(Tag, "get fd fail");
                 ex.printStackTrace();
             }
         } else {
-            LogUtil.e(f3263b, "usb is not connected");
+            LogUtil.e(Tag, "usb is not connected");
         }
     }
 
     /* renamed from: b */
-    public void m4163b() {
-        LogUtil.e(f3263b, "uninit");
+    public void unInit() {
+        LogUtil.e(Tag, "uninit");
         try {
-            if (this.f3294i != null) {
-                this.f3294i.close();
-                this.f3294i = null;
+            if (this.mFileOutputStream != null) {
+                this.mFileOutputStream.close();
+                this.mFileOutputStream = null;
             }
-            if (this.f3295j != null) {
-                this.f3295j.close();
-                this.f3295j = null;
+            if (this.mFileInputStream != null) {
+                this.mFileInputStream.close();
+                this.mFileInputStream = null;
             }
-            if (this.f3292g != null) {
-                this.f3292g.close();
-                this.f3292g = null;
+            if (this.mParcelFileDescriptor != null) {
+                this.mParcelFileDescriptor.close();
+                this.mParcelFileDescriptor = null;
             }
         } catch (Exception e) {
-            LogUtil.e(f3263b, "uninit fail");
+            LogUtil.e(Tag, "uninit fail");
         }
-        this.f3291f = null;
-        this.f3293h = null;
+        this.mUsbAccessory = null;
+        this.mFileDescriptor = null;
         ConnectManager.newInstance().setType(1);
-        m4167f();
-        m4165d();
+        stopReadThread();
+        stopAOAReadThread();
     }
 
     /* renamed from: b */
-    private int m4144b(byte[] data, int len) {
+    private int bulkTransferIn(byte[] data, int len) {
         try {
-            if (this.f3295j == null) {
-                LogUtil.e(f3263b, "mFin is null");
+            if (this.mFileInputStream == null) {
+                LogUtil.e(Tag, "mFin is null");
                 throw new IOException();
             }
             int cnt = len;
             int dataLen = 0;
             while (cnt > 0) {
-                int ret = this.f3295j.read(data, dataLen, 16384);
+                int ret = this.mFileInputStream.read(data, dataLen, 16384);
                 if (ret > 0) {
                     cnt -= ret;
                     dataLen += ret;
                 } else {
-                    LogUtil.e(f3263b, "bulkTransferIn error 1: ret = " + ret);
+                    LogUtil.e(Tag, "bulkTransferIn error 1: ret = " + ret);
                     throw new IOException();
                 }
             }
             if (dataLen == len) {
                 return dataLen;
             }
-            LogUtil.e(f3263b, "bulkTransferIn error 3: dataLen = " + dataLen + ", len = " + len);
+            LogUtil.e(Tag, "bulkTransferIn error 3: dataLen = " + dataLen + ", len = " + len);
             throw new IOException();
         } catch (Exception e) {
-            LogUtil.e(f3263b, "bulkTransferIn catch exception");
-            ConnectClient.newInstance().m4222a(false);
+            LogUtil.e(Tag, "bulkTransferIn catch exception");
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return -1;
         }
     }
 
     /* renamed from: a */
-    public int m4160a(byte[] data, int len) {
+    public int bulkTransferOut(byte[] data, int len) {
         try {
-            if (this.f3294i == null) {
-                LogUtil.e(f3263b, "mFin is null");
+            if (this.mFileOutputStream == null) {
+                LogUtil.e(Tag, "mFin is null");
                 throw new IOException();
             }
-            this.f3294i.write(data, 0, len);
+            this.mFileOutputStream.write(data, 0, len);
             return len;
         } catch (Exception e) {
-            LogUtil.e(f3263b, "bulkTransferOut catch exception");
-            ConnectClient.newInstance().m4222a(false);
+            LogUtil.e(Tag, "bulkTransferOut catch exception");
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return -1;
         }
     }
 
     /* renamed from: a */
-    public synchronized int m4161a(byte[] head, int lenHead, byte[] msg, int lenMsg) {
+    public synchronized int bulkTransferOut(byte[] head, int lenHead, byte[] msg, int lenMsg) {
         int i = -1;
         synchronized (this) {
-            this.f3287J++;
-            this.f3287J %= 65536;
-            if (m4160a(head, lenHead) < 0) {
-                LogUtil.e(f3263b, "bulkTransferOut fail 1");
-            } else if (m4160a(msg, lenMsg) < 0) {
-                LogUtil.e(f3263b, "bulkTransferOut fail 2");
+            this.mNumOfHeartBeat++;
+            this.mNumOfHeartBeat %= 65536;
+            if (bulkTransferOut(head, lenHead) < 0) {
+                LogUtil.e(Tag, "bulkTransferOut fail 1");
+            } else if (bulkTransferOut(msg, lenMsg) < 0) {
+                LogUtil.e(Tag, "bulkTransferOut fail 2");
             } else {
                 i = lenHead + lenMsg;
             }
@@ -728,117 +724,117 @@ public class AOAConnectManager implements KeepClass {
     }
 
     /* renamed from: c */
-    public void m4164c() {
+    public void startAOAReadThread() {
         try {
-            this.f3298z = new C1197a(this);
+            this.f3298z = new AOAReadThread(this);
             this.f3298z.start();
         } catch (Exception e) {
-            LogUtil.e(f3263b, "Start AOAReadThread Fail");
+            LogUtil.e(Tag, "Start AOAReadThread Fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: d */
-    public void m4165d() {
+    public void stopAOAReadThread() {
         try {
             if (this.f3298z != null) {
                 this.f3298z.m4106a();
                 this.f3298z = null;
             }
         } catch (Exception e) {
-            LogUtil.e(f3263b, "Stop AOAReadThread Fail");
+            LogUtil.e(Tag, "Stop AOAReadThread Fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: e */
-    public void m4166e() {
+    public void startSocketReadThread() {
         try {
-            this.f3278A = new C1198b(this, CommonParams.SOCKET_WIFI_PORT, CommonParams.SERVER_SOCKET_NAME);
-            this.f3278A.start();
-            this.f3279B = new C1198b(this, CommonParams.SOCKET_VIDEO_WIFI_PORT, CommonParams.SERVER_SOCKET_VIDEO_NAME);
-            this.f3279B.start();
-            this.f3280C = new C1198b(this, CommonParams.SOCKET_AUDIO_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_NAME);
-            this.f3280C.start();
-            this.f3281D = new C1198b(this, CommonParams.SOCKET_AUDIO_TTS_WIFI_PORT, "TTS");
-            this.f3281D.start();
-            this.f3282E = new C1198b(this, CommonParams.SOCKET_AUDIO_VR_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_VR_NAME);
-            this.f3282E.start();
-            this.f3283F = new C1198b(this, CommonParams.SOCKET_TOUCH_WIFI_PORT, CommonParams.SERVER_SOCKET_TOUCH_NAME);
-            this.f3283F.start();
-            this.f3284G = new C1198b(this, CommonParams.SOCKET_DATA_WIFI_PORT, CommonParams.SERVER_SOCKET_DATA_NAME);
-            this.f3284G.start();
+            this.mWifiReadThread = new SocketReadThread(this, CommonParams.SOCKET_WIFI_PORT, CommonParams.SERVER_SOCKET_NAME);
+            this.mWifiReadThread.start();
+            this.mVideoReadThread = new SocketReadThread(this, CommonParams.SOCKET_VIDEO_WIFI_PORT, CommonParams.SERVER_SOCKET_VIDEO_NAME);
+            this.mVideoReadThread.start();
+            this.mAudioReadThread = new SocketReadThread(this, CommonParams.SOCKET_AUDIO_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_NAME);
+            this.mAudioReadThread.start();
+            this.mTTSReadThread = new SocketReadThread(this, CommonParams.SOCKET_AUDIO_TTS_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_TTS_NAME);
+            this.mTTSReadThread.start();
+            this.mVRReadThread = new SocketReadThread(this, CommonParams.SOCKET_AUDIO_VR_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_VR_NAME);
+            this.mVRReadThread.start();
+            this.mTouchReadThread = new SocketReadThread(this, CommonParams.SOCKET_TOUCH_WIFI_PORT, CommonParams.SERVER_SOCKET_TOUCH_NAME);
+            this.mTouchReadThread.start();
+            this.mDataReadThread = new SocketReadThread(this, CommonParams.SOCKET_DATA_WIFI_PORT, CommonParams.SERVER_SOCKET_DATA_NAME);
+            this.mDataReadThread.start();
         } catch (Exception e) {
-            LogUtil.e(f3263b, "Start Read Thread Fail");
+            LogUtil.e(Tag, "Start Read Thread Fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: f */
-    public void m4167f() {
+    public void stopReadThread() {
         try {
-            if (this.f3278A != null) {
-                this.f3278A.m4108a();
-                this.f3278A = null;
+            if (this.mWifiReadThread != null) {
+                this.mWifiReadThread.close();
+                this.mWifiReadThread = null;
             }
-            if (this.f3279B != null) {
-                this.f3279B.m4108a();
-                this.f3279B = null;
+            if (this.mVideoReadThread != null) {
+                this.mVideoReadThread.close();
+                this.mVideoReadThread = null;
             }
-            if (this.f3280C != null) {
-                this.f3280C.m4108a();
-                this.f3280C = null;
+            if (this.mAudioReadThread != null) {
+                this.mAudioReadThread.close();
+                this.mAudioReadThread = null;
             }
-            if (this.f3281D != null) {
-                this.f3281D.m4108a();
-                this.f3281D = null;
+            if (this.mTTSReadThread != null) {
+                this.mTTSReadThread.close();
+                this.mTTSReadThread = null;
             }
-            if (this.f3282E != null) {
-                this.f3282E.m4108a();
-                this.f3282E = null;
+            if (this.mVRReadThread != null) {
+                this.mVRReadThread.close();
+                this.mVRReadThread = null;
             }
-            if (this.f3283F != null) {
-                this.f3283F.m4108a();
-                this.f3283F = null;
+            if (this.mTouchReadThread != null) {
+                this.mTouchReadThread.close();
+                this.mTouchReadThread = null;
             }
-            if (this.f3284G != null) {
-                this.f3284G.m4108a();
-                this.f3284G = null;
+            if (this.mDataReadThread != null) {
+                this.mDataReadThread.close();
+                this.mDataReadThread = null;
             }
         } catch (Exception e) {
-            LogUtil.e(f3263b, "Stop Read Thread Fail");
+            LogUtil.e(Tag, "Stop Read Thread Fail");
             e.printStackTrace();
         }
     }
 
     /* renamed from: g */
-    public void m4168g() {
+    public void startTimer() {
         try {
-            LogUtil.e(f3263b, "start timer");
-            this.f3287J = 0;
-            this.f3288K = -1;
-            this.f3285H = new Timer();
-            this.f3286I = new C11941(this);
-            this.f3285H.schedule(this.f3286I, 1500, 500);
+            LogUtil.e(Tag, "start timer");
+            this.mNumOfHeartBeat = 0;
+            this.mOldNumOfHeartBeat = -1;
+            this.mTimer = new Timer();
+            this.mTimerTask = new AOAConnectManagerTask(this);
+            this.mTimer.schedule(this.mTimerTask, 1500, 500);
         } catch (Exception ex) {
-            LogUtil.e(f3263b, "start timer get exception");
+            LogUtil.e(Tag, "start timer get exception");
             ex.printStackTrace();
         }
     }
 
     /* renamed from: h */
-    public void m4169h() {
-        LogUtil.e(f3263b, "timer Stop");
-        if (this.f3285H != null) {
-            this.f3285H.cancel();
-            this.f3285H = null;
+    public void stopTimer() {
+        LogUtil.e(Tag, "timer Stop");
+        if (this.mTimer != null) {
+            this.mTimer.cancel();
+            this.mTimer = null;
         }
-        if (this.f3286I != null) {
-            this.f3286I.cancel();
-            this.f3286I = null;
+        if (this.mTimerTask != null) {
+            this.mTimerTask.cancel();
+            this.mTimerTask = null;
         }
-        this.f3287J = 0;
-        this.f3288K = -1;
+        this.mNumOfHeartBeat = 0;
+        this.mOldNumOfHeartBeat = -1;
     }
 
     /* renamed from: j */
@@ -858,15 +854,15 @@ public class AOAConnectManager implements KeepClass {
     }
 
     /* renamed from: k */
-    private void m4157k() {
-        this.f3297w = new C11952(this);
-        this.f3297w.setName("WriteThread");
-        this.f3297w.start();
+    private void startWriteThread() {
+        this.mWriteThread = new WriteThread(this);
+        this.mWriteThread.setName("WriteThread");
+        this.mWriteThread.start();
     }
 
     /* renamed from: l */
-    private void m4159l() {
-        this.f3296v = new C11963(this);
+    private void startReadThread() {
+        this.f3296v = new ReadThread(this);
         this.f3296v.setName("ReadThread");
         this.f3296v.start();
     }

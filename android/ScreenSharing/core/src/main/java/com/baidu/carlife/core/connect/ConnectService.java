@@ -8,7 +8,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
+
 import com.baidu.carlife.core.LogUtil;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,117 +18,117 @@ public class ConnectService extends Service {
     /* renamed from: a */
     public static final int f3180a = -1;
     /* renamed from: b */
-    private static final String f3181b = "ConnectService";
+    private static final String Tag = "ConnectService";
     /* renamed from: c */
     private static final int f3182c = 100;
     /* renamed from: d */
-    private HandlerThread f3183d = new HandlerThread("MsgHandlerThread");
+    private HandlerThread mMsgHandlerThread = new HandlerThread("MsgHandlerThread");
     /* renamed from: e */
-    private C1193a f3184e;
+    private ConnectServiceHandler mConnectServiceHandler;
     /* renamed from: f */
-    private Messenger f3185f;
+    private Messenger mMessenger;
     /* renamed from: g */
-    private ConnectServiceProxy f3186g = null;
+    private ConnectServiceProxy mConnectServiceProxy = null;
     /* renamed from: h */
-    private Handler f3187h = null;
+    private Handler mHandler = null;
     /* renamed from: i */
-    private List<Message> f3188i = new LinkedList();
+    private List<Message> mMessageList = new LinkedList();
     /* renamed from: j */
-    private ConnectManager f3189j = null;
+    private ConnectManager mConnectManager = null;
 
     /* renamed from: com.baidu.carlife.core.connect.ConnectService$a */
-    private class C1193a extends Handler {
+    private class ConnectServiceHandler extends Handler {
         /* renamed from: a */
-        final /* synthetic */ ConnectService f3179a;
+        final /* synthetic */ ConnectService mConnectService;
 
-        public C1193a(ConnectService connectService, Looper looper) {
-            this.f3179a = connectService;
+        public ConnectServiceHandler(ConnectService connectService, Looper looper) {
             super(looper);
+            this.mConnectService = connectService;
         }
 
         public void handleMessage(Message msg) {
-            if (this.f3179a.f3187h != null) {
-                this.f3179a.f3187h.handleMessage(msg);
-                if (this.f3179a.f3188i.size() > 0) {
-                    this.f3179a.f3184e.sendMessage((Message) this.f3179a.f3188i.remove(0));
+            if (this.mConnectService.mHandler != null) {
+                this.mConnectService.mHandler.handleMessage(msg);
+                if (this.mConnectService.mMessageList.size() > 0) {
+                    this.mConnectService.mConnectServiceHandler.sendMessage((Message) this.mConnectService.mMessageList.remove(0));
                     return;
                 }
                 return;
             }
-            if (this.f3179a.f3188i.size() >= 100) {
-                Message oldMsg = (Message) this.f3179a.f3188i.remove(0);
+            if (this.mConnectService.mMessageList.size() >= 100) {
+                Message oldMsg = (Message) this.mConnectService.mMessageList.remove(0);
                 Message replayMsg = Message.obtain(null, -1, oldMsg);
                 try {
-                    LogUtil.e(ConnectService.f3181b, "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(oldMsg.what));
+                    LogUtil.e(ConnectService.Tag, "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(oldMsg.what));
                     oldMsg.replyTo.send(replayMsg);
                 } catch (Throwable t) {
-                    LogUtil.e(ConnectService.f3181b, "Send MSG_SEND_DISCARD Error");
+                    LogUtil.e(ConnectService.Tag, "Send MSG_SEND_DISCARD Error");
                     t.printStackTrace();
                 }
             }
-            this.f3179a.f3188i.add(Message.obtain(msg));
-            this.f3179a.m4097a();
+            this.mConnectService.mMessageList.add(Message.obtain(msg));
+            this.mConnectService.onBind();
         }
     }
 
     /* renamed from: a */
-    private void m4097a() {
+    private void onBind() {
         try {
-            if (this.f3186g == null || this.f3187h == null) {
-                this.f3186g = new ConnectServiceProxy(this);
-                this.f3187h = this.f3186g.m4257a();
+            if (this.mConnectServiceProxy == null || this.mHandler == null) {
+                this.mConnectServiceProxy = new ConnectServiceProxy(this);
+                this.mHandler = this.mConnectServiceProxy.getConnectServiceProxyHandler();
             }
-            if (this.f3188i.size() > 0) {
-                this.f3184e.sendMessage((Message) this.f3188i.remove(0));
+            if (this.mMessageList.size() > 0) {
+                this.mConnectServiceHandler.sendMessage((Message) this.mMessageList.remove(0));
             }
-            this.f3189j = ConnectManager.newInstance();
-            this.f3189j.startAcceptThread();
-            this.f3189j.startUDP();
+            this.mConnectManager = ConnectManager.newInstance();
+            this.mConnectManager.startAcceptThread();
+            this.mConnectManager.startUDP();
         } catch (Throwable t) {
-            this.f3186g = null;
-            this.f3187h = null;
+            this.mConnectServiceProxy = null;
+            this.mHandler = null;
             t.printStackTrace();
         }
     }
 
     public IBinder onBind(Intent intent) {
-        LogUtil.d(f3181b, "ConnectService onBind()");
-        return this.f3185f.getBinder();
+        LogUtil.d(Tag, "ConnectService onBind()");
+        return this.mMessenger.getBinder();
     }
 
     public boolean onUnbind(Intent intent) {
-        LogUtil.d(f3181b, "ConnectService onUnbind()");
+        LogUtil.d(Tag, "ConnectService onUnbind()");
         return super.onUnbind(intent);
     }
 
     public void onRebind(Intent intent) {
-        LogUtil.d(f3181b, "ConnectService onRebind()");
+        LogUtil.d(Tag, "ConnectService onRebind()");
         super.onRebind(intent);
     }
 
     public void onCreate() {
-        LogUtil.d(f3181b, "ConnectService onCreate()");
+        LogUtil.d(Tag, "ConnectService onCreate()");
         super.onCreate();
-        this.f3183d.start();
-        this.f3184e = new C1193a(this, this.f3183d.getLooper());
-        this.f3185f = new Messenger(this.f3184e);
-        m4097a();
+        this.mMsgHandlerThread.start();
+        this.mConnectServiceHandler = new ConnectServiceHandler(this, this.mMsgHandlerThread.getLooper());
+        this.mMessenger = new Messenger(this.mConnectServiceHandler);
+        onBind();
     }
 
     public void onStart(Intent intent, int startId) {
-        LogUtil.d(f3181b, "ConnectService onStart(), startId = " + startId);
+        LogUtil.d(Tag, "ConnectService onStart(), startId = " + startId);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtil.d(f3181b, "ConnectService onStartCommand()");
+        LogUtil.d(Tag, "ConnectService onStartCommand()");
         return super.onStartCommand(intent, flags, startId);
     }
 
     public void onDestroy() {
-        LogUtil.d(f3181b, "ConnectService onDestroy()");
-        if (this.f3189j != null) {
-            this.f3189j.stopAcceptThread();
-            this.f3189j = null;
+        LogUtil.d(Tag, "ConnectService onDestroy()");
+        if (this.mConnectManager != null) {
+            this.mConnectManager.stopAcceptThread();
+            this.mConnectManager = null;
         }
         super.onDestroy();
     }

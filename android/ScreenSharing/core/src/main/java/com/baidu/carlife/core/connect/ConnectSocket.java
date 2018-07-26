@@ -275,7 +275,7 @@ public class ConnectSocket implements KeepClass {
                         this.mOutputStream.flush();
                     }
                 } else {
-                    byte[] encryptData = this.mEncryptData.m4112a(msg.getData(), msg.getData().length);
+                    byte[] encryptData = this.mEncryptData.encrypt(msg.getData(), msg.getData().length);
                     if (encryptData == null) {
                         LogUtil.e(TAG, "encrypt failed!");
                         return -1;
@@ -294,7 +294,7 @@ public class ConnectSocket implements KeepClass {
             throw new IOException();
         } catch (Exception e) {
             LogUtil.e(TAG, this.mSocketName + " IOException, Send Data Fail");
-            ConnectClient.newInstance().m4222a(false);
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return -1;
         }
@@ -315,7 +315,7 @@ public class ConnectSocket implements KeepClass {
             throw new IOException();
         } catch (Exception e) {
             LogUtil.e(TAG, this.mSocketName + " IOException, Send Data Fail");
-            ConnectClient.newInstance().m4222a(false);
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return -1;
         }
@@ -341,7 +341,7 @@ public class ConnectSocket implements KeepClass {
                     }
                 }
                 if (headLen == 8) {
-                    carlifeMsg.m4195a(headBuf);
+                    carlifeMsg.fromByteArray(headBuf);
                     int len = carlifeMsg.getLength();
                     cnt = len;
                     byte[] dataBuf = new byte[len];
@@ -360,7 +360,7 @@ public class ConnectSocket implements KeepClass {
                         if (!EncryptSetupManager.newInstance().getFlag() || dataLen <= 0) {
                             carlifeMsg.setData(dataBuf);
                         } else {
-                            byte[] decryptData = this.f3388u.m4113b(dataBuf, dataLen);
+                            byte[] decryptData = this.f3388u.decrypt(dataBuf, dataLen);
                             if (decryptData == null) {
                                 LogUtil.e(TAG, "decrypt failed!");
                                 return null;
@@ -381,7 +381,7 @@ public class ConnectSocket implements KeepClass {
             throw new IOException();
         } catch (Exception e) {
             LogUtil.e(TAG, this.mSocketName + " IOException, Receive Data Fail");
-            ConnectClient.newInstance().m4222a(false);
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return null;
         }
@@ -407,7 +407,7 @@ public class ConnectSocket implements KeepClass {
                     }
                 }
                 if (headLen == 8) {
-                    carlifeMsg.m4195a(headBuf);
+                    carlifeMsg.fromByteArray(headBuf);
                     int len = carlifeMsg.getLength();
                     cnt = len;
                     byte[] dataBuf = new byte[len];
@@ -434,7 +434,7 @@ public class ConnectSocket implements KeepClass {
                 throw new IOException();
             } catch (Exception e) {
                 LogUtil.e(TAG, "IOException, Receive Data Fail");
-                ConnectClient.newInstance().m4222a(false);
+                ConnectClient.newInstance().setIS(false);
                 e.printStackTrace();
                 return null;
             }
@@ -470,7 +470,7 @@ public class ConnectSocket implements KeepClass {
             throw new IOException();
         } catch (Exception e) {
             LogUtil.e(TAG, this.mSocketName + " IOException, Receive Data Fail");
-            ConnectClient.newInstance().m4222a(false);
+            ConnectClient.newInstance().setIS(false);
             e.printStackTrace();
             return r;
         }

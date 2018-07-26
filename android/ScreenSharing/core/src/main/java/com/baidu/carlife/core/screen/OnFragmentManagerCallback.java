@@ -2,8 +2,6 @@ package com.baidu.carlife.core.screen;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.baidu.navi.fragment.ContentFragment;
-import com.baidu.navi.fragment.NaviFragmentManager;
 
 /* compiled from: OnFragmentManagerCallback */
 /* renamed from: com.baidu.carlife.core.screen.f */
@@ -14,13 +12,13 @@ public interface OnFragmentManagerCallback {
 
     void backTo(int i, Bundle bundle);
 
-    ContentFragment createFragment(int i);
-
-    ContentFragment getCurrentFragment();
+//    ContentFragment createFragment(int i);
+//
+//    ContentFragment getCurrentFragment();
 
     int getCurrentFragmentType();
 
-    NaviFragmentManager getNaviFragmentManager();
+//    NaviFragmentManager getNaviFragmentManager();
 
     int getNextFragmentType();
 
@@ -28,7 +26,7 @@ public interface OnFragmentManagerCallback {
 
     boolean isNaviMapFragment();
 
-    void push(ContentFragment contentFragment);
+//    void push(ContentFragment contentFragment);
 
     void removeAllFragmentByType(int i);
 

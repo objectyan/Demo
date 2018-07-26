@@ -11,45 +11,46 @@ import android.view.Window;
 import android.view.Window.Callback;
 import android.view.WindowManager.LayoutParams;
 import android.view.accessibility.AccessibilityEvent;
+
 import com.baidu.carlife.core.KeepClass;
 
 /* compiled from: AbsCarlifeWindowCallback */
 /* renamed from: com.baidu.carlife.core.screen.presentation.c */
 public abstract class AbsCarlifeWindowCallback implements Callback, KeepClass {
     /* renamed from: a */
-    private static final String f3711a = "CarlifeTouchManager#CarlifeWindowCallback";
+    private static final String Tag = "CarlifeTouchManager#CarlifeWindowCallback";
     /* renamed from: b */
-    private Window f3712b;
+    private Window mWindow;
 
     /* renamed from: a */
     public abstract void mo1450a();
 
-    public AbsCarlifeWindowCallback(Window window) {
-        this.f3712b = window;
+    public AbsCarlifeWindowCallback(AbsCarlifePresentation absCarlifePresentation, Window window) {
+        this.mWindow = window;
     }
 
     public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         if (keyEvent.getKeyCode() != 4 || keyEvent.getAction() != 0) {
-            return this.f3712b.superDispatchKeyEvent(keyEvent);
+            return this.mWindow.superDispatchKeyEvent(keyEvent);
         }
         mo1450a();
         return true;
     }
 
     public boolean dispatchKeyShortcutEvent(KeyEvent keyEvent) {
-        return this.f3712b.superDispatchKeyShortcutEvent(keyEvent);
+        return this.mWindow.superDispatchKeyShortcutEvent(keyEvent);
     }
 
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        return this.f3712b.superDispatchTouchEvent(motionEvent);
+        return this.mWindow.superDispatchTouchEvent(motionEvent);
     }
 
     public boolean dispatchTrackballEvent(MotionEvent motionEvent) {
-        return this.f3712b.superDispatchTrackballEvent(motionEvent);
+        return this.mWindow.superDispatchTrackballEvent(motionEvent);
     }
 
     public boolean dispatchGenericMotionEvent(MotionEvent motionEvent) {
-        return this.f3712b.superDispatchGenericMotionEvent(motionEvent);
+        return this.mWindow.superDispatchGenericMotionEvent(motionEvent);
     }
 
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent accessibilityEvent) {

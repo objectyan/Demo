@@ -215,7 +215,7 @@ public class C2342g implements OnClickListener, OnRGInfoListener {
             int curModuleType = FragmentManagerCallbackProxy.m4757a().m4768d();
             if (isBTConnected && 4002 != curModuleType && this.f7663a.f7689P) {
                 this.f7663a.m8870i();
-                this.f7663a.f7693c.sendEmptyMessageDelayed(CommonParams.gT, BNOffScreenParams.MIN_ENTER_INTERVAL);
+                this.f7663a.f7693c.sendEmptyMessageDelayed(CommonParams.gT, 10000);
             }
             this.f7663a.f7689P = false;
             this.f7663a.f7690Q = false;
@@ -610,7 +610,7 @@ public class C2342g implements OnClickListener, OnRGInfoListener {
         if (this.f7700o != null) {
             this.f7700o.setVisibility(8);
             this.f7696k = true;
-            this.f7693c.sendEmptyMessageDelayed(CommonParams.gU, BNOffScreenParams.MIN_ENTER_INTERVAL);
+            this.f7693c.sendEmptyMessageDelayed(CommonParams.gU, 10000);
         }
         if (m8873j()) {
             C1440d.m5251a().m5255b(null);
@@ -699,7 +699,7 @@ public class C2342g implements OnClickListener, OnRGInfoListener {
             } else {
                 this.f7693c.removeMessages(CommonParams.gR);
             }
-            this.f7693c.sendEmptyMessageDelayed(CommonParams.gR, BNOffScreenParams.MIN_ENTER_INTERVAL);
+            this.f7693c.sendEmptyMessageDelayed(CommonParams.gR, 10000);
             if (this.f7679F == null) {
                 this.f7679F = new C1443g(this.f7698m, 0);
                 this.f7679F.m5300d(this.f7700o.findViewById(R.id.ib_cancle_tips));
@@ -738,7 +738,7 @@ public class C2342g implements OnClickListener, OnRGInfoListener {
                     lp.leftMargin = xPos;
                     this.f7698m.setLayoutParams(lp);
                 }
-                this.f7693c.sendEmptyMessageDelayed(CommonParams.gR, BNOffScreenParams.MIN_ENTER_INTERVAL);
+                this.f7693c.sendEmptyMessageDelayed(CommonParams.gR, 10000);
                 if (this.f7678E == null) {
                     this.f7678E = new C1443g(this.f7698m, 0);
                     this.f7678E.m5300d(this.f7698m.findViewById(R.id.ib_cancle_tips));

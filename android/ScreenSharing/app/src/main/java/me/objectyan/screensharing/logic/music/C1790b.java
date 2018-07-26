@@ -363,7 +363,7 @@ public abstract class C1790b {
                     String className = ri.activityInfo.name;
                     Intent intent = new Intent("android.intent.action.MAIN");
                     intent.addCategory("android.intent.category.LAUNCHER");
-                    intent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    intent.setFlags(268435456);
                     intent.setComponent(new ComponentName(packageName, className));
                     try {
                         BaseFragment.getNaviActivity().startActivity(intent);

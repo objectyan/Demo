@@ -594,7 +594,7 @@ public class C1838q extends C1790b {
         if (CarlifeUtil.m4358a().m4401r()) {
             try {
                 Intent intent = new Intent("android.intent.action.VIEW", Uri.parse(ac));
-                intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                intent.addFlags(268435456);
                 this.C.startActivity(intent);
                 return;
             } catch (Exception e) {

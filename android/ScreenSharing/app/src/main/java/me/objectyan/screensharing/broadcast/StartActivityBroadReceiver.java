@@ -13,12 +13,12 @@ public class StartActivityBroadReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (TextUtils.equals("com.baidu.carlife.Action.StartActivityBroadReceiver", action)) {
             Intent i = new Intent(C1984a.f6383b);
-            i.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+            i.setFlags(268435456);
             context.startActivity(i);
             return;
         }
         Intent mainIntent = new Intent(context, CarlifeActivity.class);
-        mainIntent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        mainIntent.setFlags(268435456);
         mainIntent.setAction(action);
         context.startActivity(mainIntent);
     }

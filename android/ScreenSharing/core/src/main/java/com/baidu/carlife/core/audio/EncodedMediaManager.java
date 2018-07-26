@@ -165,7 +165,7 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
                     }
                     LogUtil.d(EncodedMediaManager.Tag, "MediaCodec Error happen!");
                 } else {
-                    if (AudioUtil.getIs() && ConnectClient.newInstance().m4225c()) {
+                    if (AudioUtil.getIs() && ConnectClient.newInstance().getIS()) {
                         if (this.mEncodedMediaManager.f3070m) {
                             if (CarlifeCoreAudio.newInstance().isSR()) {
                                 this.mEncodedMediaManager.m3951b(EncodedMediaManager.f3048C, this.mEncodedMediaManager.f3060c, this.mEncodedMediaManager.f3061d);
@@ -479,7 +479,7 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
             }
             byte[] rawData = new byte[size];
             System.arraycopy(sendData, this.f3076s, rawData, 0, sendSize);
-            sendData = this.mAESManager.m4112a(rawData, size);
+            sendData = this.mAESManager.encrypt(rawData, size);
             if (sendData == null) {
                 LogUtil.e(Tag, "encrypt failed!");
                 return;
@@ -530,7 +530,7 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     private void m3951b(int sampleRate, int channelConfig, int formatConfig) {
         if (AudioUtil.getIs()) {
             this.mPCMPackageHeadOne.m4053c(CommonParams.bp);
-            this.f3069l = this.mPCMPackageHeadOne.m4046a(sampleRate, channelConfig, formatConfig, this.f3068k);
+            this.f3069l = this.mPCMPackageHeadOne.encryptMusicLength(sampleRate, channelConfig, formatConfig, this.f3068k);
             this.mPCMPackageHeadOne.m4047a(this.f3069l);
             System.arraycopy(this.mPCMPackageHeadOne.m4048a(), 0, this.f3068k, 0, this.f3076s);
             MediaChannelSend.newInstance().send(this.f3068k, this.f3069l + this.f3076s, EnumAudioState.INIT);

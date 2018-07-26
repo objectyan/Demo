@@ -7,6 +7,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.core.connect.ConnectClient;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse;
 import com.baidu.carlife.protobuf.CarlifeMdAesKeyRequestProto.CarlifeMdAesKeyRequest;
 import com.baidu.carlife.protobuf.CarlifeMdAesKeyRequestProto.CarlifeMdAesKeyRequest.Builder;
@@ -24,49 +25,49 @@ public class EncryptSetupManager {
     /* renamed from: b */
     private boolean mFlag = false;
     /* renamed from: c */
-    private C1207a f3255c = new C1207a();
+    private EncryptSetupMsgBaseManager mEncryptSetupMsgBaseManager = new EncryptSetupMsgBaseManager(this);
     /* renamed from: d */
     private boolean f3256d = false;
     /* renamed from: e */
-    private Object f3257e = new Object();
+    private Object mObject = new Object();
     /* renamed from: f */
-    private Timer f3258f;
+    private Timer mTimer;
     /* renamed from: g */
     private RSAManager mRSAManager = new RSAManager();
     /* renamed from: i */
-    private String f3260i;
+    private String mKey;
 
     /* compiled from: EncryptSetupManager */
     /* renamed from: com.baidu.carlife.core.connect.a.e$2 */
-    class C12062 extends TimerTask {
+    class EncryptSetupManagerTask extends TimerTask {
         /* renamed from: a */
-        final /* synthetic */ EncryptSetupManager f3250a;
+        final /* synthetic */ EncryptSetupManager mEncryptSetupManager;
 
-        C12062(EncryptSetupManager this$0) {
-            this.f3250a = this$0;
+        EncryptSetupManagerTask(EncryptSetupManager this$0) {
+            this.mEncryptSetupManager = this$0;
         }
 
         public void run() {
-            synchronized (this.f3250a.f3257e) {
-                this.f3250a.f3257e.notifyAll();
+            synchronized (this.mEncryptSetupManager.mObject) {
+                this.mEncryptSetupManager.mObject.notifyAll();
             }
         }
     }
 
-    /* compiled from: EncryptSetupManager c1207a */
+    /* compiled from: EncryptSetupManager EncryptSetupMsgBaseManager */
     /* renamed from: com.baidu.carlife.core.connect.a.e$a */
     private class EncryptSetupMsgBaseManager extends MsgBaseHandler {
         /* renamed from: a */
-        final /* synthetic */ EncryptSetupManager f3251a;
+        final /* synthetic */ EncryptSetupManager mEncryptSetupManager;
 
         private EncryptSetupMsgBaseManager(EncryptSetupManager encryptSetupManager) {
-            this.f3251a = encryptSetupManager;
+            this.mEncryptSetupManager = encryptSetupManager;
         }
 
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 98411:
-                    DebugLogUtil.m4115a().m4117a("[receive] MSG_CMD_HU_RSA_PUBLIC_KEY_RESPONSE");
+                    DebugLogUtil.newInstance().m4117a("[receive] MSG_CMD_HU_RSA_PUBLIC_KEY_RESPONSE");
                     CarlifeHuRsaPublicKeyResponse rsaResponse = null;
                     try {
                         CarlifeCmdMessage aesKey = (CarlifeCmdMessage) msg.obj;
@@ -75,22 +76,22 @@ public class EncryptSetupManager {
                         e.printStackTrace();
                     }
                     if (rsaResponse == null) {
-                        synchronized (this.f3251a.f3257e) {
-                            this.f3251a.f3257e.notifyAll();
+                        synchronized (this.mEncryptSetupManager.mObject) {
+                            this.mEncryptSetupManager.mObject.notifyAll();
                         }
                         return;
                     }
-                    this.f3251a.m4131a(rsaResponse.getRsaPublicKey());
-                    DebugLogUtil.m4115a().m4117a("[send] MSG_CMD_MD_AES_KEY_SEND_REQUEST");
-                    this.f3251a.m4129i();
+                    this.mEncryptSetupManager.setKet(rsaResponse.getRsaPublicKey());
+                    DebugLogUtil.newInstance().m4117a("[send] MSG_CMD_MD_AES_KEY_SEND_REQUEST");
+                    this.mEncryptSetupManager.m4129i();
                     return;
                 case 98413:
-                    DebugLogUtil.m4115a().m4117a("[receive] MSG_CMD_HU_AES_REC_RESPONSE");
-                    this.f3251a.m4128h();
-                    EncryptSetupManager.newInstance().setFlag(this.f3251a.m4134b());
-                    this.f3251a.f3256d = true;
-                    synchronized (this.f3251a.f3257e) {
-                        this.f3251a.f3257e.notifyAll();
+                    DebugLogUtil.newInstance().m4117a("[receive] MSG_CMD_HU_AES_REC_RESPONSE");
+                    this.mEncryptSetupManager.m4128h();
+                    EncryptSetupManager.newInstance().setFlag(this.mEncryptSetupManager.m4134b());
+                    this.mEncryptSetupManager.f3256d = true;
+                    synchronized (this.mEncryptSetupManager.mObject) {
+                        this.mEncryptSetupManager.mObject.notifyAll();
                     }
                     return;
                 default:
@@ -113,18 +114,18 @@ public class EncryptSetupManager {
     }
 
     private EncryptSetupManager() {
-        MsgHandlerCenter.registerMessageHandler(this.f3255c);
+        MsgHandlerCenter.registerMessageHandler(this.mEncryptSetupMsgBaseManager);
     }
 
     /* renamed from: a */
     public void m4130a(final IConfigSyncDone syncDone) {
         if (syncDone != null) {
-            new Thread(this) {
+            new Thread((Runnable) this) {
                 /* renamed from: b */
-                final /* synthetic */ EncryptSetupManager f3249b = null;
+                final /* synthetic */ EncryptSetupManager mEncryptSetupManager = null;
 
                 public void run() {
-                    if (this.f3249b.m4126f()) {
+                    if (this.mEncryptSetupManager.m4126f()) {
                         syncDone.mo1641a(true);
                     } else {
                         syncDone.mo1641a(false);
@@ -155,13 +156,13 @@ public class EncryptSetupManager {
     }
 
     /* renamed from: a */
-    public void m4131a(String key) {
-        this.f3260i = key;
+    public void setKet(String key) {
+        this.mKey = key;
     }
 
     /* renamed from: d */
-    public String m4136d() {
-        return this.f3260i;
+    public String getKey() {
+        return this.mKey;
     }
 
     /* renamed from: e */
@@ -173,11 +174,11 @@ public class EncryptSetupManager {
     /* renamed from: f */
     private boolean m4126f() {
         m4127g();
-        DebugLogUtil.m4115a().m4117a("[send] MSG_CMD_MD_RSA_PUBLIC_KEY_REQUEST");
-//        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.bi);
-        synchronized (this.f3257e) {
+        DebugLogUtil.newInstance().m4117a("[send] MSG_CMD_MD_RSA_PUBLIC_KEY_REQUEST");
+        CarlifeCoreSDK.newInstance().disconnected((int) CommonParams.bi);
+        synchronized (this.mObject) {
             try {
-                this.f3257e.wait();
+                this.mObject.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -187,24 +188,24 @@ public class EncryptSetupManager {
 
     /* renamed from: g */
     private void m4127g() {
-        this.f3258f = new Timer();
-        this.f3258f.schedule(new C12062(this), (long) EncryptConfig.f3243c);
+        this.mTimer = new Timer();
+        this.mTimer.schedule(new EncryptSetupManagerTask(this), (long) EncryptConfig.f3243c);
     }
 
     /* renamed from: h */
     private void m4128h() {
-        if (this.f3258f != null) {
-            this.f3258f.cancel();
+        if (this.mTimer != null) {
+            this.mTimer.cancel();
         }
     }
 
     /* renamed from: i */
     private int m4129i() {
-        PublicKey publicKey = this.mRSAManager.m4139a(EncryptSetupManager.newInstance().m4136d());
+        PublicKey publicKey = this.mRSAManager.getPublicKey(EncryptSetupManager.newInstance().getKey());
         if (publicKey == null) {
             return -1;
         }
-        String encryptedAesKey = this.mRSAManager.m4138a(EncryptConfig.m4118a().m4119b(), publicKey);
+        String encryptedAesKey = this.mRSAManager.getRst(EncryptConfig.newInstance().getAecSeed(), publicKey);
         Builder builder = CarlifeMdAesKeyRequest.newBuilder();
         builder.setAesKey(encryptedAesKey);
         CarlifeMdAesKeyRequest aesKeyRequest = builder.build();
@@ -212,7 +213,7 @@ public class EncryptSetupManager {
         msg.setServiceType(CommonParams.bk);
         msg.setData(aesKeyRequest.toByteArray());
         msg.setLength(aesKeyRequest.getSerializedSize());
-        ConnectClient.newInstance().m4223a(Message.obtain(null, msg.getServiceType(), 1001, 0, msg));
+        ConnectClient.newInstance().sendMsgToService(Message.obtain(null, msg.getServiceType(), 1001, 0, msg));
         return 0;
     }
 }

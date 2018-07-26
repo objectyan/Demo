@@ -306,7 +306,7 @@ public class ConnectManager implements KeepClass {
             this.mCurrentSocketNum++;
         }
         if (this.mCurrentSocketNum >= mTotalSocket) {
-            ConnectClient.newInstance().m4222a(true);
+            ConnectClient.newInstance().setIS(true);
         }
         try {
             if (connectSocket.getSocketName().equals(CommonParams.SERVER_SOCKET_NAME)) {

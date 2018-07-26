@@ -30,7 +30,7 @@ public class CarlifeCoreVideo {
 
     private CarlifeCoreVideo() {
         this.f5155f = null;
-        this.f5155f = Recorder.m4826b();
+        this.f5155f = Recorder.newInstance();
     }
 
     /* renamed from: a */
@@ -116,7 +116,7 @@ public class CarlifeCoreVideo {
     /* renamed from: l */
     public void m6119l() {
         this.f5155f.m4885p();
-        CarLifePresentationController.m4626b().m4635c();
+        CarLifePresentationController.newInstance().clearAll();
     }
 
     /* renamed from: a */
@@ -131,14 +131,14 @@ public class CarlifeCoreVideo {
 
     /* renamed from: n */
     public CarlifeServiceConnection m6121n() {
-        return CarLifePresentationController.m4626b().m4640h();
+        return CarLifePresentationController.newInstance().getServiceConn();
     }
 
     /* renamed from: a */
     public void m6104a(Activity activity, Class CarlifeActivityServiceClass, OnStatusChangeListener listener, Drawable maskDrawable, int launchIconId) {
-        CarLifePresentationController.m4626b().m4630a(activity, CarlifeActivityServiceClass, listener);
-        CarLifePresentationController.m4626b().m4633a(maskDrawable);
-        CarLifePresentationController.m4626b().m4628a(launchIconId);
+        CarLifePresentationController.newInstance().m4630a(activity, CarlifeActivityServiceClass, listener);
+        CarLifePresentationController.newInstance().setMaskDrawable(maskDrawable);
+        CarLifePresentationController.newInstance().setLaunchIconId(launchIconId);
         CarlifeScreenUtil.m4331a().m4337a(activity);
     }
 }

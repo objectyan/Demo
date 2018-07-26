@@ -2,10 +2,11 @@ package com.baidu.carlife.core.screen.video;
 
 import android.graphics.Bitmap;
 import android.os.Build;
+
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
-import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,19 +26,19 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
     /* renamed from: d */
     protected static byte[] f3831d = null;
     /* renamed from: e */
-    protected static ByteBuffer f3832e = null;
+    protected static ByteBuffer sByteBuffer = null;
     /* renamed from: f */
-    protected static Bitmap f3833f = null;
+    protected static Bitmap sBitmap = null;
     /* renamed from: h */
-    private static final String f3834h = "BaseReceiverAndConverterThread";
+    private static final String Tag = "BaseReceiverAndConverterThread";
     /* renamed from: a */
     protected boolean f3835a = true;
     /* renamed from: b */
-    protected DataInputStream f3836b;
+    protected DataInputStream mDataInputStream;
     /* renamed from: c */
-    protected DataOutputStream f3837c;
+    protected DataOutputStream mDataOutputStream;
     /* renamed from: g */
-    protected ByteArrayOutputStream f3838g = new ByteArrayOutputStream();
+    protected ByteArrayOutputStream mByteArrayOutputStream = new ByteArrayOutputStream();
 
     /* renamed from: a */
     public abstract void mo1523a();
@@ -46,7 +47,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
     public abstract void mo1524a(int i);
 
     /* renamed from: b */
-    protected void m4792b() {
+    protected void m4792b() throws Throwable {
         IOException e;
         FileNotFoundException e2;
         Throwable th;
@@ -55,7 +56,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
         if (file.exists()) {
             long lastModify = file.lastModified();
             long deltaTime = System.currentTimeMillis() - lastModify;
-            if (lastModify <= 0 || deltaTime <= BNOffScreenParams.MIN_ENTER_INTERVAL) {
+            if (lastModify <= 0 || deltaTime <= 10000) {
                 FileInputStream fileInputStream = null;
                 FileOutputStream out = null;
                 byte[] buffer = new byte[10];
@@ -73,7 +74,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                         String[] verArr = versionStr.toString().split("\\.");
                         if (((verArr.length > 2 ? 1 : 0) & (verArr != null ? 1 : 0)) != 0 && Integer.parseInt(verArr[0]) + Integer.parseInt(verArr[1]) >= 2) {
                             if (Build.MANUFACTURER.toLowerCase(Locale.ENGLISH).contains("xiaomi")) {
-                                this.f3837c.write(206);
+                                this.mDataOutputStream.write(206);
                             } else {
                                 int layerZ = 18;
                                 try {
@@ -94,7 +95,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                                 } catch (InvocationTargetException e9) {
                                     e9.printStackTrace();
                                 }
-                                this.f3837c.write(layerZ + 200);
+                                this.mDataOutputStream.write(layerZ + 200);
                             }
                             MsgHandlerCenter.dispatchMessage((int) CommonParams.hx);
                         }
@@ -155,10 +156,8 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                                 throw th;
                             }
                         } catch (IOException e12) {
-                            e1022222 = e12;
                             out = fileOutputStream;
                             fileInputStream = in;
-                            e1022222.printStackTrace();
                             if (fileInputStream != null) {
                                 try {
                                     fileInputStream.close();
@@ -177,7 +176,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                             e3 = e13;
                             out = fileOutputStream;
                             fileInputStream = in;
-                            LogUtil.e(f3834h, e3.toString());
+                            LogUtil.e(Tag, e3.toString());
                             if (fileInputStream != null) {
                                 try {
                                     fileInputStream.close();
@@ -215,9 +214,8 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                             out.close();
                         }
                     } catch (IOException e15) {
-                        e10222222222 = e15;
                         fileInputStream = in;
-                        e10222222222.printStackTrace();
+                        e15.printStackTrace();
                         if (fileInputStream != null) {
                             fileInputStream.close();
                         }
@@ -227,7 +225,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                     } catch (Exception e16) {
                         e3 = e16;
                         fileInputStream = in;
-                        LogUtil.e(f3834h, e3.toString());
+                        LogUtil.e(Tag, e3.toString());
                         if (fileInputStream != null) {
                             fileInputStream.close();
                         }
@@ -255,8 +253,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                         out.close();
                     }
                 } catch (IOException e18) {
-                    e10222222222 = e18;
-                    e10222222222.printStackTrace();
+                    e18.printStackTrace();
                     if (fileInputStream != null) {
                         fileInputStream.close();
                     }
@@ -265,7 +262,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                     }
                 } catch (Exception e19) {
                     e3 = e19;
-                    LogUtil.e(f3834h, e3.toString());
+                    LogUtil.e(Tag, e3.toString());
                     if (fileInputStream != null) {
                         fileInputStream.close();
                     }

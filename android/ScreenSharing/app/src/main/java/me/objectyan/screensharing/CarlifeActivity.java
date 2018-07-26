@@ -42,6 +42,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout.LayoutParams;
+
 import com.baidu.baidumaps.base.localmap.C0692f;
 import com.baidu.baidumaps.common.network.NetworkListener;
 import com.baidu.baidunavis.BaiduNaviManager;
@@ -183,16 +184,18 @@ import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import com.baidu.navisdk.util.common.ScreenUtil;
+import com.baidu.navisdk.util.listener.NetworkListener;
 import com.baidu.platform.comapi.map.MapBundleKey.MapObjKey;
 import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CarlifeActivity extends BaseActivity implements ConnectionInfoListener, WindowLightnessChangeListener, OnStatusChangeListener {
+public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements ConnectionInfoListener, WindowLightnessChangeListener, OnStatusChangeListener {
     /* renamed from: c */
     public static String f2351c = CarlifeActivity.class.getSimpleName();
     /* renamed from: d */
@@ -812,7 +815,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                     case CommonParams.fn /*1060*/:
                         ArrayList<SearchPoi> data = msg.obj;
                         Bundle bundle = new Bundle();
-                        bundle.putInt(ContentFragmentManager.MODULE_FROM, 1);
+                        bundle.putInt("module_from", 1);
                         bundle.putSerializable("poi_data", data);
                         this.f2350a.f2364H.openNaviFromOutSide(35, bundle);
                         return;
@@ -2362,7 +2365,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         if (this.f2373Q == null) {
             this.f2373Q = new IntentFilter();
         }
-        this.f2373Q.addAction(NetworkListener.f2258e);
+        this.f2373Q.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         this.f2373Q.addAction("android.net.wifi.p2p.STATE_CHANGED");
         this.f2373Q.addAction("android.net.wifi.p2p.PEERS_CHANGED");
         this.f2373Q.addAction("android.net.wifi.p2p.CONNECTION_STATE_CHANGE");

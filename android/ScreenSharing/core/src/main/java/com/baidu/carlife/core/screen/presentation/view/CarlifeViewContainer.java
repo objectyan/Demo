@@ -8,53 +8,53 @@ import com.baidu.carlife.core.screen.OnDialogListener;
 /* renamed from: com.baidu.carlife.core.screen.presentation.a.g */
 public class CarlifeViewContainer implements OnDialogListener {
     /* renamed from: b */
-    private static CarlifeViewContainer f3769b = new CarlifeViewContainer();
+    private static CarlifeViewContainer sCarlifeViewContainer = new CarlifeViewContainer();
     /* renamed from: a */
-    private CarlifeView f3770a;
+    private CarlifeView mCarlifeView;
 
     /* renamed from: a */
-    public static CarlifeViewContainer m4699a() {
-        return f3769b;
+    public static CarlifeViewContainer newInstance() {
+        return sCarlifeViewContainer;
     }
 
     private CarlifeViewContainer() {
     }
 
     /* renamed from: b */
-    public CarlifeView m4701b() {
-        return this.f3770a;
+    public CarlifeView getCarlifeView() {
+        return this.mCarlifeView;
     }
 
     /* renamed from: a */
-    public void m4700a(CarlifeView view) {
-        this.f3770a = view;
+    public void setCarlifeView(CarlifeView view) {
+        this.mCarlifeView = view;
     }
 
     public void showDialog(BaseDialog chldView) {
-        this.f3770a.showDialog(chldView);
+        this.mCarlifeView.showDialog(chldView);
     }
 
     public void showDialog(BaseDialog chldView, C1265a gravity) {
-        this.f3770a.showDialog(chldView, gravity);
+        this.mCarlifeView.showDialog(chldView, gravity);
     }
 
     public void dismissDialog() {
-        this.f3770a.dismissDialog();
+        this.mCarlifeView.dismissDialog();
     }
 
     public void dismissDialog(BaseDialog childView) {
-        this.f3770a.dismissDialog(childView);
+        this.mCarlifeView.dismissDialog(childView);
     }
 
     public void cancelDialog() {
-        this.f3770a.cancelDialog();
+        this.mCarlifeView.cancelDialog();
     }
 
     public void cancelDialog(BaseDialog childView) {
-        this.f3770a.cancelDialog(childView);
+        this.mCarlifeView.cancelDialog(childView);
     }
 
     public boolean isDialogShown() {
-        return this.f3770a.isDialogShown();
+        return this.mCarlifeView.isDialogShown();
     }
 }

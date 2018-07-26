@@ -530,7 +530,7 @@ public class BtHfpManager {
         Context context = BaiduNaviApplication.getInstance().getApplicationContext();
         Intent intent = new Intent(context, CarlifeActivity.class);
         intent.putExtra("com.baidu.carlife.callstate", callState);
-        intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        intent.addFlags(268435456);
         context.startActivity(intent);
     }
 

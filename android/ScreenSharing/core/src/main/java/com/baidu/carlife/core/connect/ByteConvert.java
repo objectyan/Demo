@@ -29,7 +29,7 @@ public class ByteConvert implements KeepClass {
 
     /* renamed from: a */
     public static long m4171a(byte[] array, int offset) {
-        return ((((((((((long) array[offset + 0]) & 255) << 56) | ((((long) array[offset + 1]) & 255) << 48)) | ((((long) array[offset + 2]) & 255) << 40)) | ((((long) array[offset + 3]) & 255) << 32)) | ((((long) array[offset + 4]) & 255) << 24)) | ((((long) array[offset + 5]) & 255) << 16)) | ((((long) array[offset + 6]) & 255) << 8)) | ((((long) array[offset + 7]) & 255) << null);
+        return ((((((((((long) array[offset + 0]) & 255) << 56) | ((((long) array[offset + 1]) & 255) << 48)) | ((((long) array[offset + 2]) & 255) << 40)) | ((((long) array[offset + 3]) & 255) << 32)) | ((((long) array[offset + 4]) & 255) << 24)) | ((((long) array[offset + 5]) & 255) << 16)) | ((((long) array[offset + 6]) & 255) << 8)) | ((((long) array[offset + 7]) & 255) << 0);
     }
 
     /* renamed from: a */
