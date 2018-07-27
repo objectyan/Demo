@@ -30,7 +30,6 @@ import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.os.StrictMode.ThreadPolicy;
 import android.os.SystemClock;
-import android.support.v4.app.OnFragmentListener;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -43,12 +42,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout.LayoutParams;
 
-import com.baidu.baidumaps.base.localmap.C0692f;
-import com.baidu.baidumaps.common.network.NetworkListener;
-import com.baidu.baidunavis.BaiduNaviManager;
 import com.baidu.baidunavis.NavMapAdapter;
 import com.baidu.baidunavis.control.NavTrajectoryController;
-import com.baidu.baidunavis.tts.BaseTTSPlayer;
 import com.baidu.carlife.ScreenListener.C0922a;
 import com.baidu.carlife.adpter.SettingListAdapter.C1011b;
 import com.baidu.carlife.bluetooth.BtDeviceManager;
@@ -141,50 +136,7 @@ import com.baidu.carlife.view.dialog.C2289i;
 import com.baidu.carlife.view.dialog.C2328t;
 import com.baidu.carlife.wechat.p105a.p107b.C2372c;
 import com.baidu.carlife.wechat.p109c.C2415a;
-import com.baidu.che.codriver.util.C2716c;
-import com.baidu.mapframework.common.mapview.MapViewFactory;
 import com.baidu.mobstat.Config;
-import com.baidu.navi.ActivityStack;
-import com.baidu.navi.BaiduNaviSDKManager;
-import com.baidu.navi.ForegroundService;
-import com.baidu.navi.controller.LaunchIntentHelper;
-import com.baidu.navi.cruise.BCruiser;
-import com.baidu.navi.cruise.control.EnterQuitLogicManager;
-import com.baidu.navi.driveanalysis.TrackDataUpload;
-import com.baidu.navi.fragment.BaseFragment;
-import com.baidu.navi.fragment.ContentFragment;
-import com.baidu.navi.fragment.ContentFragmentManager;
-import com.baidu.navi.fragment.NaviFragmentManager;
-import com.baidu.navi.fragment.carmode.CarModeMapFragment;
-import com.baidu.navi.location.LocationManager;
-import com.baidu.navi.style.StyleManager;
-import com.baidu.navi.track.TrackCarDataSolveModel;
-import com.baidu.navi.util.StatisticConstants;
-import com.baidu.navi.util.StatisticManager;
-import com.baidu.navi.view.DownNotifManager;
-import com.baidu.navisdk.BNaviModuleManager;
-import com.baidu.navisdk.comapi.base.BNSubject;
-import com.baidu.navisdk.comapi.commontool.BNAutoDayNightHelper;
-import com.baidu.navisdk.comapi.commontool.BNDayNightChangedObserver;
-import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
-import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
-import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataObserver;
-import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
-import com.baidu.navisdk.comapi.setting.BNSettingManager;
-import com.baidu.navisdk.comapi.setting.SettingParams.Key;
-import com.baidu.navisdk.model.MainMapModel;
-import com.baidu.navisdk.model.datastruct.SearchPoi;
-import com.baidu.navisdk.ui.routeguide.BNavigator;
-import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.fsm.RGFSMTable.FsmEvent;
-import com.baidu.navisdk.ui.routeguide.fsm.RouteGuideFSM;
-import com.baidu.navisdk.ui.routeguide.model.RGPickPointModel;
-import com.baidu.navisdk.ui.routeguide.model.RGRouteSearchModel;
-import com.baidu.navisdk.ui.util.BNStyleManager;
-import com.baidu.navisdk.ui.util.TipTool;
-import com.baidu.navisdk.util.common.PreferenceHelper;
-import com.baidu.navisdk.util.common.ScreenUtil;
-import com.baidu.navisdk.util.listener.NetworkListener;
 import com.baidu.platform.comapi.map.MapBundleKey.MapObjKey;
 import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -195,7 +147,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements ConnectionInfoListener, WindowLightnessChangeListener, OnStatusChangeListener {
+public abstract class CarlifeActivity extends com.baidu.carlife.BaseActivity implements ConnectionInfoListener, WindowLightnessChangeListener, OnStatusChangeListener {
     /* renamed from: c */
     public static String f2351c = CarlifeActivity.class.getSimpleName();
     /* renamed from: d */
@@ -243,27 +195,6 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
     /* renamed from: Q */
     private IntentFilter f2373Q = new IntentFilter();
     /* renamed from: R */
-    private BNOfflineDataObserver f2374R = new BNOfflineDataObserver(this) {
-        /* renamed from: a */
-        final /* synthetic */ CarlifeActivity f2330a;
-
-        {
-            this.f2330a = this$0;
-        }
-
-        public void update(BNSubject o, int type, int event, Object arg) {
-            switch (type) {
-                case 3:
-                    if (event == 277) {
-                        this.f2330a.m3098a(1);
-                        return;
-                    }
-                    return;
-                default:
-                    return;
-            }
-        }
-    };
     /* renamed from: S */
     private boolean f2375S = false;
     /* renamed from: T */
@@ -455,43 +386,6 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
         }
     }
 
-    /* renamed from: com.baidu.carlife.CarlifeActivity$5 */
-    class C09265 implements BNDayNightChangedObserver {
-        /* renamed from: a */
-        final /* synthetic */ CarlifeActivity f2340a;
-
-        C09265(CarlifeActivity this$0) {
-            this.f2340a = this$0;
-        }
-
-        public void update(BNSubject o, int type, int event, Object arg) {
-            if (type == 1) {
-                switch (event) {
-                    case 2:
-                    case 4:
-                    case 6:
-                    case 8:
-                    case 10:
-                    case 12:
-                        BNMapController.getInstance().setNightMode(false);
-                        this.f2340a.m3104a(true);
-                        return;
-                    case 3:
-                    case 5:
-                    case 7:
-                    case 9:
-                    case 11:
-                    case 13:
-                        BNMapController.getInstance().setNightMode(true);
-                        this.f2340a.m3104a(false);
-                        return;
-                    default:
-                        return;
-                }
-            }
-        }
-    }
-
     /* renamed from: com.baidu.carlife.CarlifeActivity$6 */
     class C09276 implements ActionListener {
         /* renamed from: a */
@@ -546,24 +440,6 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
         }
     }
 
-    /* renamed from: com.baidu.carlife.CarlifeActivity$9 */
-    class C09309 implements Runnable {
-        /* renamed from: a */
-        final /* synthetic */ CarlifeActivity f2344a;
-
-        C09309(CarlifeActivity this$0) {
-            this.f2344a = this$0;
-        }
-
-        public void run() {
-            ContentFragment fragment = this.f2344a.f2363G.getCurrentFragment();
-            LogUtil.d(CarlifeActivity.f2351c, "CurrentFragment = " + fragment.getClass().toString());
-            if (C1440d.m5251a().m5269h() && fragment != null) {
-                fragment.onInitFocusAreas();
-            }
-        }
-    }
-
     /* renamed from: com.baidu.carlife.CarlifeActivity$a */
     private class C0937a extends MsgBaseHandler {
         /* renamed from: a */
@@ -579,7 +455,7 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
             }
 
             public void run() {
-                StatisticManager.onEvent(StatisticConstants.HOME_PHONE_BT_CONNECT, "1058_" + BtManager.m3470a().m3533k());
+//                StatisticManager.onEvent(StatisticConstants.HOME_PHONE_BT_CONNECT, "1058_" + BtManager.m3470a().m3533k());
             }
         }
 
@@ -593,7 +469,7 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
             }
 
             public void run() {
-                CarlifeUtil.m4384v();
+//                CarlifeUtil.m4384v();
             }
         }
 
@@ -621,7 +497,7 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
             }
 
             public void run() {
-                CarlifeCoreSDK.m5979a().m5994O();
+//                CarlifeCoreSDK.m5979a().m5994O();
             }
         }
 
@@ -640,8 +516,8 @@ public class CarlifeActivity extends com.baidu.carlife.BaseActivity implements C
         }
 
         public C0937a(CarlifeActivity carlifeActivity, Looper looper) {
-            this.f2350a = carlifeActivity;
             super(looper);
+            this.f2350a = carlifeActivity;
         }
 
         public void handleMessage(Message msg) {

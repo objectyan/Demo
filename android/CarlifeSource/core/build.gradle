@@ -33,5 +33,4 @@ dependencies {
     implementation 'com.baidu.mobstat:mtj-sdk:3.9.0.7'
     implementation project(path: ':protobuf')
     implementation 'com.android.support:support-v4:28.0.0-alpha3'
-    implementation 'com.google.android:support-v4:r7'
 }

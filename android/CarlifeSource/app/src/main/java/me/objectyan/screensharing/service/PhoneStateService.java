@@ -10,6 +10,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
@@ -17,7 +18,7 @@ import com.baidu.carlife.logic.C1868q;
 
 public class PhoneStateService extends Service {
     /* renamed from: a */
-    static final String f6911a = "PhoneStateService";
+    static final String Tag = "PhoneStateService";
     /* renamed from: b */
     private TelephonyManager f6912b;
     /* renamed from: c */
@@ -36,22 +37,22 @@ public class PhoneStateService extends Service {
 
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
-            LogUtil.d(PhoneStateService.f6911a, "============== PhoneState Changed :" + state + " :: " + incomingNumber);
+            LogUtil.d(PhoneStateService.Tag, "============== PhoneState Changed :" + state + " :: " + incomingNumber);
             MsgHandlerCenter.m4458a((int) CommonParams.fW, state, (Object) incomingNumber);
             C1868q.m7089f().m7105a(state, incomingNumber);
             switch (state) {
                 case 0:
-                    LogUtil.d(PhoneStateService.f6911a, "============== CALL_STATE_IDLE:");
+                    LogUtil.d(PhoneStateService.Tag, "============== CALL_STATE_IDLE:");
                     return;
                 case 1:
-                    LogUtil.d(PhoneStateService.f6911a, "============== CALL_STATE_RINGING: ");
+                    LogUtil.d(PhoneStateService.Tag, "============== CALL_STATE_RINGING: ");
                     if (TextUtils.isEmpty(incomingNumber)) {
-                        Log.d(PhoneStateService.f6911a, "Cann't Get Phone Number");
+                        Log.d(PhoneStateService.Tag, "Cann't Get Phone Number");
                         return;
                     }
                     return;
                 case 2:
-                    LogUtil.d(PhoneStateService.f6911a, "============== CALL_STATE_OFFHOOK:" + incomingNumber);
+                    LogUtil.d(PhoneStateService.Tag, "============== CALL_STATE_OFFHOOK:" + incomingNumber);
                     return;
                 default:
                     return;
@@ -73,7 +74,7 @@ public class PhoneStateService extends Service {
     public static void m8212a(Context context) {
         if (VERSION.SDK_INT >= 24) {
             try {
-                LogUtil.d(f6911a, "============== PhoneStateService start");
+                LogUtil.d(Tag, "============== PhoneStateService start");
                 context.startService(new Intent(context, PhoneStateService.class));
             } catch (Throwable e) {
                 LogUtil.m4433a(e);
@@ -85,7 +86,7 @@ public class PhoneStateService extends Service {
     public static void m8213b(Context context) {
         if (VERSION.SDK_INT >= 24) {
             try {
-                LogUtil.d(f6911a, "============== PhoneStateService stop");
+                LogUtil.d(Tag, "============== PhoneStateService stop");
                 context.stopService(new Intent(context, PhoneStateService.class));
             } catch (Throwable e) {
                 LogUtil.m4433a(e);
@@ -95,34 +96,34 @@ public class PhoneStateService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        LogUtil.d(f6911a, "============== PhoneStateService onCreate()");
+        LogUtil.d(Tag, "============== PhoneStateService onCreate()");
         this.f6912b = (TelephonyManager) getSystemService("phone");
         this.f6912b.listen(new C2167a(), 32);
     }
 
     public IBinder onBind(Intent intent) {
-        LogUtil.d(f6911a, "PhoneStateService onBind()");
+        LogUtil.d(Tag, "PhoneStateService onBind()");
         return this.f6914d;
     }
 
     public boolean onUnbind(Intent intent) {
-        LogUtil.d(f6911a, "PhoneStateService onUnbind()");
+        LogUtil.d(Tag, "PhoneStateService onUnbind()");
         return super.onUnbind(intent);
     }
 
     public void onRebind(Intent intent) {
-        LogUtil.d(f6911a, "PhoneStateService onRebind()");
+        LogUtil.d(Tag, "PhoneStateService onRebind()");
         super.onRebind(intent);
     }
 
     public void onStart(Intent intent, int startId) {
-        LogUtil.d(f6911a, "PhoneStateService onStart(), startId = " + startId);
+        LogUtil.d(Tag, "PhoneStateService onStart(), startId = " + startId);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtil.d(f6911a, "PhoneStateService onStartCommand");
+        LogUtil.d(Tag, "PhoneStateService onStartCommand");
         if (this.f6913c == null) {
-            Log.e(f6911a, "============== Service onStartCommand");
+            Log.e(Tag, "============== Service onStartCommand");
             this.f6912b = (TelephonyManager) getApplicationContext().getSystemService("phone");
             this.f6913c = new C2167a();
             this.f6912b.listen(this.f6913c, 32);
@@ -131,7 +132,7 @@ public class PhoneStateService extends Service {
     }
 
     public void onDestroy() {
-        LogUtil.d(f6911a, "PhoneStateService onDestroy()");
+        LogUtil.d(Tag, "PhoneStateService onDestroy()");
         super.onDestroy();
     }
 }
